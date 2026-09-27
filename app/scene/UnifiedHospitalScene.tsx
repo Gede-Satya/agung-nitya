@@ -28,7 +28,7 @@ export default function UnifiedHospitalScene({ quality = "high" }: SceneProps) {
   return (
     <group>
       <Lighting />
-      <Environment />
+      <Environment quality={quality} />
       <DataCore />
       <ModulesField quality={quality} />
       <Connections quality={quality} />

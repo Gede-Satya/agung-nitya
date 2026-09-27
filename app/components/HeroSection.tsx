@@ -83,20 +83,20 @@ export default function HeroSection({ ready = true }: { ready?: boolean }) {
       {/* Scrim agar editorial typography tetap terbaca di atas scene. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,13,0.88),rgba(11,11,13,0.34)_46%,rgba(11,11,13,0.78))] md:bg-[linear-gradient(90deg,rgba(11,11,13,0.94),rgba(11,11,13,0.7)_38%,rgba(11,11,13,0)_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,13,0.84),rgba(11,11,13,0.3)_46%,rgba(11,11,13,0.74))] md:bg-[linear-gradient(90deg,rgba(11,11,13,0.93),rgba(11,11,13,0.66)_44%,rgba(11,11,13,0.2)_70%,rgba(11,11,13,0)_88%)]"
       />
 
-      <div ref={copy} className="relative z-10 flex h-full items-center">
+      <div ref={copy} className="relative z-10 flex h-full items-center pt-16">
         <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12">
           <motion.div
             variants={group}
             initial={reduced ? "show" : "hidden"}
             animate={ready ? "show" : "hidden"}
-            className="max-w-[660px]"
+            className="max-w-[700px]"
           >
             <motion.span
               variants={item}
-              className="flex items-center gap-3 text-[10px] tracking-[0.3em] text-muted-text uppercase"
+              className="t-eyebrow flex items-center gap-3 text-muted-text"
             >
               <span className="h-px w-8 bg-healthcare-blue" />
               SIMRS — Integrated Hospital Information System
@@ -104,7 +104,7 @@ export default function HeroSection({ ready = true }: { ready?: boolean }) {
 
             <motion.h1
               variants={item}
-              className="mt-7 font-display text-[clamp(2.4rem,5vw,4.4rem)] font-medium leading-[1.02] tracking-tight text-primary-text"
+              className="t-hero mt-8 font-display font-medium text-primary-text"
             >
               Rekam medis, farmasi, dan billing rumah sakit Anda, akhirnya
               bicara satu bahasa.
@@ -112,7 +112,7 @@ export default function HeroSection({ ready = true }: { ready?: boolean }) {
 
             <motion.p
               variants={item}
-              className="mt-6 max-w-[520px] text-[15px] leading-relaxed text-muted-text md:text-base"
+              className="t-lede mt-7 max-w-[520px] text-muted-text"
             >
               Agung Nitya membangun SIMRS yang menyatukan setiap unit ke dalam
               satu basis data — bukan sekadar menghubungkan aplikasi yang
@@ -145,9 +145,7 @@ export default function HeroSection({ ready = true }: { ready?: boolean }) {
         ref={hint}
         className="pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
       >
-        <span className="text-[10px] tracking-[0.3em] text-muted-text uppercase">
-          scroll ▾
-        </span>
+        <span className="text-[13px] text-muted-text">scroll ↓</span>
       </div>
     </section>
   );

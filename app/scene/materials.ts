@@ -18,7 +18,7 @@ export const M = {
   accent: new THREE.MeshStandardMaterial({
     color: "#111a3d",
     emissive: new THREE.Color(P.blue),
-    emissiveIntensity: 0.7,
+    emissiveIntensity: 0.4,
     roughness: 0.42,
     metalness: 0.1,
   }),

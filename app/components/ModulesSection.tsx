@@ -7,7 +7,6 @@ import { useHydratedReducedMotion } from "@/app/lib/motion";
 import { modules, edges, modulesIntro, type ModuleNode } from "@/app/lib/content";
 import { setFocus } from "@/app/scene/story";
 import { focusIndexOf } from "@/app/scene/composition";
-import SpatialDecor from "./SpatialDecor";
 import {
   UserPlus,
   BedDouble,
@@ -43,35 +42,24 @@ function InfoPanel({ m }: { m: ModuleNode }) {
   const Icon = iconMap[m.icon] ?? FileText;
   const rel = partners(m.id);
   return (
-    <div className="hairline-b border-t border-slate-border/25 pb-5">
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-trust-blue" strokeWidth={1.6} />
-          <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-            Modul terkoneksi
-          </span>
-        </span>
-        <span className="status-dot" />
-      </div>
-      <h3 className="mt-3 font-display text-2xl font-medium leading-tight tracking-tight text-ivory-text">
+    <div className="hairline-b border-t border-slate-border/25 pb-6">
+      <span className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-trust-blue" strokeWidth={1.6} />
+        <span className="t-eyebrow text-ash-text">Modul terkoneksi</span>
+      </span>
+      <h3 className="mt-4 font-display text-[26px] font-medium leading-tight tracking-tight text-ivory-text">
         {m.title}
       </h3>
-      <p className="mt-2 text-[14px] leading-relaxed text-ash-text">{m.desc}</p>
-      <p className="mt-2 text-[12px] leading-relaxed text-ash-text/80">
+      <p className="t-body mt-3 text-ash-text">{m.desc}</p>
+      <p className="t-body mt-3 text-ash-text/85">
         <span className="text-trust-blue">→&nbsp;</span>
         {m.hint}
       </p>
       {rel.length > 0 ? (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {rel.map((r) => (
-            <span
-              key={r}
-              className="rounded-full border border-slate-border/40 px-3 py-1 text-[9px] tracking-[0.22em] text-ash-text uppercase"
-            >
-              {r}
-            </span>
-          ))}
-        </div>
+        <p className="mt-4 text-[15px] leading-snug text-ash-text/80">
+          <span className="text-ash-text/60">Terhubung ke </span>
+          {rel.join(", ")}
+        </p>
       ) : null}
     </div>
   );
@@ -147,60 +135,52 @@ export default function ModulesSection() {
     <section
       ref={sectionRef}
       id="modul"
-      className="relative bg-onyx-canvas px-4 py-24 md:px-6 md:py-36"
+      className="section-pad-tall relative px-6 md:px-10"
       aria-label="Modul SIMRS — satu sistem, tujuh unit"
     >
-      <SpatialDecor variant="orbit" />
-      <div className="relative z-10 mx-auto max-w-[1200px]">
+      {/* z-10 sengaja TIDAK dipakai di pembungkus: konteks ber-`z` menangkap
+          scrim host di dalamnya sehingga scrim jadi menimpa teks blok lain.
+          Semua scrim jatuh ke konteks section (z:-1) — di belakang semua teks. */}
+      <div className="relative mx-auto max-w-[1200px]">
         {/* header */}
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <div>
+        <div className="relative flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="scrim-block relative">
             <div data-mod-head className="mb-6 flex items-center gap-3">
-              <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
+              <span className="t-eyebrow text-ash-text">
                 {modulesIntro.label}
               </span>
               <span className="h-px w-10 bg-trust-blue" />
             </div>
             <h2
               data-mod-head
-              className="font-display text-[clamp(2.8rem,8vw,6.5rem)] font-medium leading-[0.94] tracking-tight text-ivory-text"
+              className="t-section max-w-[14ch] text-ivory-text"
             >
               {modulesIntro.headline}
             </h2>
           </div>
           <p
             data-mod-head
-            className="max-w-sm text-[14px] leading-relaxed text-ash-text"
+            className="scrim-block t-lede max-w-[40ch] text-ash-text"
           >
             {modulesIntro.sub}
           </p>
         </div>
 
         {/* sistem 3D di kiri (EXPLORING) — panel modul di kanan */}
-        <div className="mt-12 grid grid-cols-12 gap-3 md:mt-16">
-          <div className="order-2 col-span-12 flex flex-col justify-end md:order-1 md:col-span-7">
-            <div className="hidden items-center gap-3 text-[10px] tracking-[0.3em] text-ash-text/70 uppercase md:flex">
-              <span className="status-dot" />
-              Arahkan kursor ke modul — kamera mengikuti pilihan Anda
-            </div>
+        <div className="mt-14 grid grid-cols-12 gap-6 md:mt-20">
+          <div className="order-2 col-span-12 flex flex-col justify-start self-start md:order-1 md:col-span-7">
+            <p className="scrim-block hidden max-w-[34ch] text-[15px] leading-snug text-ash-text md:block">
+              Arahkan kursor ke modul — kamera mengikuti pilihan Anda.
+            </p>
           </div>
 
           {/* right rail */}
-          <div className="order-1 col-span-12 flex flex-col gap-3 md:order-2 md:col-span-5">
-            <motion.div
-              initial={revealInitial}
-              whileInView={revealVisible}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={revealTransition}
+          <div className="scrim-block relative order-1 col-span-12 flex flex-col gap-6 md:order-2 md:col-span-5">
+            <div
               className="mb-1 hidden items-center justify-between md:flex"
             >
-              <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-                Pilih modul
-              </span>
-              <span className="text-[10px] tracking-[0.28em] text-ash-text/70 uppercase">
-                01 — 07
-              </span>
-            </motion.div>
+              <span className="t-eyebrow text-ash-text">Pilih modul</span>
+            </div>
 
             {/* info panel */}
             <motion.div
@@ -208,7 +188,7 @@ export default function ModulesSection() {
               whileInView={revealVisible}
               viewport={{ once: true, amount: 0.2 }}
               transition={revealTransition}
-              className="panel min-h-[238px] p-5"
+              className="min-h-[238px]"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -230,7 +210,7 @@ export default function ModulesSection() {
               whileInView={revealVisible}
               viewport={{ once: true, amount: 0.12 }}
               transition={revealTransition}
-              className="panel divide-y divide-slate-border/15"
+              className="divide-y divide-slate-border/20 border-t border-slate-border/20"
             >
               {modules.map((m, i) => {
                 const active = m.id === activeId;
@@ -285,7 +265,7 @@ export default function ModulesSection() {
                           }
                     }
                     whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-                    className={`group relative flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition-[background-color,opacity] duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trust-blue ${
+                    className={`group relative flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-[background-color,opacity] duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trust-blue ${
                       active ? "bg-obsidian-button" : "hover:bg-obsidian-button/50"
                     }`}
                   >
@@ -295,16 +275,16 @@ export default function ModulesSection() {
                         className="absolute top-0 left-0 h-full w-px bg-trust-blue"
                       />
                     ) : null}
-                    <span className="flex items-center gap-3">
+                    <span className="flex min-w-0 items-baseline gap-4">
                       <span
-                        className={`font-display text-[11px] tracking-[0.3em] ${
-                          active ? "text-trust-blue" : "text-ash-text/60"
+                        className={`font-display text-[12px] tracking-[0.14em] ${
+                          active ? "text-trust-blue" : "text-ash-text/50"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span
-                        className={`text-[12px] tracking-[0.18em] uppercase ${
+                        className={`truncate text-[15px] leading-snug ${
                           active ? "text-ivory-text" : "text-ash-text"
                         }`}
                       >
@@ -334,10 +314,9 @@ export default function ModulesSection() {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-3 text-[10px] tracking-[0.3em] text-ash-text/70 uppercase">
-          <span className="status-dot" />
-          Bukan tujuh aplikasi terpisah — tujuh pintu masuk pada satu basis data
-        </div>
+        <p className="t-lede mt-6 max-w-[52ch] text-ash-text">
+          Bukan tujuh aplikasi terpisah — tujuh pintu masuk pada satu basis data.
+        </p>
       </div>
     </section>
   );

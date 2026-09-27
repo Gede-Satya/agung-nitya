@@ -7,7 +7,6 @@ import { useHydratedReducedMotion } from "@/app/lib/motion";
 import { closing } from "@/app/lib/content";
 import Magnetic from "./Magnetic";
 import { ArrowRight } from "lucide-react";
-import SpatialDecor from "./SpatialDecor";
 
 export default function FinalCTA() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,9 +37,9 @@ export default function FinalCTA() {
           scrub: 0.8,
         },
       });
-      tl.fromTo(
+      gsap.set(q("[data-cw-word]"), { yPercent: 118 });
+      tl.to(
         q("[data-cw-word]"),
-        { yPercent: 118 },
         { yPercent: 0, stagger: 0.03, ease: "power4.out", duration: 0.9 },
       )
         .fromTo(
@@ -78,41 +77,23 @@ export default function FinalCTA() {
     <section
       ref={sectionRef}
       id="kontak"
-      className="relative bg-onyx-canvas"
+      className="relative"
       style={{ height: "180vh" }}
       aria-label="Kontak — jadwalkan demo"
     >
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-4 md:px-6">
-        <SpatialDecor variant="converge" />
+      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6 md:px-10">
         {/* System 3D lengkap di belakang (COMPLETE) — tarikan kamera menutup cerita */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(70% 58% at 50% 45%, rgba(11,11,13,0.62) 0%, rgba(11,11,13,0.42) 52%, rgba(11,11,13,0.78) 100%)",
-          }}
-        />
+        <div className="scrim-block relative z-10 flex max-w-3xl flex-col items-center text-center">
+          <div className="t-eyebrow mb-7 text-ash-text">{closing.label}</div>
 
-        {/* content */}
-        <div className="relative z-10 flex max-w-3xl flex-col items-center text-center">
-          <div className="mb-7 flex items-center gap-3">
-            <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-              {closing.label}
-            </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-trust-blue" />
-            <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-              Kontak
-            </span>
-          </div>
-
-          <h2 className="font-display text-[clamp(2.4rem,6vw,4.8rem)] font-medium leading-[1.02] tracking-tight text-ivory-text">
+          <h2 className="t-section font-display text-ivory-text">
             <span data-cw-head>
               {headlineWords.map((w, i) => (
                 <span
                   key={i}
                   className="inline-block overflow-hidden align-top pt-[0.08em] -mb-[0.08em]"
                 >
-                  <span data-cw-word className="inline-block translate-y-[118%] min-readable">
+                  <span data-cw-word className="inline-block">
                     {w}
                     {i < headlineWords.length - 1 ? "\u00A0" : ""}
                   </span>
@@ -121,16 +102,13 @@ export default function FinalCTA() {
             </span>
           </h2>
 
-          <p
-            data-cw-sub
-            className="mt-6 max-w-md text-[14px] leading-relaxed text-ash-text"
-          >
+          <p data-cw-sub className="t-lede mt-7 max-w-[46ch] text-ash-text">
             {closing.sub}
           </p>
 
           <div
             data-cw-cta
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-11 flex flex-col items-center justify-center gap-5 sm:flex-row"
           >
             <Magnetic strength={0.3}>
               <motion.a
@@ -139,7 +117,7 @@ export default function FinalCTA() {
                 whileHover={reduceMotion ? undefined : { scale: 1.03, y: -1 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 transition={ctaTransition}
-                className="group inline-flex items-center gap-3 rounded-full bg-trust-blue px-8 py-4 text-[12px] font-medium tracking-[0.2em] text-white uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trust-blue"
+                className="group inline-flex items-center gap-3 rounded-full bg-trust-blue px-9 py-4 text-[15px] font-medium tracking-[0.02em] text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trust-blue"
               >
                 {closing.cta}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -148,7 +126,7 @@ export default function FinalCTA() {
             <a
               href="#modul"
               data-cta-secondary
-              className="link-underline text-[12px] tracking-[0.2em] text-ash-text uppercase"
+              className="link-underline text-[15px] text-ash-text"
             >
               Lihat modul
             </a>
@@ -156,15 +134,10 @@ export default function FinalCTA() {
 
           <p
             data-cw-sub
-            className="mt-10 font-display text-[13px] tracking-[0.14em] text-ivory-text uppercase"
+            className="mt-11 text-[15px] tracking-[0.06em] text-ivory-text/80"
           >
             PT. Agung Wijaya Nitya
           </p>
-        </div>
-
-        <div className="absolute bottom-5 left-6 hidden items-center gap-3 text-[10px] tracking-[0.35em] text-ash-text/70 uppercase md:flex">
-          <span className="status-dot" />
-          Semua unit — satu sistem — satu bahasa
         </div>
       </div>
     </section>

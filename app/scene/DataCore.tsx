@@ -35,28 +35,34 @@ export default function DataCore() {
     const staticMode = storyStore.reduced;
     const t = state.clock.elapsedTime;
 
-    if (group.current && !staticMode) {
-      group.current.rotation.y += delta * 0.055;
+    /* Yaw terikat ke progres cerita (maks 0 → 0.85 rad) — kamera yang
+       mengamati, bukan objek yang berputar tanpa henti (MOTION §7.1). */
+    if (group.current) {
+      const target = p * 0.85;
+      group.current.rotation.y = staticMode
+        ? target
+        : THREE.MathUtils.damp(group.current.rotation.y, target, 4, delta);
     }
-    if (ringA.current && !staticMode) ringA.current.rotation.z += delta * 0.14;
-    if (ringB.current && !staticMode) ringB.current.rotation.z -= delta * 0.1;
 
     // Inti menguat saat reconnection & operasional — arsitektur jadi dominan.
     const strength =
       0.3 + flow * 0.6 + seg(p, 0.4, 0.6) * 0.4 - fracture * 0.15;
     const breathe = staticMode ? 0 : Math.sin(t * 1.4) * 0.05;
 
-    M.coreStrip.emissiveIntensity = Math.max(
-      0.12,
-      0.3 + strength * 0.45 + breathe,
+    M.coreStrip.emissiveIntensity = Math.min(
+      0.65,
+      Math.max(0.12, 0.26 + strength * 0.4 + breathe),
     );
     rimMats.current.forEach((mat, i) => {
       if (!mat) return;
-      mat.emissiveIntensity = Math.max(0.06, strength * (0.4 + i * 0.12));
-      mat.opacity = 0.3 + flow * 0.36;
+      mat.emissiveIntensity = Math.min(
+        0.45,
+        Math.max(0.06, strength * (0.32 + i * 0.1)),
+      );
+      mat.opacity = 0.3 + flow * 0.32;
     });
     if (light.current) {
-      light.current.intensity = 1.6 + flow * 2.6 + breathe * 2;
+      light.current.intensity = Math.min(2.2, 1.1 + flow * 1.4);
     }
   });
 

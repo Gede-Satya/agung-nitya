@@ -3,9 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, deferScrollTriggers } from "@/app/lib/anim";
 import { problem } from "@/app/lib/content";
-import SpatialDecor from "./SpatialDecor";
-
-const fragments = ["Pendaftaran", "Apotek", "Kasir"];
 
 export default function ProblemSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -57,22 +54,10 @@ export default function ProblemSection() {
             "-=0.7",
           )
           .fromTo(
-            q("[data-shard]"),
-            { autoAlpha: 0, y: 20, scale: 0.94 },
-            { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.06 },
-            "-=0.7",
-          )
-          .fromTo(
             q("[data-stat]"),
             { autoAlpha: 0, y: 30 },
             { autoAlpha: 1, y: 0, duration: 0.7 },
             "-=0.6",
-          )
-          .fromTo(
-            q("[data-merge]"),
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.5, ease: "power3.inOut" },
-            "<0.2",
           );
       },
     );
@@ -83,11 +68,9 @@ export default function ProblemSection() {
           [
             q("[data-pw]"),
             q("[data-pbody]"),
-            q("[data-shard]"),
             q("[data-stat]"),
-            q("[data-merge]"),
           ],
-          { autoAlpha: 1, y: 0, yPercent: 0, scale: 1, scaleX: 1 },
+          { autoAlpha: 1, y: 0, yPercent: 0, scale: 1 },
         );
       });
     });
@@ -104,7 +87,7 @@ export default function ProblemSection() {
     <section
       ref={sectionRef}
       id="masalah"
-      className="relative bg-onyx-canvas md:h-[200vh]"
+      className="relative md:h-[200vh]"
       aria-label="Masalah — sistem terfragmentasi"
     >
       {/* bleed from the hero's ink into onyx */}
@@ -113,56 +96,19 @@ export default function ProblemSection() {
         aria-hidden="true"
       />
       <div className="md:sticky md:top-0 md:h-screen md:overflow-hidden">
-        <div className="tech-grid absolute inset-0 opacity-40" />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(75% 60% at 82% 40%, rgba(91,124,255,0.06) 0%, rgba(11,11,13,0) 60%), linear-gradient(180deg, #0b0b0d 0%, rgba(11,11,13,0.14) 50%, #0b0b0d 100%)",
-          }}
-        />
-        <SpatialDecor variant="fragment" />
+        <div className="relative mx-auto grid h-full max-w-[1200px] grid-cols-12 gap-6 px-6 py-24 md:px-10 md:py-28">
+          {/* kiri — editorial; fragmentasi ditunjukkan oleh scene 3D di kanan */}
+          <div className="scrim-inline relative col-span-12 flex flex-col justify-center md:col-span-7">
+            <div className="t-eyebrow mb-9 text-ash-text">{problem.eyebrow}</div>
 
-        {/* watermark */}
-        <div className="pointer-events-none absolute top-6 right-0 z-0 font-display text-[clamp(8rem,22vw,20rem)] font-medium leading-none tracking-tighter text-transparent opacity-[0.05] [-webkit-text-stroke:1px_rgba(237,237,243,0.4)] select-none">
-          01
-        </div>
-
-        <div className="relative z-10 mx-auto grid h-full max-w-[1200px] grid-cols-12 gap-3 px-4 py-20 md:px-6">
-          {/* left — editorial */}
-          <div className="relative col-span-12 flex flex-col justify-center md:col-span-7">
-            {/* scrim lokal: teks tetap terbaca saat scene 3D lewat di belakangnya */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -left-4 right-0 -top-6 -bottom-6 bg-[linear-gradient(90deg,rgba(11,11,13,0.92),rgba(11,11,13,0.6)_62%,transparent)]"
-            />
-            <div className="relative">
-            <div className="mb-8 flex items-center gap-3">
-              <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-                {problem.eyebrow}
-              </span>
-              <span className="h-px flex-1 bg-slate-border/30" />
-              <span className="flex items-center gap-2 text-[10px] tracking-[0.3em] text-ash-text uppercase">
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-border" />
-                Fase 1 — Fragment
-              </span>
-            </div>
-
-            <h2 className="font-display font-medium leading-[1.02] tracking-tight text-ivory-text">
+            <h2 className="t-section font-display text-ivory-text">
               {titleWords.map((w, i) => (
                 <span
                   key={i}
                   className="inline-block overflow-hidden align-top pt-[0.08em] -mb-[0.08em]"
                 >
-                  <span
-                    data-pw
-                    className="inline-block text-[clamp(2.1rem,4.6vw,3.9rem)]"
-                  >
-                    {w.startsWith("banyak") || w.startsWith("sistem") ? (
-                      <span className="stroke-text">{w}</span>
-                    ) : (
-                      w
-                    )}
+                  <span data-pw className="inline-block">
+                    {w}
                     {i < titleWords.length - 1 ? "\u00A0" : ""}
                   </span>
                 </span>
@@ -171,62 +117,31 @@ export default function ProblemSection() {
 
             <p
               data-pbody
-              className="mt-7 max-w-lg text-[15px] leading-relaxed text-ash-text"
+              className="t-lede mt-8 max-w-[52ch] text-ash-text"
             >
               {problem.body}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2">
-              {fragments.map((f, i) => {
-                const last = i === fragments.length - 1;
-                return (
-                  <span key={f} className="flex items-center gap-2">
-                    <span
-                      data-shard
-                      className="rounded-full border border-slate-border/40 bg-obsidian-button px-4 py-1.5 text-[10px] tracking-[0.25em] text-ash-text uppercase"
-                    >
-                      {f}
-                    </span>
-                    {!last ? (
-                      <span className="block h-px w-5 border-t border-dashed border-slate-border/50" />
-                    ) : null}
-                  </span>
-                );
-              })}
-              <span className="ml-2 flex items-center gap-2">
-                <span
-                  data-merge
-                  className="block h-px w-9 origin-left bg-trust-blue"
-                />
-                <span className="text-[10px] tracking-[0.25em] text-ash-text uppercase">
-                  1 basis data
-                </span>
-              </span>
-            </div>
-            </div>
-          </div>
-
-          {/* right — ruang negatif: fragmentasi ditunjukkan oleh scene 3D */}
-          <div className="col-span-12 flex flex-col justify-center md:col-span-5">
-            <div data-stat className="flex items-end justify-between gap-6 px-1">
-              <div className="flex items-end gap-2">
-                <span className="font-display text-[clamp(4.5rem,9vw,7.5rem)] font-medium leading-[0.85] tracking-tight text-ivory-text">
+            <div
+              data-stat
+              className="mt-10 flex max-w-[52ch] items-end justify-between gap-8 border-t border-slate-border/30 pt-6"
+            >
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-[clamp(3rem,5vw,4rem)] font-medium leading-none tracking-tight text-ivory-text">
                   {problem.statLine.slice(0, 1)}
                 </span>
-                <span className="stroke-text -mb-1 font-display text-[clamp(2.4rem,5vw,4rem)] font-medium leading-none">
+                <span className="font-display text-[clamp(1.4rem,2.4vw,2rem)] font-medium leading-none tracking-tight text-ivory-text/70">
                   {problem.statLine.slice(1)}
                 </span>
               </div>
-              <p className="max-w-[13rem] text-right text-[10px] leading-snug text-ash-text">
+              <p className="max-w-[26rem] text-right text-[15px] leading-snug text-ash-text">
                 {problem.statCaption}
               </p>
             </div>
           </div>
-        </div>
 
-        <div className="absolute bottom-5 left-6 hidden items-center gap-3 text-[10px] tracking-[0.35em] text-ash-text/70 uppercase md:flex">
-          <span className="status-dot" />
-          Simulasi rekonsiliasi berhenti — satu entri tersisa
+          {/* kanan — ruang negatif: fragmentasi fisik terlihat di scene 3D */}
+          <div className="hidden md:col-span-5 md:block" aria-hidden="true" />
         </div>
       </div>
     </section>

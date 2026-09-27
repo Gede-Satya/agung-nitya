@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { gsap, deferScrollTriggers } from "@/app/lib/anim";
 import { journey } from "@/app/lib/content";
-import SpatialDecor from "./SpatialDecor";
 
 const iconMap: Record<string, LucideIcon> = {
   datang: DoorOpen,
@@ -45,10 +44,9 @@ export default function JourneySection() {
         const fills = q("[data-jr-fill]");
         const pulses = q("[data-jr-pulse]");
         const head = q("[data-jr-head]");
-        const foot = q("[data-jr-foot]");
 
         /* keadaan awal eksplisit: tidak ada kedip konten sebelum timeline jalan */
-        gsap.set([...head, ...stages, ...foot], { autoAlpha: 0, y: 26 });
+        gsap.set([...head, ...stages], { autoAlpha: 0, y: 26 });
         gsap.set(fills, { scaleX: 0 });
         gsap.set(pulses, { autoAlpha: 0, left: "0%" });
 
@@ -89,8 +87,6 @@ export default function JourneySection() {
             ).set(pulse, { autoAlpha: 0 });
           }
         });
-
-        tl.to(foot, { autoAlpha: 1, y: 0, duration: 0.6 }, ">-0.2");
       });
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
@@ -98,7 +94,6 @@ export default function JourneySection() {
           [
             ...q("[data-jr-head]"),
             ...q("[data-jr-stage]"),
-            ...q("[data-jr-foot]"),
           ],
           { autoAlpha: 1, y: 0 },
         );
@@ -119,40 +114,21 @@ export default function JourneySection() {
     <section
       ref={sectionRef}
       id="perjalanan"
-      className="relative bg-onyx-canvas px-4 py-20 md:px-6 md:py-28"
+      className="section-pad relative px-6 md:px-10"
       aria-label="Patient Journey — perjalanan pasien lewat sistem"
     >
-      <div className="tech-grid absolute inset-0 opacity-25" />
-      {/* scrim: teks tetap terbaca saat scene 3D lewat di belakangnya */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,13,0.92)_0%,rgba(11,11,13,0.68)_38%,rgba(11,11,13,0.68)_70%,#0b0b0d_100%)]"
-      />
-      <SpatialDecor variant="tunnel" />
-      <div className="relative z-10 mx-auto max-w-[1200px]">
-        <div data-jr-head className="mb-12 grid grid-cols-12 gap-3">
+      <div className="scrim-block relative z-10 mx-auto max-w-[1200px]">
+        <div data-jr-head className="mb-16 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
-            <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span className="shrink-0 text-[10px] tracking-[0.3em] text-ash-text uppercase">
-                {journey.label}
-              </span>
-              <span className="h-px w-10 shrink-0 bg-slate-border/30" />
-              <span className="shrink-0 text-[10px] tracking-[0.3em] text-ash-text/70 uppercase">
-                05 tahap · 1 berkas
-              </span>
-            </div>
-            <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.05] tracking-tight text-ivory-text">
-              {journey.headline}
-            </h2>
+            <div className="t-eyebrow mb-8 text-ash-text">{journey.label}</div>
+            <h2 className="t-section text-ivory-text">{journey.headline}</h2>
           </div>
           <div className="col-span-12 flex items-end md:col-span-5">
-            <p className="text-[14px] leading-relaxed text-ash-text md:pl-8">
-              {journey.sub}
-            </p>
+            <p className="t-lede text-ash-text md:pl-10">{journey.sub}</p>
           </div>
         </div>
 
-        <ol className="relative grid grid-cols-1 gap-y-9 lg:grid-cols-5 lg:gap-y-0">
+        <ol className="relative grid grid-cols-1 gap-y-12 lg:grid-cols-5 lg:gap-y-0">
           {/* tulang punggung vertikal — hanya mobile */}
           <span
             aria-hidden="true"
@@ -164,7 +140,7 @@ export default function JourneySection() {
               <li
                 key={step.key}
                 data-jr-stage
-                className="relative flex items-start gap-4 lg:block lg:pr-6"
+                className="relative flex items-start gap-5 lg:block lg:pr-8"
               >
                 <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center border border-slate-border/60 bg-obsidian-button text-trust-blue">
                   <Icon size={15} strokeWidth={1.6} aria-hidden="true" />
@@ -182,38 +158,23 @@ export default function JourneySection() {
                     />
                     <span
                       data-jr-pulse
-                      className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-trust-blue shadow-[0_0_10px_rgba(91,124,255,0.9)]"
+                      className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-trust-blue"
                     />
                   </span>
                 )}
 
-                <div className="lg:mt-4">
-                  <span className="font-mono text-[10px] tracking-[0.28em] text-ash-text/70 uppercase">
-                    {String(i + 1).padStart(2, "0")} · {step.code}
-                  </span>
-                  <h3 className="mt-1.5 font-display text-lg font-medium tracking-tight text-ivory-text">
+                <div className="lg:mt-6">
+                  <h3 className="font-display text-[17px] font-medium leading-snug tracking-tight text-ivory-text">
                     {step.label}
                   </h3>
-                  <p className="mt-1.5 max-w-[30ch] text-[13px] leading-relaxed text-ash-text">
+                  <p className="mt-2.5 max-w-[30ch] text-[15px] leading-relaxed text-ash-text">
                     {step.desc}
-                  </p>
-                  <p className="mt-3 flex items-center gap-2 text-[10px] tracking-[0.22em] text-ash-text/60 uppercase">
-                    <span className="h-1 w-1 shrink-0 rounded-full bg-trust-blue" />
-                    {step.signal}
                   </p>
                 </div>
               </li>
             );
           })}
         </ol>
-
-        <div
-          data-jr-foot
-          className="mt-12 flex items-center gap-3 border-t border-slate-border/25 pt-5 text-[10px] tracking-[0.3em] text-ash-text/70 uppercase"
-        >
-          <span className="status-dot" />
-          Satu berkas kunjungan — lima tahap, nol entri ulang
-        </div>
       </div>
     </section>
   );

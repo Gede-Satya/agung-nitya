@@ -13,12 +13,7 @@ export default function Cursor() {
     dot.className =
       "custom-cursor fixed left-0 top-0 z-[300] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-trust-blue pointer-events-none";
     ring.className =
-      "custom-cursor fixed left-0 top-0 z-[299] h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ivory-text/25 pointer-events-none flex items-center justify-center";
-    const label = document.createElement("span");
-    label.className =
-      "text-[9px] tracking-[0.35em] uppercase text-ivory-text opacity-0 transition-opacity duration-300 select-none";
-    label.textContent = "Lihat";
-    ring.appendChild(label);
+      "custom-cursor fixed left-0 top-0 z-[299] h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ivory-text/25 pointer-events-none";
     document.body.appendChild(dot);
     document.body.appendChild(ring);
 
@@ -27,7 +22,6 @@ export default function Cursor() {
     const rx = gsap.quickTo(ring, "x", { duration: 0.45, ease: "power3.out" });
     const ry = gsap.quickTo(ring, "y", { duration: 0.45, ease: "power3.out" });
 
-    let scale = 1;
     let targetScale = 1;
     let active = false;
     let lastX = -1;
@@ -50,16 +44,11 @@ export default function Cursor() {
       const interactive =
         under && typeof under.closest === "function"
           ? (under.closest(
-              "a, button, [data-cursor], [data-cursor-label], .cursor-target",
+              "a, button, [data-cursor], .cursor-target",
             ) as HTMLElement | null)
           : null;
       if (interactive) {
-        const mode = interactive.getAttribute("data-cursor");
-        const custom = interactive.getAttribute("data-cursor-label");
-        const showLabel = Boolean(custom) || mode === "view";
-        targetScale = showLabel ? 3.2 : 1.8;
-        label.textContent = custom ?? "Lihat";
-        label.style.opacity = showLabel ? "1" : "0";
+        targetScale = 1.8;
         gsap.to(ring, {
           backgroundColor: "rgba(91,124,255,0.1)",
           borderColor: "rgba(91,124,255,0.65)",
@@ -67,7 +56,6 @@ export default function Cursor() {
         });
       } else {
         targetScale = 1;
-        label.style.opacity = "0";
         gsap.to(ring, {
           backgroundColor: "rgba(91,124,255,0)",
           borderColor: "rgba(237,237,243,0.25)",
@@ -87,6 +75,7 @@ export default function Cursor() {
       }, 60);
     };
 
+    let scale = 1;
     const tick = () => {
       scale += (targetScale - scale) * 0.14;
       gsap.set(ring, { scale });

@@ -8,8 +8,8 @@ import { fractureAt, flowAt, storyStore } from "./story";
 import { P } from "./palette";
 
 const SEGMENTS = 16;
-const PULSES_PER_LINK = 2;
-const PULSE_SPEED = 0.17;
+const PULSES_PER_LINK = 1;
+const PULSE_SPEED = 0.1;
 
 const UP = new THREE.Vector3(0, 1, 0);
 const tmpA = new THREE.Vector3();
@@ -116,9 +116,9 @@ export default function Connections({ quality }: { quality: "high" | "low" }) {
       for (let li = 0; li < links.length; li++) {
         for (let k = 0; k < perLink; k++) {
           const local =
-            (t * PULSE_SPEED + li * 0.11 + k / perLink + li * 0.07) % 1;
+            (t * PULSE_SPEED + li * 0.13 + k / perLink) % 1;
           links[li].getPoint(local, tmpP);
-          const scale = active * (0.85 + Math.sin((local + t) * 6) * 0.15);
+          const scale = active * 0.9;
           dummy.position.copy(tmpP);
           dummy.scale.setScalar(scale);
           dummy.updateMatrix();
@@ -152,11 +152,11 @@ export default function Connections({ quality }: { quality: "high" | "low" }) {
         frustumCulled={false}
         renderOrder={2}
       >
-        <sphereGeometry args={[0.048, 8, 8]} />
+        <sphereGeometry args={[0.038, 8, 8]} />
         <meshBasicMaterial
           color={P.blue}
           transparent
-          opacity={0.95}
+          opacity={0.7}
           depthWrite={false}
         />
       </instancedMesh>

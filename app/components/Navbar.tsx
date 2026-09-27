@@ -222,8 +222,7 @@ export default function Navbar() {
 
           <div className="flex items-center gap-2 md:gap-5">
             <div className="hidden items-center gap-2 md:flex">
-              <span className="status-dot" />
-              <span className="text-[10px] tracking-[0.28em] text-ash-text uppercase">
+              <span className="text-[12px] tracking-[0.2em] text-ash-text">
                 SIMRS
               </span>
             </div>
@@ -277,7 +276,7 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
             >
-              <span className="text-[11px] tracking-[0.25em] text-ivory-text uppercase">
+              <span className="text-[14px] text-ivory-text">
                 {open ? "Tutup" : "Menu"}
               </span>
               <span className="relative flex h-6 w-6 items-center justify-center">
@@ -321,14 +320,6 @@ export default function Navbar() {
               exit="exit"
               transition={menuTransition}
             >
-              <div className="tech-grid absolute inset-0 opacity-40" />
-              <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(80% 55% at 85% 15%, rgba(91,124,255,0.08) 0%, rgba(11,11,13,0) 60%)",
-                }}
-              />
               <div className="relative flex flex-1 flex-col justify-center gap-1 px-7 pt-20">
                 {navLinks.map((link, i) => {
                   const isActive = active === link.href.slice(1);
@@ -346,7 +337,7 @@ export default function Navbar() {
                           isActive ? "text-ivory-text" : "text-ash-text"
                         }`}
                       >
-                        <span className="text-[10px] tracking-[0.3em] text-slate-border">
+                        <span className="text-[12px] tracking-[0.14em] text-slate-border">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         {link.label}
@@ -371,7 +362,7 @@ export default function Navbar() {
                       duration: 0.28,
                       ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
                     }}
-                    className="rounded-[32px] bg-trust-blue px-6 py-3.5 text-[13px] tracking-[0.2em] text-pure-white uppercase"
+                    className="rounded-[32px] bg-trust-blue px-7 py-3.5 text-[15px] text-pure-white"
                   >
                     {hero.ctaPrimary}
                   </motion.button>
@@ -381,16 +372,15 @@ export default function Navbar() {
                 <motion.span
                   variants={fadeVariants}
                   transition={menuTransition}
-                  className="text-[11px] tracking-[0.2em] text-ash-text uppercase"
+                  className="text-[13px] text-ash-text"
                 >
                   PT. Agung Wijaya Nitya
                 </motion.span>
                 <motion.span
                   variants={fadeVariants}
                   transition={menuTransition}
-                  className="flex items-center gap-2 text-[10px] tracking-[0.2em] text-ash-text/70 uppercase"
+                  className="text-[13px] text-ash-text/80"
                 >
-                  <span className="status-dot" />
                   Sistem aktif
                 </motion.span>
               </div>

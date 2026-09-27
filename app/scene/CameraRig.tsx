@@ -21,13 +21,20 @@ const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
  * rotasi cepat, tanpa lompatan FOV (MOTION §31).
  */
 const KEYS: Key[] = [
-  { p: 0, pos: V(1, 3, 12.8), look: V(0, 1.2, 0) },
-  { p: 0.2, pos: V(-1.4, 3.4, 13.4), look: V(0, 1.2, 0) },
-  { p: 0.4, pos: V(-3, 4.4, 15), look: V(0, 1.3, 0) },
-  { p: 0.6, pos: V(1.6, 2.4, 9), look: V(0, 1.3, 0) },
-  { p: 0.75, pos: V(4.6, 1.9, 6.8), look: V(1.4, 1, 1.2) },
-  { p: 0.9, pos: V(-4.2, 2.6, 8), look: V(-0.6, 1.2, 0.4) },
-  { p: 1, pos: V(0.2, 4.8, 16.4), look: V(0, 1.2, 0) },
+  // p0 Hero — artefak di ruang negatif, offset ke kanan dari kolom copy.
+  { p: 0, pos: V(0.4, 3, 12.6), look: V(-1.5, 1.25, 0) },
+  // p0.2 Problem — pull-back halus supaya fragmentasi terbaca.
+  { p: 0.2, pos: V(-1.8, 3.3, 13.6), look: V(-0.6, 1.2, 0) },
+  // p0.4 Solution — tetap lebar, berayun ke kiri.
+  { p: 0.4, pos: V(-3.2, 4, 15.2), look: V(0, 1.3, 0) },
+  // p0.6 Modules — dolly melewati cincin.
+  { p: 0.6, pos: V(1.6, 2.3, 8.4), look: V(0, 1.3, 0) },
+  // p0.75 Process — lateral track tiga-perempat, diredam.
+  { p: 0.75, pos: V(4, 1.95, 7.2), look: V(1.2, 1.05, 1.1) },
+  // p0.9 Trust — menetap, tenang, lebar.
+  { p: 0.9, pos: V(-3.6, 2.7, 9.4), look: V(-0.4, 1.2, 0.3) },
+  // p1 Final CTA — pull-back panjang seperti penutup film produk.
+  { p: 1, pos: V(0.2, 4.6, 16), look: V(0, 1.2, 0) },
 ];
 
 const STATIC = { pos: V(1, 3.1, 13.4), look: V(0, 1.2, 0) };
@@ -49,6 +56,9 @@ function sample(p: number, outPos: THREE.Vector3, outLook: THREE.Vector3) {
 
 export default function CameraRig() {
   const look = useRef(new THREE.Vector3(0, 1.1, 0));
+  /* Dolly-in pembuka: kamera masuk ke dunia saat pertama kali tampil,
+     bukan berputar-putar tanpa tujuan. */
+  const settle = useRef(0);
 
   useFrame((state, delta) => {
     const camera = state.camera as THREE.PerspectiveCamera;
@@ -63,6 +73,7 @@ export default function CameraRig() {
       return;
     }
 
+    settle.current = THREE.MathUtils.damp(settle.current, 1, 1.5, delta);
     sample(p, posOut, lookOut);
 
     const weight = focusWeightAt(p);
@@ -82,9 +93,13 @@ export default function CameraRig() {
       lookOut.lerp(focusOut, weight);
     }
 
+    /* Idle minimal: hanya goyangan sangat halus, separuh amplitudo lama. */
     const t = state.clock.elapsedTime;
-    posOut.x += Math.sin(t * 0.11) * 0.14;
-    posOut.y += Math.sin(t * 0.085 + 1.2) * 0.09;
+    const settleOffset = 1 - settle.current;
+    posOut.z += settleOffset * 4.4;
+    posOut.y += settleOffset * 1.1;
+    posOut.x += Math.sin(t * 0.07) * 0.05;
+    posOut.y += Math.sin(t * 0.055 + 1.2) * 0.035;
 
     camera.position.copy(posOut);
     const k = 1 - Math.exp(-5 * Math.min(delta, 0.1));

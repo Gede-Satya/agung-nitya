@@ -36,7 +36,7 @@ export default function ModulesField({ quality }: { quality: "high" | "low" }) {
       group.rotation.y = moduleFacingY(i) + moduleRotationY(i, fracture);
     }
 
-    M.accent.emissiveIntensity = 0.18 + flow * 0.8;
+    M.accent.emissiveIntensity = Math.min(0.5, 0.18 + flow * 0.8);
   });
 
   return (

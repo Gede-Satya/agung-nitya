@@ -45,7 +45,7 @@
   --radius-nav: 40px;
 
   /* DESIGN.md §6.2/§6.3 — spacing & container. */
-  --section-gap: 112px;
+  --section-gap: 136px;
   --page-max-width: 1200px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -76,6 +76,10 @@ html.lenis body {
   overflow: hidden;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--color-deep-canvas);
   color: var(--color-primary-text);
@@ -90,29 +94,16 @@ main {
   z-index: 1;
 }
 
-/* Scrim per seksi supaya copy tetap terbaca di atas scene 3D.
+/* SEMUA SEKSI TRANSPARAN. Dunia 3D persisten adalah latar seluruh halaman
+   (FINAL DIRECTION §12) — tidak ada wash hitam se-viewport, tidak ada
+   tech-grid. Keterbacaan copy datang dari `.scrim-*` lokal di belakang blok
+   teks saja, ditambah komposisi asimetris.
    Selector `main section` (bukan `> section`) karena GSAP membalut section
-   yang di-pin di dalam .pin-spacer — #hero dan #proses ikut terkena. */
+   yang di-pin di dalam .pin-spacer. */
 main section {
   position: relative;
   z-index: 1;
-  background-color: rgba(11, 11, 13, 0.6) !important;
-}
-
-/* Dua sesi yang sengaja dibuka lebih terang: scene 3D jadi bintang utama */
-#modul,
-#proses {
-  background-color: rgba(11, 11, 13, 0.45) !important;
-}
-
-#kontak {
-  background-color: rgba(11, 11, 13, 0.35) !important;
-}
-
-/* Hero: scene harus mendominasi komposisi (DESIGN §12.2) — scrim khusus
-   sudah ditangani di dalam HeroSection. */
-#hero {
-  background-color: rgba(11, 11, 13, 0.24) !important;
+  background-color: transparent !important;
 }
 
 ::selection {
@@ -158,72 +149,184 @@ canvas {
   text-wrap: pretty;
 }
 
-.stroke-text {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(241, 238, 232, 0.55);
+/* ───────────────────────── Type scale (DESIGN §5.3, §5.4) ─────────────────────────
+   Satu tangga dipakai seluruh halaman. HIERARKI: hero > judul seksi > judul
+   bagian > body. Angka lebih besar tidak pernah dipakai untuk kepentingan
+   bobot — skala dan ruang kosong yang bekerja. */
+
+.t-hero {
+  font-size: clamp(2.6rem, 5.6vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.t-section {
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.t-sub {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+.t-lede {
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+.t-body {
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Satu-satunya label huruf besar yang diizinkan: ≤3 kata penanda seksi. */
+.t-eyebrow {
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Label tahap pada tab proses: kolom sempit (4 tab di 390px) butuh tracking
+   yang jauh lebih rapat supaya "MIGRATE" tidak terpotong elipsis. */
+.tab-eyebrow {
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+}
+
+@media (min-width: 640px) {
+  .tab-eyebrow {
+    letter-spacing: 0.26em;
+    line-height: 1;
+  }
+}
+
+/* ───────────────────────── Negative space (DESIGN §6.2, §6.5) ─────────────────────────
+   Dua tingkat padding blok menggantikan py-* ad-hoc. Rata-rata naik ±20–25%
+   terhadap baseline (112px / 144px desktop). */
+
+.section-pad {
+  padding-block: 96px;
+}
+.section-pad-tall {
+  padding-block: 128px;
+}
+@media (min-width: 768px) {
+  .section-pad {
+    padding-block: 136px;
+  }
+  .section-pad-tall {
+    padding-block: 176px;
+  }
+}
+
+/* ───────────────────────── Local text scrims ─────────────────────────
+   Bukan wash hitam se-viewport — hanya gradasi di belakang blok teks.
+   Dipasang pada kontainer copy; dunia 3D tetap terbaca di sisinya. */
+
+/* Host scrim TIDAK boleh jadi stacking context (isolation/transform/z-index):
+   kalau iya, `::before` z-index:-1 terjebak di dalam host dan — karena urutan
+   pohon — menimpa teks blok sebelumnya. Tanpa stacking context, scrim jatuh ke
+   konteks section pada z:-1: di belakang SEMUA teks, tetap di atas dunia 3D.
+   `z-index: auto` menetralkan utility `.z-10` yang menaruh host ke konteksnya
+   sendiri; `transform: none !important` menetralkan identity-transform sisa
+   reveal GSAP (inline style). */
+.scrim-block,
+.scrim-inline,
+.scrim-bottom {
+  position: relative;
+  z-index: auto;
+  transform: none !important;
+}
+
+.scrim-block::before,
+.scrim-inline::before,
+.scrim-bottom::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Radial di belakang blok teks — sumbu Y dijamin melebar minimal 180px untuk
+   blok pendek (supaya tepi mendatar tidak terbaca); sumbu X dibatasi maksimal
+   220px supaya scrim blok yang bersebelahan tidak saling menutupi teksnya.
+   Ekor gradasi sengaja panjang: blok lebar tetap punya ~0.5 alpha di tepinya. */
+.scrim-block::before {
+  inset: min(-26%, -180px) clamp(-32%, -220px, -72px);
+  background: radial-gradient(
+    closest-side,
+    rgba(11, 11, 13, 0.92) 0%,
+    rgba(11, 11, 13, 0.9) 45%,
+    rgba(11, 11, 13, 0.78) 70%,
+    rgba(11, 11, 13, 0.5) 86%,
+    rgba(11, 11, 13, 0) 100%
+  );
+}
+
+/* Linear kiri→kanan untuk kolom copy asimetris; fade vertikal lewat mask
+   supaya artefak 3D tetap terbaca di atas dan di bawah blok teks. */
+.scrim-inline::before {
+  inset: -26% -8% -26% -46%;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 11, 13, 0.96) 0%,
+    rgba(11, 11, 13, 0.92) 38%,
+    rgba(11, 11, 13, 0.66) 66%,
+    rgba(11, 11, 13, 0.24) 86%,
+    rgba(11, 11, 13, 0) 96%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+}
+
+.scrim-bottom::before {
+  inset: -18% -14% -22%;
+  background: radial-gradient(
+    closest-side,
+    rgba(11, 11, 13, 0.95) 0%,
+    rgba(11, 11, 13, 0.88) 50%,
+    rgba(11, 11, 13, 0.58) 78%,
+    rgba(11, 11, 13, 0) 100%
+  );
 }
 
 /* ───────────────────────── System panel chrome ───────────────────────── */
 
+/* Pelat cetak: persegi murni, tanpa sudut HUD, tanpa gloss. */
 .panel {
   position: relative;
-  background-color: var(--color-graphite-card);
+  background-color: rgba(21, 21, 24, 0.74);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-structural-border);
-}
-
-.panel::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 9px;
-  height: 9px;
-  border-top: 1px solid var(--color-slate-border);
-  border-left: 1px solid var(--color-slate-border);
-  border-top-left-radius: var(--radius-cards);
-  pointer-events: none;
-}
-
-.tech-grid {
-  background-image:
-    linear-gradient(rgba(52, 49, 45, 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(52, 49, 45, 0.5) 1px, transparent 1px);
-  background-size: 72px 72px;
+  backdrop-filter: blur(3px);
 }
 
 .hairline-b {
   border-bottom: 1px solid var(--color-structural-border);
-}
-
-/* ───────────────────────── Status dot ───────────────────────── */
-
-@keyframes status-ping {
-  0% {
-    transform: scale(1);
-    opacity: 0.65;
-  }
-  80%,
-  100% {
-    transform: scale(2.6);
-    opacity: 0;
-  }
-}
-.status-dot {
-  position: relative;
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background-color: var(--color-trust-blue);
-}
-.status-dot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  background-color: var(--color-trust-blue);
-  animation: status-ping 2.4s var(--ease-out-expo) infinite;
 }
 
 /* ───────────────────────── Links ───────────────────────── */
@@ -280,270 +383,6 @@ canvas {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .status-dot::after {
-    display: none;
-  }
-}
-
-.spatial-decor {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  perspective: 1200px;
-  opacity: 0.56;
-  transform-style: preserve-3d;
-}
-
-.spatial-decor__plane,
-.spatial-decor__ring,
-.spatial-decor__axis,
-.spatial-decor__node {
-  position: absolute;
-  display: block;
-  transform-style: preserve-3d;
-}
-
-.spatial-decor__plane {
-  width: 58%;
-  height: 42%;
-  border: 1px solid rgba(241, 238, 232, 0.14);
-  background: linear-gradient(135deg, rgba(91, 124, 255, 0.06), transparent 64%);
-  transform: translate(-50%, -50%) rotateX(64deg) rotateZ(-14deg);
-}
-
-.spatial-decor__plane--one {
-  top: 48%;
-  left: 66%;
-}
-
-.spatial-decor__plane--two {
-  top: 57%;
-  left: 72%;
-  width: 42%;
-  height: 30%;
-  border-color: rgba(241, 238, 232, 0.14);
-  transform: translate(-50%, -50%) rotateX(68deg) rotateZ(22deg);
-}
-
-.spatial-decor__ring {
-  top: 48%;
-  left: 68%;
-  width: 32%;
-  aspect-ratio: 1;
-  border: 1px solid rgba(241, 238, 232, 0.22);
-  border-radius: 999px;
-  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg);
-}
-
-.spatial-decor__ring--two {
-  width: 48%;
-  border-color: rgba(241, 238, 232, 0.12);
-  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(34deg);
-}
-
-.spatial-decor__axis {
-  top: 12%;
-  left: 68%;
-  width: 1px;
-  height: 76%;
-  background: linear-gradient(180deg, transparent, rgba(91, 124, 255, 0.4), transparent);
-  transform: rotate(18deg);
-}
-
-.spatial-decor__node {
-  width: 7px;
-  height: 7px;
-  border: 1px solid rgba(241, 238, 232, 0.76);
-  border-radius: 999px;
-  background: rgba(91, 124, 255, 0.5);
-  box-shadow: 0 0 18px rgba(91, 124, 255, 0.35);
-}
-
-.spatial-decor__node--one {
-  top: 29%;
-  left: 57%;
-}
-
-.spatial-decor__node--two {
-  top: 68%;
-  left: 77%;
-}
-
-.spatial-decor__node--three {
-  top: 40%;
-  left: 83%;
-}
-
-.spatial-decor__label {
-  position: absolute;
-  right: 7%;
-  bottom: 9%;
-  color: rgba(155, 152, 146, 0.75);
-  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 9px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-
-.spatial-decor--fragment .spatial-decor__plane--one {
-  transform: translate(-50%, -50%) rotateX(58deg) rotateZ(-24deg);
-}
-
-.spatial-decor--fragment .spatial-decor__plane--two {
-  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(28deg);
-}
-
-.spatial-decor--fragment .spatial-decor__ring--one {
-  animation: spatial-decor-drift 11s ease-in-out infinite alternate;
-}
-
-.spatial-decor--orbit .spatial-decor__plane--one {
-  left: 28%;
-  top: 45%;
-  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(8deg);
-}
-
-.spatial-decor--orbit .spatial-decor__plane--two {
-  left: 28%;
-  top: 45%;
-  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(-18deg);
-}
-
-.spatial-decor--orbit .spatial-decor__ring--one {
-  left: 28%;
-  top: 45%;
-  animation: spatial-decor-spin 16s linear infinite;
-}
-
-.spatial-decor--orbit .spatial-decor__ring--two {
-  left: 28%;
-  top: 45%;
-  animation: spatial-decor-spin-reverse 21s linear infinite;
-}
-
-.spatial-decor--tunnel .spatial-decor__plane--one {
-  left: 50%;
-  top: 50%;
-  width: 78%;
-  height: 64%;
-  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(0deg);
-}
-
-.spatial-decor--tunnel .spatial-decor__plane--two {
-  left: 50%;
-  top: 50%;
-  width: 54%;
-  height: 42%;
-  transform: translate(-50%, -50%) rotateX(76deg) rotateZ(12deg);
-}
-
-.spatial-decor--tunnel .spatial-decor__ring--one {
-  left: 50%;
-  top: 50%;
-  width: 58%;
-  animation: spatial-decor-pulse 8s ease-in-out infinite;
-}
-
-.spatial-decor--tunnel .spatial-decor__ring--two {
-  left: 50%;
-  top: 50%;
-  width: 92%;
-  animation: spatial-decor-pulse 8s ease-in-out -2s infinite;
-}
-
-.spatial-decor--tunnel .spatial-decor__axis {
-  left: 50%;
-  top: 0;
-  height: 100%;
-  transform: rotate(90deg);
-}
-
-.spatial-decor--signal .spatial-decor__plane--one {
-  left: 18%;
-  top: 44%;
-}
-
-.spatial-decor--signal .spatial-decor__plane--two {
-  left: 18%;
-  top: 44%;
-}
-
-.spatial-decor--signal .spatial-decor__ring--one {
-  left: 18%;
-  top: 44%;
-  width: 42%;
-  animation: spatial-decor-pulse 6s ease-in-out infinite;
-}
-
-.spatial-decor--signal .spatial-decor__ring--two {
-  left: 18%;
-  top: 44%;
-  width: 68%;
-  animation: spatial-decor-pulse 6s ease-in-out -1.5s infinite;
-}
-
-.spatial-decor--signal .spatial-decor__axis {
-  left: 18%;
-  top: 20%;
-  height: 60%;
-  transform: rotate(90deg);
-}
-
-.spatial-decor--converge .spatial-decor__plane--one,
-.spatial-decor--converge .spatial-decor__plane--two,
-.spatial-decor--converge .spatial-decor__ring--one,
-.spatial-decor--converge .spatial-decor__ring--two {
-  left: 50%;
-  top: 48%;
-}
-
-.spatial-decor--converge .spatial-decor__plane--one {
-  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg);
-  animation: spatial-decor-spin 18s linear infinite;
-}
-
-.spatial-decor--converge .spatial-decor__plane--two {
-  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(24deg);
-  animation: spatial-decor-spin-reverse 14s linear infinite;
-}
-
-.spatial-decor--converge .spatial-decor__ring--one {
-  animation: spatial-decor-pulse 7s ease-in-out infinite;
-}
-
-.spatial-decor--converge .spatial-decor__ring--two {
-  animation: spatial-decor-pulse 7s ease-in-out -1.8s infinite;
-}
-
-@keyframes spatial-decor-spin {
-  from { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg); }
-  to { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(360deg); }
-}
-
-@keyframes spatial-decor-spin-reverse {
-  from { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(360deg); }
-  to { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(0deg); }
-}
-
-@keyframes spatial-decor-pulse {
-  0%, 100% { opacity: 0.28; transform: translate(-50%, -50%) rotateX(66deg) scale(0.92); }
-  50% { opacity: 0.8; transform: translate(-50%, -50%) rotateX(66deg) scale(1.08); }
-}
-
-@keyframes spatial-decor-drift {
-  from { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg) translate3d(-10px, 0, 0); }
-  to { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(22deg) translate3d(18px, -12px, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .spatial-decor__plane,
-  .spatial-decor__ring,
-  .spatial-decor__axis,
-  .spatial-decor__node {
-    animation: none !important;
-  }
 }
 
 /* Vertical anti-overflow guard: text never squashed narrower than this */
@@ -581,31 +420,6 @@ canvas {
 }
 .info-swap {
   animation: info-swap-in 0.45s var(--ease-out-expo) both;
-}
-
-/* Diagonal glass reflection following the cursor on service cards (MOTION §13). */
-.card-sheen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(
-    135deg,
-    transparent 35%,
-    rgba(241, 238, 232, 0.07) 50%,
-    transparent 65%
-  );
-  background-size: 240% 240%;
-  background-position: calc(50% + var(--sheen-x, 0%)) calc(50% + var(--sheen-y, 0%));
-  transition: opacity 0.5s ease;
-}
-.group:hover > .card-sheen {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .card-sheen {
-    display: none;
-  }
 }
 
 .skip-link {

@@ -65,17 +65,11 @@ export default function Loader({ onDone }: { onDone: () => void }) {
       className="fixed inset-0 z-[400] flex flex-col justify-between bg-onyx-canvas px-6 py-6 md:px-10 md:py-8"
       aria-hidden="true"
     >
-      <div className="flex items-center justify-between">
-        <span
-          data-lines
-          className="font-display text-[11px] tracking-[0.3em] text-ivory-text/70 uppercase"
-        >
+      <div className="flex items-center justify-between gap-6">
+        <span data-lines className="font-display text-[14px] text-ivory-text/80">
           Agung Nitya
         </span>
-        <span
-          data-lines
-          className="text-[10px] tracking-[0.3em] text-ash-text uppercase"
-        >
+        <span data-lines className="text-[13px] text-ash-text">
           SIMRS — Sistem Informasi Manajemen Rumah Sakit
         </span>
       </div>
@@ -83,7 +77,7 @@ export default function Loader({ onDone }: { onDone: () => void }) {
       <div className="relative mx-auto flex min-h-[30vh] w-full max-w-6xl items-center">
         <span
           data-lines
-          className="font-display text-[clamp(2.4rem,9vw,8rem)] font-medium leading-[0.9] tracking-[-0.03em] text-transparent [-webkit-text-stroke:1px_rgba(237,237,243,0.5)]"
+          className="font-display text-[clamp(2rem,6vw,4rem)] font-medium leading-[1.05] tracking-[0.24em] text-ivory-text"
         >
           Satu sistem.
           <br />
@@ -93,12 +87,12 @@ export default function Loader({ onDone }: { onDone: () => void }) {
         </span>
       </div>
 
-      <div className="flex items-end justify-between">
-        <span data-lines className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
+      <div className="flex items-end justify-between gap-6">
+        <span data-lines className="text-[13px] text-ash-text">
           Menghubungkan unit…
         </span>
         <div className="flex items-center gap-4">
-          <span data-lines className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
+          <span data-lines className="text-[13px] text-ash-text">
             Inisialisasi
           </span>
           <span

@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, deferScrollTriggers } from "@/app/lib/anim";
 import { dataFlow } from "@/app/lib/content";
-import SpatialDecor from "./SpatialDecor";
 
 /**
  * AMBIENT DATA FLOW (PROMPTS #9) — Pendaftaran → RME → Billing.
@@ -103,33 +102,16 @@ export default function DataFlowSection() {
     <section
       ref={sectionRef}
       id="alur-data"
-      className="relative bg-onyx-canvas px-4 py-20 md:px-6 md:py-28"
+      className="section-pad relative px-6 md:px-10"
       aria-label="Alur data ambient — pendaftaran menuju billing"
     >
-      <div className="tech-grid absolute inset-0 opacity-20" />
-      {/* scrim: kartu node tidak tenggelam di atas objek 3D yang terang */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#0b0b0d_0%,rgba(11,11,13,0.7)_40%,rgba(11,11,13,0.7)_72%,#0b0b0d_100%)]"
-      />
-      <SpatialDecor variant="signal" />
-      <div className="relative z-10 mx-auto max-w-[1200px]">
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="scrim-block relative z-10 mx-auto max-w-[1200px]">
+        <div className="relative z-10 mb-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span className="shrink-0 text-[10px] tracking-[0.3em] text-ash-text uppercase">
-                {dataFlow.label}
-              </span>
-              <span className="h-px w-10 shrink-0 bg-slate-border/30 md:w-16" />
-              <span className="shrink-0 font-mono text-[10px] tracking-[0.3em] text-ash-text/60 uppercase">
-                {dataFlow.nodes.map((n) => n.code).join(" → ")}
-              </span>
-            </div>
-            <h2 className="font-display text-[clamp(1.9rem,4vw,3rem)] font-medium leading-[1.06] tracking-tight text-ivory-text">
-              {dataFlow.headline}
-            </h2>
+            <div className="t-eyebrow mb-8 text-ash-text">{dataFlow.label}</div>
+            <h2 className="t-section text-ivory-text">{dataFlow.headline}</h2>
           </div>
-          <p className="max-w-md text-[14px] leading-relaxed text-ash-text md:text-right">
+          <p className="t-lede max-w-md text-ash-text md:text-right">
             {dataFlow.sub}
           </p>
         </div>
@@ -137,56 +119,46 @@ export default function DataFlowSection() {
         {/* rail desktop */}
         <div
           aria-hidden="true"
-          className="relative mb-7 hidden h-6 w-full overflow-hidden md:block"
+          className="relative mb-9 hidden h-6 w-full overflow-hidden md:block"
         >
           <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-slate-border/40" />
           <span
             data-flow-rail
             className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 origin-left bg-gradient-to-r from-trust-blue/10 via-trust-blue/70 to-trust-blue/10"
           />
-          {[0, 1, 2].map((i) => (
+          {[0, 1].map((i) => (
             <span
               key={i}
               data-flow-packet
-              className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-trust-blue shadow-[0_0_10px_rgba(91,124,255,0.9)]"
-              style={{ left: `${-6 - i * 34}%` }}
+              className="absolute top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-trust-blue"
+              style={{ left: `${-6 - i * 46}%` }}
             />
           ))}
         </div>
 
-        <ol className="relative grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-          {dataFlow.nodes.map((node, i) => (
+        <ol className="scrim-block relative z-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          {dataFlow.nodes.map((node) => (
             <li
               key={node.code}
               data-flow-reveal
-              className="relative border border-slate-border/30 bg-obsidian-button/80 p-6"
+              className="relative border-t border-slate-border/40 pt-7"
             >
-              <span
-                aria-hidden="true"
-                className="absolute -top-7 left-7 hidden h-7 w-px bg-slate-border/40 md:block"
-              />
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] tracking-[0.3em] text-trust-blue uppercase">
-                  {node.code}
-                </span>
-                <span className="font-mono text-[10px] tracking-[0.3em] text-ash-text/50 uppercase">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ivory-text">
+              <span className="t-eyebrow block text-trust-blue">
+                {node.code}
+              </span>
+              <h3 className="mt-5 font-display text-[26px] font-medium leading-tight tracking-tight text-ivory-text">
                 {node.label}
               </h3>
-              <p className="mt-2 text-[13px] leading-relaxed text-ash-text">
+              <p className="mt-3 text-[15px] leading-relaxed text-ash-text">
                 {node.note}
               </p>
             </li>
           ))}
         </ol>
 
-        <div className="mt-9 flex flex-wrap items-center gap-3 text-[10px] tracking-[0.3em] text-ash-text/70 uppercase">
-          <span className="status-dot" />
-          Paket data berjalan terus — tanpa salin, tanpa ketik ulang
-        </div>
+        <p className="scrim-block mt-12 text-[15px] leading-relaxed text-ash-text/80">
+          Paket data berjalan terus — tanpa salin, tanpa ketik ulang.
+        </p>
       </div>
     </section>
   );
