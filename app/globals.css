@@ -1,26 +1,628 @@
 @import "tailwindcss";
 
+@theme {
+  /* DESIGN.md §19/20 — token kanonik. Sistem monokrom hangat + healthcare blue. */
+  --color-deep-canvas: #0b0b0d;
+  --color-graphite-surface: #151518;
+  --color-dark-surface: #1d1d21;
+  --color-structural-border: #34312d;
+  --color-muted-text: #9b9892;
+  --color-primary-text: #f1eee8;
+  --color-healthcare-blue: #5b7cff;
+  --color-pure-white: #ffffff;
+
+  /* Alias nama lama → nilai DESIGN (utilitas yang sudah ada tetap valid). */
+  --color-onyx-canvas: var(--color-deep-canvas);
+  --color-graphite-card: var(--color-graphite-surface);
+  --color-obsidian-button: var(--color-dark-surface);
+  --color-slate-border: var(--color-structural-border);
+  --color-mist-border: var(--color-primary-text);
+  --color-ash-text: var(--color-muted-text);
+  --color-ivory-text: var(--color-primary-text);
+  --color-trust-blue: var(--color-healthcare-blue);
+
+  /* Palet hero lama → dipetakan ke sistem yang diizinkan (tanpa cyan/amber). */
+  --color-ink: var(--color-deep-canvas);
+  --color-surface: var(--color-graphite-surface);
+  --color-line: var(--color-structural-border);
+  --color-text: var(--color-primary-text);
+  --color-text-dim: var(--color-muted-text);
+  --color-pulse: var(--color-healthcare-blue);
+  --color-glow: var(--color-healthcare-blue);
+  --color-signal: var(--color-healthcare-blue);
+
+  --font-display: var(--font-grotesk), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+
+  /* DESIGN.md §7 — radius. */
+  --radius-card: 12px;
+  --radius-cards: 12px;
+  --radius-button: 32px;
+  --radius-pill: 9999px;
+  --radius-nav: 40px;
+
+  /* DESIGN.md §6.2/§6.3 — spacing & container. */
+  --section-gap: 112px;
+  --page-max-width: 1200px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  background-color: var(--color-deep-canvas);
+  color: var(--color-primary-text);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-deep-canvas);
+  color: var(--color-primary-text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scrim per seksi supaya copy tetap terbaca di atas scene 3D.
+   Selector `main section` (bukan `> section`) karena GSAP membalut section
+   yang di-pin di dalam .pin-spacer — #hero dan #proses ikut terkena. */
+main section {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(11, 11, 13, 0.6) !important;
+}
+
+/* Dua sesi yang sengaja dibuka lebih terang: scene 3D jadi bintang utama */
+#modul,
+#proses {
+  background-color: rgba(11, 11, 13, 0.45) !important;
+}
+
+#kontak {
+  background-color: rgba(11, 11, 13, 0.35) !important;
+}
+
+/* Hero: scene harus mendominasi komposisi (DESIGN §12.2) — scrim khusus
+   sudah ditangani di dalam HeroSection. */
+#hero {
+  background-color: rgba(11, 11, 13, 0.24) !important;
+}
+
+::selection {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* ───────────────────────── Custom cursor guards ───────────────────────── */
+
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+}
+
+/* Saat kursor kustom aktif, sembunyikan kursor OS supaya titik trust-blue
+   tidak tampak "melayang" sebagai elemen tak bertuan di atas pointer asli. */
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none;
+  }
+}
+
+/* ───────────────────────── Typography helpers ───────────────────────── */
+
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.stroke-text {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(241, 238, 232, 0.55);
+}
+
+/* ───────────────────────── System panel chrome ───────────────────────── */
+
+.panel {
+  position: relative;
+  background-color: var(--color-graphite-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-structural-border);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 9px;
+  height: 9px;
+  border-top: 1px solid var(--color-slate-border);
+  border-left: 1px solid var(--color-slate-border);
+  border-top-left-radius: var(--radius-cards);
+  pointer-events: none;
+}
+
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(52, 49, 45, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 49, 45, 0.5) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.hairline-b {
+  border-bottom: 1px solid var(--color-structural-border);
+}
+
+/* ───────────────────────── Status dot ───────────────────────── */
+
+@keyframes status-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.status-dot {
+  position: relative;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: var(--color-trust-blue);
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--color-trust-blue);
+  animation: status-ping 2.4s var(--ease-out-expo) infinite;
+}
+
+/* ───────────────────────── Links ───────────────────────── */
+
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ───────────────────────── Scrollbar ───────────────────────── */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-deep-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: #2b2a2e;
+  border-radius: 8px;
+  border: 2px solid var(--color-deep-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #46433f;
+}
+
+/* ───────────────────────── Reduced motion ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .status-dot::after {
+    display: none;
+  }
+}
+
+.spatial-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1200px;
+  opacity: 0.56;
+  transform-style: preserve-3d;
+}
+
+.spatial-decor__plane,
+.spatial-decor__ring,
+.spatial-decor__axis,
+.spatial-decor__node {
+  position: absolute;
+  display: block;
+  transform-style: preserve-3d;
+}
+
+.spatial-decor__plane {
+  width: 58%;
+  height: 42%;
+  border: 1px solid rgba(241, 238, 232, 0.14);
+  background: linear-gradient(135deg, rgba(91, 124, 255, 0.06), transparent 64%);
+  transform: translate(-50%, -50%) rotateX(64deg) rotateZ(-14deg);
+}
+
+.spatial-decor__plane--one {
+  top: 48%;
+  left: 66%;
+}
+
+.spatial-decor__plane--two {
+  top: 57%;
+  left: 72%;
+  width: 42%;
+  height: 30%;
+  border-color: rgba(241, 238, 232, 0.14);
+  transform: translate(-50%, -50%) rotateX(68deg) rotateZ(22deg);
+}
+
+.spatial-decor__ring {
+  top: 48%;
+  left: 68%;
+  width: 32%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(241, 238, 232, 0.22);
+  border-radius: 999px;
+  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg);
+}
+
+.spatial-decor__ring--two {
+  width: 48%;
+  border-color: rgba(241, 238, 232, 0.12);
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(34deg);
+}
+
+.spatial-decor__axis {
+  top: 12%;
+  left: 68%;
+  width: 1px;
+  height: 76%;
+  background: linear-gradient(180deg, transparent, rgba(91, 124, 255, 0.4), transparent);
+  transform: rotate(18deg);
+}
+
+.spatial-decor__node {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(241, 238, 232, 0.76);
+  border-radius: 999px;
+  background: rgba(91, 124, 255, 0.5);
+  box-shadow: 0 0 18px rgba(91, 124, 255, 0.35);
+}
+
+.spatial-decor__node--one {
+  top: 29%;
+  left: 57%;
+}
+
+.spatial-decor__node--two {
+  top: 68%;
+  left: 77%;
+}
+
+.spatial-decor__node--three {
+  top: 40%;
+  left: 83%;
+}
+
+.spatial-decor__label {
+  position: absolute;
+  right: 7%;
+  bottom: 9%;
+  color: rgba(155, 152, 146, 0.75);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.spatial-decor--fragment .spatial-decor__plane--one {
+  transform: translate(-50%, -50%) rotateX(58deg) rotateZ(-24deg);
+}
+
+.spatial-decor--fragment .spatial-decor__plane--two {
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(28deg);
+}
+
+.spatial-decor--fragment .spatial-decor__ring--one {
+  animation: spatial-decor-drift 11s ease-in-out infinite alternate;
+}
+
+.spatial-decor--orbit .spatial-decor__plane--one {
+  left: 28%;
+  top: 45%;
+  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(8deg);
+}
+
+.spatial-decor--orbit .spatial-decor__plane--two {
+  left: 28%;
+  top: 45%;
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(-18deg);
+}
+
+.spatial-decor--orbit .spatial-decor__ring--one {
+  left: 28%;
+  top: 45%;
+  animation: spatial-decor-spin 16s linear infinite;
+}
+
+.spatial-decor--orbit .spatial-decor__ring--two {
+  left: 28%;
+  top: 45%;
+  animation: spatial-decor-spin-reverse 21s linear infinite;
+}
+
+.spatial-decor--tunnel .spatial-decor__plane--one {
+  left: 50%;
+  top: 50%;
+  width: 78%;
+  height: 64%;
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(0deg);
+}
+
+.spatial-decor--tunnel .spatial-decor__plane--two {
+  left: 50%;
+  top: 50%;
+  width: 54%;
+  height: 42%;
+  transform: translate(-50%, -50%) rotateX(76deg) rotateZ(12deg);
+}
+
+.spatial-decor--tunnel .spatial-decor__ring--one {
+  left: 50%;
+  top: 50%;
+  width: 58%;
+  animation: spatial-decor-pulse 8s ease-in-out infinite;
+}
+
+.spatial-decor--tunnel .spatial-decor__ring--two {
+  left: 50%;
+  top: 50%;
+  width: 92%;
+  animation: spatial-decor-pulse 8s ease-in-out -2s infinite;
+}
+
+.spatial-decor--tunnel .spatial-decor__axis {
+  left: 50%;
+  top: 0;
+  height: 100%;
+  transform: rotate(90deg);
+}
+
+.spatial-decor--signal .spatial-decor__plane--one {
+  left: 18%;
+  top: 44%;
+}
+
+.spatial-decor--signal .spatial-decor__plane--two {
+  left: 18%;
+  top: 44%;
+}
+
+.spatial-decor--signal .spatial-decor__ring--one {
+  left: 18%;
+  top: 44%;
+  width: 42%;
+  animation: spatial-decor-pulse 6s ease-in-out infinite;
+}
+
+.spatial-decor--signal .spatial-decor__ring--two {
+  left: 18%;
+  top: 44%;
+  width: 68%;
+  animation: spatial-decor-pulse 6s ease-in-out -1.5s infinite;
+}
+
+.spatial-decor--signal .spatial-decor__axis {
+  left: 18%;
+  top: 20%;
+  height: 60%;
+  transform: rotate(90deg);
+}
+
+.spatial-decor--converge .spatial-decor__plane--one,
+.spatial-decor--converge .spatial-decor__plane--two,
+.spatial-decor--converge .spatial-decor__ring--one,
+.spatial-decor--converge .spatial-decor__ring--two {
+  left: 50%;
+  top: 48%;
+}
+
+.spatial-decor--converge .spatial-decor__plane--one {
+  transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg);
+  animation: spatial-decor-spin 18s linear infinite;
+}
+
+.spatial-decor--converge .spatial-decor__plane--two {
+  transform: translate(-50%, -50%) rotateX(72deg) rotateZ(24deg);
+  animation: spatial-decor-spin-reverse 14s linear infinite;
+}
+
+.spatial-decor--converge .spatial-decor__ring--one {
+  animation: spatial-decor-pulse 7s ease-in-out infinite;
+}
+
+.spatial-decor--converge .spatial-decor__ring--two {
+  animation: spatial-decor-pulse 7s ease-in-out -1.8s infinite;
+}
+
+@keyframes spatial-decor-spin {
+  from { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg); }
+  to { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(360deg); }
+}
+
+@keyframes spatial-decor-spin-reverse {
+  from { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(360deg); }
+  to { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(0deg); }
+}
+
+@keyframes spatial-decor-pulse {
+  0%, 100% { opacity: 0.28; transform: translate(-50%, -50%) rotateX(66deg) scale(0.92); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) rotateX(66deg) scale(1.08); }
+}
+
+@keyframes spatial-decor-drift {
+  from { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(0deg) translate3d(-10px, 0, 0); }
+  to { transform: translate(-50%, -50%) rotateX(66deg) rotateZ(22deg) translate3d(18px, -12px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-decor__plane,
+  .spatial-decor__ring,
+  .spatial-decor__axis,
+  .spatial-decor__node {
+    animation: none !important;
+  }
+}
+
+/* Vertical anti-overflow guard: text never squashed narrower than this */
+.min-readable {
+  min-width: 1.2em;
+}
+
+/* ───────────────────────── Smoothness utilities ───────────────────────── */
+
+/* "SISTEM AKTIF" status blink — CSS-driven (not scrubbed) so it never
+   stutters while the horizontal timeline reverses during scroll. */
+@keyframes p-blink-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.p-blink {
+  animation: p-blink-pulse 1.5s ease-in-out infinite;
+}
+
+/* Soft crossfade when the module info panel swaps content (key remount). */
+@keyframes info-swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.info-swap {
+  animation: info-swap-in 0.45s var(--ease-out-expo) both;
+}
+
+/* Diagonal glass reflection following the cursor on service cards (MOTION §13). */
+.card-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 35%,
+    rgba(241, 238, 232, 0.07) 50%,
+    transparent 65%
+  );
+  background-size: 240% 240%;
+  background-position: calc(50% + var(--sheen-x, 0%)) calc(50% + var(--sheen-y, 0%));
+  transition: opacity 0.5s ease;
+}
+.group:hover > .card-sheen {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-sheen {
+    display: none;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 400;
+  transform: translateY(-160%);
+  border-radius: 999px;
+  background: #fff;
+  padding: 10px 16px;
+  color: #09090b;
+  font-size: 12px;
+  font-weight: 600;
+  transition: transform 200ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }
