@@ -30,9 +30,9 @@
 @utility type-display {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.85rem, 1rem + 3.2vw, 4.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
@@ -90,6 +90,8 @@
     color-scheme: dark;
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
@@ -98,6 +100,9 @@
     min-height: 100svh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   ::selection {
@@ -105,8 +110,8 @@
     color: var(--color-ink);
   }
 
-  /* Clear, consistent focus ring (DESIGN.md §10). */
-  :focus-visible {
+  /* Clear, consistent focus ring for interactive controls (DESIGN.md §10). */
+  :is(a, button, input, select, textarea, summary, [role="button"]):focus-visible {
     outline: 2px solid var(--color-blue);
     outline-offset: 2px;
     border-radius: 4px;
