@@ -1,67 +1,145 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────────
+   Design tokens — DESIGN.md §3 (color) and §4 (typography)
+   ────────────────────────────────────────────────────────────── */
+
 @theme {
-  /* DESIGN.md §19/20 — token kanonik. Sistem monokrom hangat + healthcare blue. */
-  --color-deep-canvas: #0b0b0d;
-  --color-graphite-surface: #151518;
-  --color-dark-surface: #1d1d21;
-  --color-structural-border: #34312d;
-  --color-muted-text: #9b9892;
-  --color-primary-text: #f1eee8;
-  --color-healthcare-blue: #5b7cff;
-  --color-pure-white: #ffffff;
-
-  /* Alias nama lama → nilai DESIGN (utilitas yang sudah ada tetap valid). */
-  --color-onyx-canvas: var(--color-deep-canvas);
-  --color-graphite-card: var(--color-graphite-surface);
-  --color-obsidian-button: var(--color-dark-surface);
-  --color-slate-border: var(--color-structural-border);
-  --color-mist-border: var(--color-primary-text);
-  --color-ash-text: var(--color-muted-text);
-  --color-ivory-text: var(--color-primary-text);
-  --color-trust-blue: var(--color-healthcare-blue);
-
-  /* Palet hero lama → dipetakan ke sistem yang diizinkan (tanpa cyan/amber). */
-  --color-ink: var(--color-deep-canvas);
-  --color-surface: var(--color-graphite-surface);
-  --color-line: var(--color-structural-border);
-  --color-text: var(--color-primary-text);
-  --color-text-dim: var(--color-muted-text);
-  --color-pulse: var(--color-healthcare-blue);
-  --color-glow: var(--color-healthcare-blue);
-  --color-signal: var(--color-healthcare-blue);
-
-  --font-display: var(--font-grotesk), var(--font-inter), ui-sans-serif,
-    system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
-    monospace;
-
-  /* DESIGN.md §7 — radius. */
-  --radius-card: 12px;
-  --radius-cards: 12px;
-  --radius-button: 32px;
-  --radius-pill: 9999px;
-  --radius-nav: 40px;
-
-  /* DESIGN.md §6.2/§6.3 — spacing & container. */
-  --section-gap: 136px;
-  --page-max-width: 1200px;
+  --color-canvas: #0b0b0d;   /* Deep Canvas */
+  --color-graphite: #151518; /* Graphite Surface */
+  --color-surface: #1d1d21;  /* Dark Surface */
+  --color-rule: #34312d;     /* Structural Border */
+  --color-muted: #9b9892;    /* Muted Text */
+  --color-ink: #f1eee8;      /* Primary Text */
+  --color-blue: #5b7cff;     /* Healthcare Blue — the only accent */
+  --color-danger: #e5484d;   /* Functional: form errors only */
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* ───────────────────────── Base ───────────────────────── */
-
-:root {
-  color-scheme: dark;
+@theme inline {
+  --font-display: var(--font-heading), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-body), "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
-html {
-  background-color: var(--color-deep-canvas);
-  color: var(--color-primary-text);
+/* ──────────────────────────────────────────────────────────────
+   Type scale (fluid). Headings never exceed weight 500.
+   ────────────────────────────────────────────────────────────── */
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
+@utility type-h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+@utility type-h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+@utility type-body {
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.6;
+}
+
+@utility type-small {
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+/* Non-essential labels only (DESIGN.md §4): uppercase + tracked. */
+@utility type-eyebrow {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Base
+   ────────────────────────────────────────────────────────────── */
+
+@layer base {
+  html {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-canvas);
+    min-height: 100svh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* Clear, consistent focus ring (DESIGN.md §10). */
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* Skip link: visible only when focused. */
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  background: var(--color-blue);
+  color: var(--color-canvas);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transform: translateY(-160%);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Lenis (DESIGN.md §2). */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -69,308 +147,13 @@ html.lenis body {
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
 .lenis.lenis-stopped {
   overflow: hidden;
 }
 
-html {
-  overflow-x: clip;
-}
-
-body {
-  background-color: var(--color-deep-canvas);
-  color: var(--color-primary-text);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  overflow-x: clip;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-main {
-  position: relative;
-  z-index: 1;
-}
-
-/* SEMUA SEKSI TRANSPARAN. Dunia 3D persisten adalah latar seluruh halaman
-   (FINAL DIRECTION §12) — tidak ada wash hitam se-viewport, tidak ada
-   tech-grid. Keterbacaan copy datang dari `.scrim-*` lokal di belakang blok
-   teks saja, ditambah komposisi asimetris.
-   Selector `main section` (bukan `> section`) karena GSAP membalut section
-   yang di-pin di dalam .pin-spacer. */
-main section {
-  position: relative;
-  z-index: 1;
-  background-color: transparent !important;
-}
-
-::selection {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-img,
-svg,
-canvas {
-  display: block;
-  max-width: 100%;
-}
-
-/* ───────────────────────── Custom cursor guards ───────────────────────── */
-
-@media (pointer: coarse) {
-  .custom-cursor {
-    display: none !important;
-  }
-}
-
-/* Saat kursor kustom aktif, sembunyikan kursor OS supaya titik trust-blue
-   tidak tampak "melayang" sebagai elemen tak bertuan di atas pointer asli. */
-@media (pointer: fine) {
-  html.has-cursor,
-  html.has-cursor * {
-    cursor: none;
-  }
-}
-
-/* ───────────────────────── Typography helpers ───────────────────────── */
-
-.text-balance {
-  text-wrap: balance;
-}
-.text-pretty {
-  text-wrap: pretty;
-}
-
-/* ───────────────────────── Type scale (DESIGN §5.3, §5.4) ─────────────────────────
-   Satu tangga dipakai seluruh halaman. HIERARKI: hero > judul seksi > judul
-   bagian > body. Angka lebih besar tidak pernah dipakai untuk kepentingan
-   bobot — skala dan ruang kosong yang bekerja. */
-
-.t-hero {
-  font-size: clamp(2.6rem, 5.6vw, 5.75rem);
-  line-height: 1.02;
-  letter-spacing: -0.022em;
-  font-weight: 500;
-  text-wrap: balance;
-}
-
-.t-section {
-  font-size: clamp(2.3rem, 5vw, 4.4rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  font-weight: 500;
-  text-wrap: balance;
-}
-
-.t-sub {
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  font-weight: 500;
-}
-
-.t-lede {
-  font-size: 16px;
-  line-height: 1.65;
-  font-weight: 400;
-}
-
-.t-body {
-  font-size: 15px;
-  line-height: 1.6;
-  font-weight: 400;
-}
-
-/* Satu-satunya label huruf besar yang diizinkan: ≤3 kata penanda seksi. */
-.t-eyebrow {
-  font-size: 11px;
-  line-height: 1;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-/* Label tahap pada tab proses: kolom sempit (4 tab di 390px) butuh tracking
-   yang jauh lebih rapat supaya "MIGRATE" tidak terpotong elipsis. */
-.tab-eyebrow {
-  letter-spacing: 0.1em;
-  line-height: 1.35;
-}
-
-@media (min-width: 640px) {
-  .tab-eyebrow {
-    letter-spacing: 0.26em;
-    line-height: 1;
-  }
-}
-
-/* ───────────────────────── Negative space (DESIGN §6.2, §6.5) ─────────────────────────
-   Dua tingkat padding blok menggantikan py-* ad-hoc. Rata-rata naik ±20–25%
-   terhadap baseline (112px / 144px desktop). */
-
-.section-pad {
-  padding-block: 96px;
-}
-.section-pad-tall {
-  padding-block: 128px;
-}
-@media (min-width: 768px) {
-  .section-pad {
-    padding-block: 136px;
-  }
-  .section-pad-tall {
-    padding-block: 176px;
-  }
-}
-
-/* ───────────────────────── Local text scrims ─────────────────────────
-   Bukan wash hitam se-viewport — hanya gradasi di belakang blok teks.
-   Dipasang pada kontainer copy; dunia 3D tetap terbaca di sisinya. */
-
-/* Host scrim TIDAK boleh jadi stacking context (isolation/transform/z-index):
-   kalau iya, `::before` z-index:-1 terjebak di dalam host dan — karena urutan
-   pohon — menimpa teks blok sebelumnya. Tanpa stacking context, scrim jatuh ke
-   konteks section pada z:-1: di belakang SEMUA teks, tetap di atas dunia 3D.
-   `z-index: auto` menetralkan utility `.z-10` yang menaruh host ke konteksnya
-   sendiri; `transform: none !important` menetralkan identity-transform sisa
-   reveal GSAP (inline style). */
-.scrim-block,
-.scrim-inline,
-.scrim-bottom {
-  position: relative;
-  z-index: auto;
-  transform: none !important;
-}
-
-.scrim-block::before,
-.scrim-inline::before,
-.scrim-bottom::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Radial di belakang blok teks — sumbu Y dijamin melebar minimal 180px untuk
-   blok pendek (supaya tepi mendatar tidak terbaca); sumbu X dibatasi maksimal
-   220px supaya scrim blok yang bersebelahan tidak saling menutupi teksnya.
-   Ekor gradasi sengaja panjang: blok lebar tetap punya ~0.5 alpha di tepinya. */
-.scrim-block::before {
-  inset: min(-26%, -180px) clamp(-32%, -220px, -72px);
-  background: radial-gradient(
-    closest-side,
-    rgba(11, 11, 13, 0.92) 0%,
-    rgba(11, 11, 13, 0.9) 45%,
-    rgba(11, 11, 13, 0.78) 70%,
-    rgba(11, 11, 13, 0.5) 86%,
-    rgba(11, 11, 13, 0) 100%
-  );
-}
-
-/* Linear kiri→kanan untuk kolom copy asimetris; fade vertikal lewat mask
-   supaya artefak 3D tetap terbaca di atas dan di bawah blok teks. */
-.scrim-inline::before {
-  inset: -26% -8% -26% -46%;
-  background: linear-gradient(
-    90deg,
-    rgba(11, 11, 13, 0.96) 0%,
-    rgba(11, 11, 13, 0.92) 38%,
-    rgba(11, 11, 13, 0.66) 66%,
-    rgba(11, 11, 13, 0.24) 86%,
-    rgba(11, 11, 13, 0) 96%
-  );
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-}
-
-.scrim-bottom::before {
-  inset: -18% -14% -22%;
-  background: radial-gradient(
-    closest-side,
-    rgba(11, 11, 13, 0.95) 0%,
-    rgba(11, 11, 13, 0.88) 50%,
-    rgba(11, 11, 13, 0.58) 78%,
-    rgba(11, 11, 13, 0) 100%
-  );
-}
-
-/* ───────────────────────── System panel chrome ───────────────────────── */
-
-/* Pelat cetak: persegi murni, tanpa sudut HUD, tanpa gloss. */
-.panel {
-  position: relative;
-  background-color: rgba(21, 21, 24, 0.74);
-  border-radius: var(--radius-card);
-  border: 1px solid var(--color-structural-border);
-  backdrop-filter: blur(3px);
-}
-
-.hairline-b {
-  border-bottom: 1px solid var(--color-structural-border);
-}
-
-/* ───────────────────────── Links ───────────────────────── */
-
-.link-underline {
-  position: relative;
-  display: inline-block;
-}
-.link-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  height: 1px;
-  width: 100%;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.5s var(--ease-out-expo);
-}
-.link-underline:hover::after,
-.link-underline:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* ───────────────────────── Scrollbar ───────────────────────── */
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-deep-canvas);
-}
-::-webkit-scrollbar-thumb {
-  background: #2b2a2e;
-  border-radius: 8px;
-  border: 2px solid var(--color-deep-canvas);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #46433f;
-}
-
-/* ───────────────────────── Reduced motion ───────────────────────── */
+/* ──────────────────────────────────────────────────────────────
+   Reduced motion (DESIGN.md §10)
+   ────────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -379,64 +162,8 @@ canvas {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
   }
-}
-
-/* Vertical anti-overflow guard: text never squashed narrower than this */
-.min-readable {
-  min-width: 1.2em;
-}
-
-/* ───────────────────────── Smoothness utilities ───────────────────────── */
-
-/* "SISTEM AKTIF" status blink — CSS-driven (not scrubbed) so it never
-   stutters while the horizontal timeline reverses during scroll. */
-@keyframes p-blink-pulse {
-  0%,
-  100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-.p-blink {
-  animation: p-blink-pulse 1.5s ease-in-out infinite;
-}
-
-/* Soft crossfade when the module info panel swaps content (key remount). */
-@keyframes info-swap-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.info-swap {
-  animation: info-swap-in 0.45s var(--ease-out-expo) both;
-}
-
-.skip-link {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 400;
-  transform: translateY(-160%);
-  border-radius: 999px;
-  background: #fff;
-  padding: 10px 16px;
-  color: #09090b;
-  font-size: 12px;
-  font-weight: 600;
-  transition: transform 200ms ease;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
 }

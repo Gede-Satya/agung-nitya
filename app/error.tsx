@@ -14,20 +14,18 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-deep-canvas px-6 text-center">
-      <span className="text-[10px] tracking-[0.3em] text-ash-text uppercase">
-        Sistem perlu dimuat ulang
-      </span>
-      <h2 className="max-w-xl font-display text-[clamp(1.8rem,4vw,3rem)] font-medium leading-tight tracking-tight text-ivory-text">
-        Terjadi kesalahan saat menampilkan halaman.
-      </h2>
+    <main className="flex min-h-svh flex-col items-center justify-center gap-6 bg-canvas px-6 text-center">
+      <p className="type-eyebrow text-muted">Halaman perlu dimuat ulang</p>
+      <h1 className="type-h2 max-w-xl text-ink">
+        Terjadi kendala saat menampilkan halaman.
+      </h1>
       <button
         type="button"
         onClick={() => retry()}
-        className="rounded-full bg-healthcare-blue px-7 py-3 text-sm font-medium text-pure-white transition-colors hover:bg-[#6d8aff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-healthcare-blue"
+        className="inline-flex min-h-11 items-center rounded-full bg-blue px-7 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
       >
         Coba lagi
       </button>
-    </div>
+    </main>
   );
 }

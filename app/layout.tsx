@@ -1,59 +1,50 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { fontVariables } from "@/lib/fonts";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-/* DESIGN.md §3 — display / headline face (pengganti Söhne Breit). */
-const grotesk = Space_Grotesk({
-  variable: "--font-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["500", "600"],
-});
+const title = "Agung Nitya — SIMRS Terintegrasi untuk Rumah Sakit";
+const description =
+  "Agung Nitya adalah Sistem Informasi Manajemen Rumah Sakit berbasis web yang menyatukan pendaftaran, rawat jalan, rawat inap, farmasi, laboratorium, radiologi, rekam medis elektronik, billing, dan logistik dalam satu basis data.";
 
 export const metadata: Metadata = {
-  title: "Agung Nitya — SIMRS untuk Rumah Sakit & Klinik",
-  description:
-    "Agung Nitya membangun SIMRS yang menyatukan setiap unit rumah sakit ke dalam satu basis data — pendaftaran, rawat inap, farmasi, laboratorium, rekam medis, hingga billing dan klaim BPJS.",
+  title,
+  description,
+  applicationName: "Agung Nitya",
   keywords: [
-    "Agung Nitya",
     "SIMRS",
     "Sistem Informasi Manajemen Rumah Sakit",
     "rekam medis elektronik",
     "RME",
-    "hospital information system",
-    "sistem rumah sakit",
+    "software rumah sakit",
+    "Agung Nitya",
   ],
   openGraph: {
-    title: "Agung Nitya — SIMRS untuk Rumah Sakit & Klinik",
-    description:
-      "Satu basis data untuk seluruh unit rumah sakit Anda. Rekam medis, farmasi, dan billing akhirnya bicara satu bahasa.",
+    title,
+    description,
     type: "website",
+    locale: "id_ID",
+    siteName: "Agung Nitya",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0d",
+  themeColor: "#0B0B0D",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${grotesk.variable} bg-deep-canvas`}>
-      <body className="bg-deep-canvas text-primary-text antialiased">
-        {children}
-      </body>
+    <html lang="id" className={fontVariables}>
+      <body className="bg-canvas text-ink">{children}</body>
     </html>
   );
 }
