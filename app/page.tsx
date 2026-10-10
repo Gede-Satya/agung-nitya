@@ -1,9 +1,9 @@
-import HeroFrameClient from "@/components/layout/HeroFrameClient";
+import ScrollChoreography from "@/components/layout/ScrollChoreography";
 
 /**
- * Page entry point for Phase 1.
- * Server Component hosting the still hero frame for visual verification.
+ * Page entry point for Phase 2: Scroll Choreography.
+ * Unified -> Fragmentation -> Reconnection transitions.
  */
 export default function Home() {
-  return <HeroFrameClient />;
+  return <ScrollChoreography />;
 }

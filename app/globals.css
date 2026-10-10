@@ -5,13 +5,23 @@
    ────────────────────────────────────────────────────────────── */
 
 @theme {
-  --color-canvas: #0b0b0d;   /* Deep Canvas */
-  --color-graphite: #151518; /* Graphite Surface */
-  --color-surface: #1d1d21;  /* Dark Surface */
-  --color-rule: #34312d;     /* Structural Border */
-  --color-muted: #9b9892;    /* Muted Text */
-  --color-ink: #f1eee8;      /* Primary Text */
-  --color-blue: #5b7cff;     /* Healthcare Blue — the only accent */
+  /* Apple Style Reference — Colors */
+  --color-canvas: #ffffff;   /* Gallery White: Primary page canvas & hero */
+  --color-gallery-white: #ffffff;
+  --color-studio-mist: #f5f5f7; /* Studio Mist: Feature bands & backdrops */
+  --color-paper-frost: #fafafc; /* Paper Frost: Opened nav surface */
+  --color-hairline-silver: #d6d6d6; /* Hairline Silver: 1px dividers */
+  --color-control-gray: #e6e6e8; /* Control Gray: Subdued utility surfaces */
+  --color-graphite: #f5f5f7; /* Studio Mist surface */
+  --color-surface: #ffffff;  /* Gallery White card surfaces */
+  --color-rule: #d6d6d6;     /* Structural hairline dividers */
+  --color-muted: #707070;    /* Slate: Secondary copy & labels */
+  --color-slate: #707070;
+  --color-steel: #86868b;    /* Steel: Outlines & subdued edges */
+  --color-ink: #1d1d1f;      /* Ink: Headlines, primary copy */
+  --color-apple-blue: #0066cc;   /* Apple Blue: Inline links & blue controls */
+  --color-pricing-blue: #0071e3; /* Pricing Blue: ONLY for small conversion controls */
+  --color-launch-orange: #b64400; /* Launch Orange: Small status labels */
   --color-danger: #e5484d;   /* Functional: form errors only */
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -19,43 +29,134 @@
 }
 
 @theme inline {
-  --font-display: var(--font-heading), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-body), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-sf-pro-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-sf-pro-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Type scale (fluid). Headings never exceed weight 500.
+   Apple Style Reference — Typography Scale & Tokens
+   ────────────────────────────────────────────────────────────── */
+
+/* Product Kicker: Display 21px / 600 / line-height 1 / tracking +0.23px */
+@utility type-apple-kicker {
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: clamp(14px, 1.4vw, 21px);
+  line-height: 1;
+  letter-spacing: 0.23px;
+}
+
+/* Hero Display: clamp(40px, 5.6vw, 80px) -> calibrated to clamp(38px, 4.8vw, 76px) with line-height 1.05 and tracking -1.2px for <= 2 lines on desktop */
+@utility type-apple-hero {
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: clamp(38px, 4.8vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -1.2px;
+  text-wrap: balance;
+}
+
+/* Feature Heading: Display 40px / 600 / line-height 1 / tracking 0px */
+@utility type-apple-feature-heading {
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: 0px;
+  text-wrap: balance;
+}
+
+/* Product Nav Title: Display 19px / 600 / line-height 1.21 / tracking +0.228px */
+@utility type-apple-nav-title {
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.21;
+  letter-spacing: 0.228px;
+}
+
+/* Body Copy: 17px/400, line-height 1.47, tracking -0.374px */
+@utility type-apple-body {
+  font-family: var(--font-sf-pro-text);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+}
+
+/* Feature Copy: 17px/400, line-height 1.24, tracking -0.374px */
+@utility type-apple-feature-copy {
+  font-family: var(--font-sf-pro-text);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.24;
+  letter-spacing: -0.374px;
+}
+
+/* Body Small: 14px/400, line-height 1.29, tracking -0.224px */
+@utility type-apple-body-small {
+  font-family: var(--font-sf-pro-text);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.29;
+  letter-spacing: -0.224px;
+}
+
+/* Compact Control: 12px/400, line-height 1.33, tracking -0.12px */
+@utility type-apple-control {
+  font-family: var(--font-sf-pro-text);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: -0.12px;
+}
+
+/* Global Nav: 12px/400, line-height 1.0, tracking -0.12px */
+@utility type-apple-nav {
+  font-family: var(--font-sf-pro-text);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: -0.12px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Type scale legacy fallback
    ────────────────────────────────────────────────────────────── */
 
 @utility type-display {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.85rem, 1rem + 3.2vw, 4.75rem);
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 5.2vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -1.2px;
   text-wrap: balance;
 }
 
 @utility type-h2 {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: 0px;
   text-wrap: balance;
 }
 
 @utility type-h3 {
-  font-family: var(--font-display);
-  font-weight: 500;
+  font-family: var(--font-sf-pro-display);
+  font-weight: 600;
   font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: -0.015em;
 }
 
 @utility type-body {
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  line-height: 1.6;
+  font-family: var(--font-sf-pro-text);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
 }
 
 @utility type-small {
@@ -87,32 +188,33 @@
   html {
     background-color: var(--color-canvas);
     color: var(--color-ink);
-    color-scheme: dark;
+    color-scheme: light;
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100vw;
   }
 
   body {
     font-family: var(--font-sans);
     background-color: var(--color-canvas);
+    color: var(--color-ink);
     min-height: 100svh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     max-width: 100vw;
   }
 
   ::selection {
-    background-color: color-mix(in srgb, var(--color-blue) 35%, transparent);
+    background-color: color-mix(in srgb, var(--color-pricing-blue) 20%, transparent);
     color: var(--color-ink);
   }
 
   /* Clear, consistent focus ring for interactive controls (DESIGN.md §10). */
   :is(a, button, input, select, textarea, summary, [role="button"]):focus-visible {
-    outline: 2px solid var(--color-blue);
+    outline: 2px solid var(--color-pricing-blue);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -133,8 +235,8 @@
   align-items: center;
   padding: 0 1.25rem;
   border-radius: 999px;
-  background: var(--color-blue);
-  color: var(--color-canvas);
+  background: var(--color-pricing-blue);
+  color: var(--color-gallery-white);
   font-weight: 500;
   font-size: 0.875rem;
   transform: translateY(-160%);
@@ -154,6 +256,90 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* Apple Style Reference — 3D Presentation & Floating Callout (No gradient, no shadow, 28px radius) */
+.agentic-factory-3d.embed {
+  background: transparent !important;
+}
+.agentic-factory-3d.embed .vignette {
+  display: none !important;
+}
+.agentic-factory-3d .coordinates {
+  display: none !important;
+}
+.agentic-factory-3d.embed .footer {
+  display: none !important;
+}
+
+/* Station labels must NEVER show during Hero mode or when not marked visible */
+.agentic-factory-3d .station-label:not(.visible) {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Floating Callout: Kapsul putih (#ffffff), radius 28px, outline 1px #d6d6d6, tanpa shadow */
+.agentic-factory-3d #tooltip {
+  background: #ffffff !important;
+  border: 1px solid #d6d6d6 !important;
+  border-radius: 28px !important;
+  box-shadow: none !important;
+  padding: 10px 18px !important;
+  color: #1d1d1f !important;
+  backdrop-filter: blur(12px) !important;
+}
+.agentic-factory-3d #tooltip strong {
+  color: #1d1d1f !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.agentic-factory-3d #tooltip strong span {
+  color: #86868b !important;
+  font-size: 11px !important;
+}
+.agentic-factory-3d #tooltip p {
+  color: #707070 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  margin: 4px 0 0 0 !important;
+}
+
+/* Station Labels in 3D: White 28px capsules without shadow or dark gradient stems */
+.agentic-factory-3d .station-label .label-card {
+  background: #ffffff !important;
+  border: 1px solid #d6d6d6 !important;
+  border-radius: 28px !important;
+  box-shadow: none !important;
+  padding: 8px 16px !important;
+}
+.agentic-factory-3d .station-label.active-step .label-card {
+  border: 1px solid #b64400 !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+.agentic-factory-3d .station-label .label-title {
+  color: #1d1d1f !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.agentic-factory-3d .station-label .label-title span {
+  color: #86868b !important;
+  font-size: 11px !important;
+}
+.agentic-factory-3d .station-label .label-meta {
+  color: #707070 !important;
+  font-size: 12px !important;
+  margin: 2px 0 0 0 !important;
+}
+.agentic-factory-3d .station-label .stem {
+  display: none !important;
 }
 
 /* ──────────────────────────────────────────────────────────────
