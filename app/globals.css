@@ -5,22 +5,41 @@
    ────────────────────────────────────────────────────────────── */
 
 @theme {
-  --color-canvas: #ffffff;          /* Canvas: Page background */
-  --color-wash: #f5f5f7;            /* Wash: Alternating section background, cards */
-  --color-surface: #e8e8ed;         /* Surface: Input fills, hover surfaces, skeletons */
-  --color-rule: #d2d2d7;            /* Hairline: Dividers, outlines */
-  --color-muted: #6e6e73;           /* Muted Text: Secondary text (AA compliant) */
-  --color-ink: #1d1d1f;             /* Primary Text: High contrast */
-  --color-accent: #0b6bae;          /* Brand Blue: Primary brand color */
-  --color-accent-strong: #095a94;   /* Brand Blue hover / pressed */
-  --color-on-accent: #ffffff;       /* Text on accent fills */
-  --color-error: #c9272d;           /* Functional error text and borders */
+  /* Colors per DESIGN.md (Apple Style Reference) */
+  --color-gallery-white: #ffffff;
+  --color-studio-mist: #f5f5f7;
+  --color-paper-frost: #fafafc;
+  --color-hairline-silver: #d6d6d6;
+  --color-control-gray: #e6e6e8;
+  --color-ink: #1d1d1f;
+  --color-slate: #707070;
+  --color-steel: #86868b;
+  --color-apple-blue: #0066cc;
+  --color-pricing-blue: #0071e3;
+  --color-launch-orange: #b64400;
 
-  /* Semantic compatibility aliases */
-  --color-border: #d2d2d7;
+  /* Semantic Aliases */
+  --color-canvas: #ffffff;
+  --color-wash: #f5f5f7;
+  --color-surface: #e6e6e8;
+  --color-rule: #d6d6d6;
+  --color-muted: #707070;
+  --color-accent: #0071e3;
+  --color-accent-strong: #0066cc;
+  --color-on-accent: #ffffff;
+  --color-error: #c9272d;
+  --color-border: #d6d6d6;
   --color-primary: #1d1d1f;
   --color-graphite: #f5f5f7;
-  --color-accent-hover: #095a94;
+  --color-accent-hover: #0066cc;
+
+  /* Radii per DESIGN.md */
+  --radius-cards: 28px;
+  --radius-links: 10px;
+  --radius-pills: 36px;
+  --radius-images: 28px;
+  --radius-navigation: 20px;
+  --radius-buttons: 9999px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);

@@ -8,13 +8,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 w-full bg-wash border-t border-rule py-12 sm:py-16 text-muted">
+    <footer className="relative z-10 w-full bg-studio-mist border-t border-hairline-silver py-12 sm:py-16 text-slate">
       <div className="shell flex flex-col gap-10 sm:gap-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Col 1: Identity & Legal */}
           <div className="md:col-span-5 flex flex-col items-start gap-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-rule bg-canvas font-heading text-xs font-semibold text-accent shadow-xs">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-hairline-silver bg-gallery-white font-heading text-xs font-semibold text-pricing-blue">
                 AN
               </span>
               <span className="font-heading text-base font-semibold text-ink">
@@ -22,7 +22,7 @@ export default function Footer() {
               </span>
             </div>
 
-            <p className="text-xs text-muted leading-relaxed max-w-sm">
+            <p className="text-xs text-slate leading-relaxed max-w-sm">
               Mitra pengadaan resmi solusi sistem informasi, implementasi sistem terpadu,
               dan perangkat teknologi informasi untuk instansi pemerintah.
             </p>
@@ -44,24 +44,24 @@ export default function Footer() {
                   href={SITE_CONTENT.company.inaprocUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-accent transition-colors font-medium text-ink"
+                  className="inline-flex items-center gap-1.5 hover:text-apple-blue transition-colors font-medium text-ink"
                 >
                   <span>INAPROC Katalog Elektronik</span>
-                  <ExternalLink className="h-3 w-3 text-muted" />
+                  <ExternalLink className="h-3 w-3 text-slate" />
                 </a>
               </li>
               <li>
-                <span className="text-muted">
+                <span className="text-slate">
                   {SITE_CONTENT.company.activeProductsCount} Produk Tayang ({SITE_CONTENT.company.activeProductsDate})
                 </span>
               </li>
               <li>
-                <span className="text-muted">
+                <span className="text-slate">
                   Tipe Penyedia: {SITE_CONTENT.company.inaprocProviderType}
                 </span>
               </li>
               <li>
-                <span className="text-muted/70 text-[11px]">
+                <span className="text-slate/70 text-[11px]">
                   (TODO: cek aturan brand logo resmi INAPROC)
                 </span>
               </li>
@@ -76,25 +76,25 @@ export default function Footer() {
             <div className="flex flex-col gap-2 text-xs">
               <a
                 href={`mailto:${SITE_CONTENT.company.email}`}
-                className="hover:text-accent transition-colors font-medium text-ink"
+                className="hover:text-apple-blue transition-colors font-medium text-ink"
               >
                 {SITE_CONTENT.company.email}
               </a>
-              <span className="text-muted">
+              <span className="text-slate">
                 {SITE_CONTENT.company.phonePlaceholder}
               </span>
-              <span className="text-muted">
+              <span className="text-slate">
                 Kab. Badung, Bali
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-rule text-[11px] text-muted">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-hairline-silver text-[11px] text-slate">
           <p>
             &copy; {currentYear} {SITE_CONTENT.company.name}. Seluruh hak cipta dilindungi undang-undang.
           </p>
-          <p className="text-muted/80">
+          <p className="text-slate/80">
             Disusun untuk transparansi pejabat pengadaan (PPK) & instansi pemerintah.
           </p>
         </div>
