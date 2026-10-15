@@ -29,16 +29,16 @@ export default function HeroShowcase() {
           <p>Konsultasi & Pengajuan Penawaran Hubungi Kami Sekarang.</p>
         </div>
 
-        {/* Hero Front-Facing Enterprise Laptop Visual (Clean, Centered, Apple Mockup Style) */}
-        <div className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-[820px] mt-4 sm:mt-6 flex flex-col items-center justify-center">
-          <div className="relative w-full aspect-[16/9] max-h-[400px] sm:max-h-[440px] flex items-center justify-center">
+        {/* Hero Front-Facing Monitor Visual (Background Removed, Crisp Apple Style) */}
+        <div className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-[760px] mt-4 sm:mt-6 flex flex-col items-center justify-center">
+          <div className="relative w-full aspect-[16/10] max-h-[420px] sm:max-h-[460px] flex items-center justify-center">
             <Image
-              src="/images/hero-laptop-cropped.png"
-              alt="Penyediaan Unit Laptop Enterprise Terbaik - Global Datacenter Analytics"
+              src="/images/hero-monitor-flawless.png"
+              alt="Penyediaan Unit Monitor & Display Komersial Enterprise"
               fill
               priority
-              className="object-contain"
-              sizes="(max-width: 1024px) 100vw, 840px"
+              className="object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.08)]"
+              sizes="(max-width: 1024px) 100vw, 800px"
             />
           </div>
         </div>
