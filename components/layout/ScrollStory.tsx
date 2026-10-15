@@ -15,10 +15,35 @@ export default function ScrollStory() {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
-  const [rawProgress, setRawProgress] = useState(0);
   const [smoothProgress, setSmoothProgress] = useState(0);
-  const [activeStage, setActiveStage] = useState(1);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
+
+  const rawProgressRef = useRef(0);
+  const smoothProgressRef = useRef(0);
+  const animFrameRef = useRef<number | null>(null);
+
+  // Derive active stage cleanly from smoothProgress without extra render cascades
+  const activeStage =
+    smoothProgress < 0.24 ? 1 : smoothProgress < 0.48 ? 2 : smoothProgress < 0.72 ? 3 : 4;
+
+  const startLerp = useCallback(() => {
+    if (animFrameRef.current !== null) return;
+
+    const tick = () => {
+      const diff = rawProgressRef.current - smoothProgressRef.current;
+      if (Math.abs(diff) < 0.0005) {
+        smoothProgressRef.current = rawProgressRef.current;
+        setSmoothProgress(rawProgressRef.current);
+        animFrameRef.current = null;
+        return;
+      }
+      smoothProgressRef.current += diff * 0.12;
+      setSmoothProgress(smoothProgressRef.current);
+      animFrameRef.current = requestAnimationFrame(tick);
+    };
+
+    animFrameRef.current = requestAnimationFrame(tick);
+  }, []);
 
   // Handle scroll progress computation
   const handleScroll = useCallback(() => {
@@ -28,42 +53,20 @@ export default function ScrollStory() {
     if (totalScrollable <= 0) return;
 
     const progress = clamp(-rect.top / totalScrollable, 0, 1);
-    setRawProgress(progress);
-  }, []);
+    rawProgressRef.current = progress;
+    startLerp();
+  }, [startLerp]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  // Smooth inertial exponential lerp for 3D synchronization
-  useEffect(() => {
-    let animId: number;
-    const updateSmooth = () => {
-      setSmoothProgress((prev) => {
-        const diff = rawProgress - prev;
-        if (Math.abs(diff) < 0.0005) return rawProgress;
-        return prev + diff * 0.12;
-      });
-      animId = requestAnimationFrame(updateSmooth);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
     };
-    animId = requestAnimationFrame(updateSmooth);
-    return () => cancelAnimationFrame(animId);
-  }, [rawProgress]);
-
-  // Compute active stage (1 to 4)
-  useEffect(() => {
-    if (smoothProgress < 0.24) {
-      setActiveStage(1);
-    } else if (smoothProgress < 0.48) {
-      setActiveStage(2);
-    } else if (smoothProgress < 0.72) {
-      setActiveStage(3);
-    } else {
-      setActiveStage(4);
-    }
-  }, [smoothProgress]);
+  }, [handleScroll]);
 
   // Mouse parallax on desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
