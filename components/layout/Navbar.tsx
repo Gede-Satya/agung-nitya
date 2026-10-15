@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { SITE_CONTENT } from "@/src/content/site";
 
 export default function Navbar() {
@@ -27,10 +28,17 @@ export default function Navbar() {
         <div className="shell flex h-12 items-center justify-between">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-3">
-            <a href="#" className="flex items-center gap-2 hover:opacity-85 transition-opacity">
-              <span className="flex h-5 w-5 items-center justify-center rounded bg-[#1d1d1f] text-white text-[9px] font-black tracking-tighter">
-                AWN
-              </span>
+            <a href="#" className="flex items-center gap-2.5 hover:opacity-85 transition-opacity">
+              <div className="relative h-6 w-6 sm:h-7 sm:w-7 shrink-0">
+                <Image
+                  src="/images/logo-awn-transparent.png"
+                  alt="Logo Resmi PT Agung Wijaya Nitya"
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="28px"
+                />
+              </div>
               <span className="font-heading text-[14px] sm:text-[15px] font-semibold text-[#1d1d1f] tracking-[-0.2px]">
                 Agung Wijaya Nitya
               </span>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 
@@ -14,10 +15,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-[#e6e6e8]">
           {/* Column 1: Identity */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <span className="flex h-5 w-5 items-center justify-center rounded bg-[#1d1d1f] text-white text-[10px] font-bold">
-                AWN
-              </span>
+            <div className="flex items-center gap-2.5">
+              <div className="relative h-6 w-6 shrink-0">
+                <Image
+                  src="/images/logo-awn-transparent.png"
+                  alt="Logo PT Agung Wijaya Nitya"
+                  fill
+                  className="object-contain"
+                  sizes="24px"
+                />
+              </div>
               <span className="font-semibold text-[#1d1d1f] text-[13px] tracking-tight">
                 PT Agung Wijaya Nitya
               </span>
