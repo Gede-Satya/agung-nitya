@@ -9,23 +9,17 @@ import { useWebGLCapability } from "@/hooks/useWebGLCapability";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface SceneCanvasProps {
-  onHoverModule?: (id: string | null) => void;
-  selectedModuleId?: string | null;
+  pointer?: { x: number; y: number };
 }
 
 /**
- * SceneCanvas — DESIGN.md §6 & §9
- * Top-level canvas container:
- * - Fixed full-bleed viewport behind UI
+ * SceneCanvas — DESIGN.md §5 & §7
  * - ACES Filmic tone mapping
- * - DPR cap: 1.5 on mobile, 2.0 on desktop
- * - Graceful fallback to 2D StaticDiagram if WebGL fails or reduced motion requested
- * - Automatically pauses render loop when page/tab is hidden
+ * - DPR cap: 1.5 maximum (efficient GPU consumption)
+ * - Safe fallback to 2D StaticDiagram if WebGL fails or reduced motion requested
+ * - Pauses render loop when browser tab is hidden
  */
-export default function SceneCanvas({
-  onHoverModule,
-  selectedModuleId,
-}: SceneCanvasProps) {
+export default function SceneCanvas({ pointer }: SceneCanvasProps) {
   const isWebGLSupported = useWebGLCapability();
   const prefersReduced = useReducedMotion();
   const [isTabVisible, setIsTabVisible] = useState(true);
@@ -47,13 +41,14 @@ export default function SceneCanvas({
   return (
     <div className="relative h-full w-full">
       <Canvas
-        camera={{ position: [0, 5.2, 7.4], fov: 38 }}
-        dpr={[1, typeof window !== "undefined" && window.innerWidth < 768 ? 1.5 : 2]}
+        camera={{ position: [0, 2.0, 6.2], fov: 33 }}
+        dpr={[1, 1.5]}
         gl={{
           antialias: true,
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.05,
+          alpha: true,
         }}
         frameloop={isTabVisible ? "always" : "never"}
         style={{
@@ -63,10 +58,7 @@ export default function SceneCanvas({
         }}
       >
         <color attach="background" args={["#0B0B0D"]} />
-        <HeroExperience
-          onHoverModule={onHoverModule}
-          selectedModuleId={selectedModuleId}
-        />
+        <HeroExperience pointer={pointer} />
       </Canvas>
     </div>
   );

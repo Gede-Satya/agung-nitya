@@ -6,16 +6,15 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 
 interface CameraRigProps {
-  /** Optional pointer damping for desktop subtle mouse response (DESIGN.md §6.3) */
+  /** Optional pointer damping for desktop subtle mouse response */
   enablePointerResponse?: boolean;
 }
 
 /**
- * CameraRig — DESIGN.md §6.3
- * Responsively frames the Unified Hospital Data System:
- * - On widescreen desktop (1440px): frames 3D system on right side with zero text collision
- * - On tablet landscape (1024px): offsets rightward with comfortable margins
- * - On tablet portrait (768px) & mobile (390px): projects 3D system cleanly into lower viewport below text copy
+ * CameraRig — DESIGN.md §5.3
+ * Narrow FOV (30-35°) studio camera rig tailored for product photography.
+ * Calibrated for clean framing of the Generic IT Device on both desktop (1440px)
+ * and mobile portrait (390px).
  */
 export default function CameraRig({
   enablePointerResponse = true,
@@ -42,62 +41,41 @@ export default function CameraRig({
 
     const aspect = size.width / size.height;
 
-    let targetX = 0.8;
-    let targetY = 5.0;
+    // Default Desktop framing (FOV 32°)
+    let targetX = 0;
+    let targetY = 2.3;
     let targetZ = 7.6;
-    let targetFov = 37;
-    let lookAtX = 0.8;
-    let lookAtY = -0.15;
+    let targetFov = 32;
+    const lookAtX = 0;
+    const lookAtY = -0.15;
 
-    if (aspect < 0.6) {
-      // Mobile portrait (390px):
-      // System sits cleanly in lower half of viewport below headline and CTAs
+    if (aspect < 0.75) {
+      // Mobile portrait (390px): centered framing with comfortable buffer
       targetX = 0;
-      targetY = 6.0;
-      targetZ = 8.8;
-      targetFov = 42;
-      lookAtX = 0;
-      lookAtY = 1.2;
-    } else if (aspect < 0.95) {
-      // Tablet portrait (768px):
-      // Projects 3D system down into lower viewport cleanly below text
+      targetY = 2.4;
+      targetZ = 8.2;
+      targetFov = 33;
+    } else if (aspect < 1.1) {
+      // Tablet view
       targetX = 0;
-      targetY = 6.4;
-      targetZ = 9.4;
-      targetFov = 40;
-      lookAtX = 0;
-      lookAtY = 1.8;
-    } else if (aspect < 1.2) {
-      // Tablet landscape / small laptop (1024px)
-      targetX = 0.4;
-      targetY = 5.2;
+      targetY = 2.3;
       targetZ = 7.8;
-      targetFov = 37;
-      lookAtX = 0.4;
-      lookAtY = 0;
-    } else {
-      // Desktop widescreen (1440px+)
-      targetX = 1.0;
-      targetY = 5.0;
-      targetZ = 7.6;
-      targetFov = 37;
-      lookAtX = 1.0;
-      lookAtY = -0.15;
+      targetFov = 32;
     }
 
-    // Subtle pointer response (desktop only, restrained)
+    // Subtle pointer response on desktop (restrained, gentle)
     if (enablePointerResponse && aspect >= 1.0) {
-      targetX += pointerPos.current.x * 0.2;
-      targetY += -pointerPos.current.y * 0.15;
+      targetX += pointerPos.current.x * 0.18;
+      targetY += -pointerPos.current.y * 0.12;
     }
 
     // Smooth dampening towards target pose
-    cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
-    cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
-    cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.05);
+    cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.04);
+    cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.04);
+    cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.04);
 
     if (Math.abs(cam.fov - targetFov) > 0.01) {
-      cam.fov = THREE.MathUtils.lerp(cam.fov, targetFov, 0.05);
+      cam.fov = THREE.MathUtils.lerp(cam.fov, targetFov, 0.04);
       cam.updateProjectionMatrix();
     }
 
@@ -109,10 +87,10 @@ export default function CameraRig({
     <PerspectiveCamera
       ref={cameraRef}
       makeDefault
-      position={[0.8, 5.0, 7.6]}
-      fov={37}
+      position={[0, 2.0, 6.2]}
+      fov={33}
       near={0.1}
-      far={50}
+      far={40}
     />
   );
 }

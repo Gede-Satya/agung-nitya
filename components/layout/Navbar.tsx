@@ -1,101 +1,60 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { SITE_CONTENT } from "@/src/content/site";
+import { ExternalLink } from "lucide-react";
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  React.useEffect(() => {
-    const onScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 w-full h-12 backdrop-blur-md transition-colors ${
+      className={`fixed top-0 left-0 right-0 z-40 w-full transition-colors duration-200 ${
         isScrolled
-          ? "bg-white/95 border-b border-[#d6d6d6]"
-          : "bg-white/90 border-b border-[#d6d6d6]"
+          ? "bg-canvas/95 border-b border-border shadow-sm backdrop-blur-md"
+          : "bg-canvas/80 border-b border-border/60 backdrop-blur-sm"
       }`}
     >
-      <div className="shell flex h-full items-center justify-between">
-        {/* Apple Product Local Title (SF Pro Display 19px/600) */}
+      <div className="shell flex h-14 sm:h-16 items-center justify-between">
+        {/* Brand Name & INAPROC Status */}
         <a
           href="#"
-          className="group flex items-center gap-2.5 text-ink transition-opacity hover:opacity-90"
+          className="group flex items-center gap-3 text-primary transition-opacity hover:opacity-90"
+          aria-label="PT Agung Wijaya Nitya - Beranda"
         >
-          <span className="flex h-6 w-6 items-center justify-center rounded-[6px] border border-[#d6d6d6] bg-[#f5f5f7] text-[11px] font-semibold text-ink">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-graphite font-heading text-xs font-semibold text-accent">
             AN
           </span>
-          <span className="font-semibold text-[19px] leading-[1.21] tracking-[0.228px] text-ink">
-            Agung Nitya
-          </span>
-          <span className="hidden sm:inline-block text-[11px] font-normal text-muted tracking-tight pl-1 border-l border-[#d6d6d6]">
-            SIMRS Enterprise
-          </span>
+          <div className="flex flex-col">
+            <span className="font-heading text-sm sm:text-base font-medium tracking-tight text-primary">
+              {SITE_CONTENT.company.name}
+            </span>
+            <span className="text-[11px] text-muted flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {SITE_CONTENT.company.inaprocStatus} · INAPROC
+            </span>
+          </div>
         </a>
 
-        {/* Global Navigation Links (SF Pro Text 12px/400, Ink, tanpa kotak) */}
-        <nav
-          aria-label="Navigasi Utama"
-          className="hidden md:flex items-center gap-7 text-[12px] tracking-[-0.12px] text-ink font-normal"
-        >
+        {/* Right CTA / INAPROC direct badge */}
+        <div className="flex items-center gap-3">
           <a
-            href="#hero"
-            className="transition-colors hover:text-[#0066cc]"
+            href={SITE_CONTENT.company.inaprocUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-border bg-graphite/80 px-4 py-2 text-xs font-medium text-primary transition-colors hover:border-accent hover:text-white"
           >
-            Ikhtisar
+            <span>INAPROC Katalog</span>
+            <ExternalLink className="h-3.5 w-3.5 text-muted" />
           </a>
-          <a
-            href="#problem"
-            className="transition-colors hover:text-[#0066cc]"
-          >
-            Fragmentasi
-          </a>
-          <a
-            href="#solution"
-            className="transition-colors hover:text-[#0066cc]"
-          >
-            Arsitektur
-          </a>
-          <a
-            href="#modules"
-            className="transition-colors hover:text-[#0066cc]"
-          >
-            Modul
-          </a>
-          <a
-            href="#spesifikasi"
-            className="transition-colors hover:text-[#0066cc]"
-          >
-            Spesifikasi
-          </a>
-        </nav>
-
-        {/* Apple Controls: Outlined Explore Pill + Pricing Blue Conversion Pill */}
-        <div className="flex items-center gap-2.5">
-          <motion.a
-            href="#modules"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="hidden sm:inline-flex items-center justify-center rounded-full border border-[#86868b] bg-transparent px-3 py-1 text-[12px] tracking-[-0.12px] text-ink font-normal transition-colors hover:bg-[#f5f5f7]"
-          >
-            Eksplorasi
-          </motion.a>
-          <motion.a
-            href="#demo"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="inline-flex items-center justify-center rounded-full bg-[#0071e3] px-3.5 py-1 text-[12px] tracking-[-0.12px] text-white font-normal transition-colors hover:bg-[#0077ed]"
-          >
-            Jadwalkan Demo
-          </motion.a>
         </div>
       </div>
     </header>
