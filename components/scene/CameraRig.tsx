@@ -55,10 +55,10 @@ export default function CameraRig({
     const sServices = smoothstep(0.68, 0.92, p);
 
     const baseTargetX = 0;
-    let baseTargetY = 2.3 + sHardware * 0.4 - sSoftware * 0.2 - sServices * 0.2;
-    let baseTargetZ = 7.6 - sHardware * 0.4 + sSoftware * 0.5 + sServices * 0.5;
+    let baseTargetY = 2.0 + sHardware * 0.4 - sSoftware * 0.2 - sServices * 0.2;
+    let baseTargetZ = 7.8 - sHardware * 0.4 + sSoftware * 0.5 + sServices * 0.5;
     let targetFov = 32 + sServices * 1.5;
-    let lookAtY = -0.15 + sHardware * 0.15;
+    let lookAtY = -0.35 + sHardware * 0.15;
 
     if (aspect < 0.75) {
       // Mobile portrait (390px): centered with comfortable buffer
