@@ -33,19 +33,19 @@ function createProceduralUITexture(): THREE.Texture {
   const ctx = canvas.getContext("2d");
 
   if (ctx) {
-    // Window background (Crisp modern slate UI)
-    ctx.fillStyle = "#1E2026";
+    // Window background (Crisp modern white/light UI per DESIGN.md §6.1)
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, 1024, 640);
 
     // Accent top highlight hairline
-    ctx.fillStyle = "#5B7CFF";
+    ctx.fillStyle = "#0B6BAE";
     ctx.fillRect(0, 0, 1024, 4);
 
-    // Header bar
-    ctx.fillStyle = "#16181D";
+    // Header bar (Wash #F5F5F7)
+    ctx.fillStyle = "#F5F5F7";
     ctx.fillRect(0, 4, 1024, 66);
 
-    ctx.strokeStyle = "#343842";
+    ctx.strokeStyle = "#D2D2D7";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(0, 70);
@@ -53,7 +53,7 @@ function createProceduralUITexture(): THREE.Texture {
     ctx.stroke();
 
     // Window control pills
-    const dots = ["#5B7CFF", "#6E7280", "#3E424D"];
+    const dots = ["#0B6BAE", "#D2D2D7", "#E8E8ED"];
     dots.forEach((color, i) => {
       ctx.fillStyle = color;
       ctx.beginPath();
@@ -62,13 +62,20 @@ function createProceduralUITexture(): THREE.Texture {
     });
 
     // Window title
-    ctx.fillStyle = "#F1EEE8";
-    ctx.font = "bold 18px sans-serif";
+    ctx.fillStyle = "#1D1D1F";
+    ctx.font = "bold 17px sans-serif";
     ctx.fillText("PT AGUNG WIJAYA NITYA — MODUL SISTEM INFORMASI INSTANSI", 120, 43);
 
     // Sidebar
-    ctx.fillStyle = "#121418";
+    ctx.fillStyle = "#F5F5F7";
     ctx.fillRect(0, 70, 240, 570);
+
+    ctx.strokeStyle = "#D2D2D7";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(240, 70);
+    ctx.lineTo(240, 640);
+    ctx.stroke();
 
     const navItems = [
       "Dashboard Terpadu",
@@ -79,66 +86,66 @@ function createProceduralUITexture(): THREE.Texture {
     ];
     navItems.forEach((text, i) => {
       if (i === 1) {
-        ctx.fillStyle = "rgba(91, 124, 255, 0.25)";
+        ctx.fillStyle = "#0B6BAE";
         ctx.fillRect(12, 92 + i * 48, 216, 36);
         ctx.fillStyle = "#FFFFFF";
       } else {
-        ctx.fillStyle = "#9B9892";
+        ctx.fillStyle = "#6E6E73";
       }
-      ctx.font = "15px sans-serif";
+      ctx.font = "14px sans-serif";
       ctx.fillText(text, 28, 116 + i * 48);
     });
 
     // Metric Card 1 (SIMDINKES)
-    ctx.fillStyle = "#16181D";
-    ctx.strokeStyle = "#343842";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "#D2D2D7";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.roundRect(265, 95, 345, 140, [12]);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#5B7CFF";
+    ctx.fillStyle = "#0B6BAE";
     ctx.font = "bold 12px monospace";
     ctx.fillText("PRODUK TAYANG INAPROC", 285, 125);
-    ctx.fillStyle = "#F1EEE8";
+    ctx.fillStyle = "#1D1D1F";
     ctx.font = "bold 20px sans-serif";
     ctx.fillText("SIMDINKES", 285, 158);
-    ctx.fillStyle = "#9B9892";
+    ctx.fillStyle = "#6E6E73";
     ctx.font = "13px sans-serif";
     ctx.fillText("Layanan Manajemen & SDM Kesehatan", 285, 185);
-    ctx.fillStyle = "#22C55E";
+    ctx.fillStyle = "#16A34A";
     ctx.fillText("● Status: Terverifikasi Aktif", 285, 212);
 
     // Metric Card 2 (Katalog Produk)
-    ctx.fillStyle = "#16181D";
-    ctx.strokeStyle = "#343842";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "#D2D2D7";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.roundRect(635, 95, 360, 140, [12]);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#9B9892";
+    ctx.fillStyle = "#6E6E73";
     ctx.font = "12px monospace";
     ctx.fillText("TOTAL PRODUK KATALOG", 655, 125);
-    ctx.fillStyle = "#5B7CFF";
+    ctx.fillStyle = "#0B6BAE";
     ctx.font = "bold 32px sans-serif";
     ctx.fillText("742 PRODUK", 655, 168);
-    ctx.fillStyle = "#9B9892";
+    ctx.fillStyle = "#6E6E73";
     ctx.font = "13px sans-serif";
     ctx.fillText("Katalog Elektronik (15 Okt 2026)", 655, 205);
 
     // Data table / Telemetry rows
-    ctx.fillStyle = "#16181D";
-    ctx.strokeStyle = "#343842";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "#D2D2D7";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.roundRect(265, 260, 730, 345, [14]);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#F1EEE8";
+    ctx.fillStyle = "#1D1D1F";
     ctx.font = "bold 16px sans-serif";
     ctx.fillText("Pilar & Solusi Terdaftar", 290, 298);
 
@@ -151,23 +158,23 @@ function createProceduralUITexture(): THREE.Texture {
 
     rows.forEach((r, idx) => {
       const y = 330 + idx * 64;
-      ctx.fillStyle = idx % 2 === 0 ? "rgba(255, 255, 255, 0.03)" : "transparent";
+      ctx.fillStyle = idx % 2 === 0 ? "#F5F5F7" : "#FFFFFF";
       ctx.fillRect(280, y - 18, 700, 52);
 
-      ctx.fillStyle = "#5B7CFF";
+      ctx.fillStyle = "#0B6BAE";
       ctx.beginPath();
       ctx.arc(298, y + 8, 4, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#F1EEE8";
+      ctx.fillStyle = "#1D1D1F";
       ctx.font = "bold 15px sans-serif";
       ctx.fillText(r.pilar, 316, y + 6);
 
-      ctx.fillStyle = "#9B9892";
+      ctx.fillStyle = "#6E6E73";
       ctx.font = "13px sans-serif";
       ctx.fillText(r.detail, 316, y + 25);
 
-      ctx.fillStyle = "#5B7CFF";
+      ctx.fillStyle = "#0B6BAE";
       ctx.font = "bold 12px monospace";
       ctx.fillText(r.status, 910, y + 14);
     });
@@ -194,18 +201,18 @@ export default function GenericITDevice({ pointer, scrollProgress = 0 }: Generic
   const upperCasingRef = useRef<THREE.Group>(null);
   const interfacePanelRef = useRef<THREE.Group>(null);
 
-  // Procedural UI mockup texture
+  // Procedural UI mockup texture (Light UI per DESIGN.md §6.1)
   const uiTexture = useMemo(() => createProceduralUITexture(), []);
 
-  // Shared Physical Materials
+  // Shared Physical Materials (DESIGN.md §6.1: dark graphite satin against white page)
   const casingMaterial = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
-        color: "#18181C",
-        roughness: 0.38,
-        metalness: 0.45,
-        clearcoat: 0.14,
-        clearcoatRoughness: 0.2,
+        color: "#222328",
+        roughness: 0.35,
+        metalness: 0.35,
+        clearcoat: 0.2,
+        clearcoatRoughness: 0.15,
       }),
     []
   );
@@ -213,8 +220,8 @@ export default function GenericITDevice({ pointer, scrollProgress = 0 }: Generic
   const darkAccentMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#101013",
-        roughness: 0.5,
+        color: "#18191D",
+        roughness: 0.45,
         metalness: 0.2,
       }),
     []
@@ -223,7 +230,7 @@ export default function GenericITDevice({ pointer, scrollProgress = 0 }: Generic
   const portMetalMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#3A3A42",
+        color: "#4A4C56",
         roughness: 0.25,
         metalness: 0.85,
       }),
@@ -243,9 +250,9 @@ export default function GenericITDevice({ pointer, scrollProgress = 0 }: Generic
   const ledAccentMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#5B7CFF",
-        emissive: "#5B7CFF",
-        emissiveIntensity: 2.2,
+        color: "#0B6BAE",
+        emissive: "#0B6BAE",
+        emissiveIntensity: 1.8,
         roughness: 0.1,
       }),
     []
@@ -570,11 +577,17 @@ export default function GenericITDevice({ pointer, scrollProgress = 0 }: Generic
           args={[3.2, 0.025, 2.0]}
           radius={0.06}
           smoothness={4}
-          material={darkAccentMaterial}
+          material={
+            new THREE.MeshStandardMaterial({
+              color: "#E8E8ED",
+              roughness: 0.35,
+              metalness: 0.15,
+            })
+          }
         />
         <mesh position={[0, 0.015, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[3.12, 1.92]} />
-          <meshBasicMaterial map={uiTexture} transparent opacity={0.94} />
+          <meshBasicMaterial map={uiTexture} transparent opacity={0.96} />
         </mesh>
       </group>
 

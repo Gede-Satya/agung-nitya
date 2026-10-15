@@ -12,7 +12,7 @@ import Footer from "@/components/layout/Footer";
  */
 export default function Home() {
   return (
-    <main className="min-h-screen bg-canvas text-primary relative selection:bg-accent/20 selection:text-white">
+    <main className="min-h-screen bg-canvas text-ink relative selection:bg-accent/15 selection:text-ink">
       <Navbar />
       <ScrollStory />
       <VerificationSection />

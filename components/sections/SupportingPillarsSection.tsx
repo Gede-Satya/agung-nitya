@@ -9,15 +9,15 @@ export default function SupportingPillarsSection() {
   const pilar4 = SITE_CONTENT.pillars.find((p) => p.id === "services-rental");
 
   return (
-    <section id="pilar-pendukung" className="relative z-10 w-full py-20 sm:py-28 bg-graphite/40 border-t border-border">
+    <section id="pilar-pendukung" className="relative z-10 w-full py-20 sm:py-28 bg-canvas border-t border-rule">
       <div className="shell flex flex-col gap-12 sm:gap-16">
         {/* Section Header */}
         <div className="flex flex-col items-start gap-4 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-graphite px-3 py-1 text-xs text-muted">
-            <span className="font-medium text-primary">Pilar Pelengkap Pengadaan</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-rule bg-wash px-3.5 py-1.5 text-xs text-muted shadow-xs">
+            <span className="font-medium text-ink">Pilar Pelengkap Pengadaan</span>
           </div>
 
-          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
             Peralatan, Perlengkapan &{" "}
             <span className="text-accent">Layanan Pendukung Instansi</span>
           </h2>
@@ -28,23 +28,23 @@ export default function SupportingPillarsSection() {
           </p>
         </div>
 
-        {/* 2 Static Cards Grid (Pilar 3 & Pilar 4) */}
+        {/* 2 Static Cards Grid (Pilar 3 & Pilar 4) - DESIGN.md §8.1 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Pilar 3: Peralatan & Perlengkapan */}
           {pilar3 && (
-            <div className="flex flex-col justify-between gap-6 p-7 sm:p-9 rounded-2xl bg-canvas border border-border transition-all duration-200 hover:border-accent/40 shadow-sm">
+            <div className="flex flex-col justify-between gap-6 p-7 sm:p-9 rounded-3xl bg-wash border border-rule transition-all duration-200 hover:border-accent/40 shadow-xs">
               <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 text-accent">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 border border-accent/20 text-accent">
                     <Package className="h-6 w-6" />
                   </div>
-                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-graphite border border-border text-muted">
+                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-surface border border-rule text-muted">
                     {pilar3.badge}
                   </span>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h3 className="font-heading text-xl sm:text-2xl font-semibold text-primary">
+                  <h3 className="font-heading text-xl sm:text-2xl font-semibold text-ink">
                     {pilar3.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-accent font-medium">
@@ -57,26 +57,26 @@ export default function SupportingPillarsSection() {
 
                 {/* Sub-item feature list */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <Server className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Rak Server & Jaringan</span>
+                    <span className="text-xs font-medium text-ink">Rak Server & Jaringan</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <Archive className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Lemari Arsip & Dokumen</span>
+                    <span className="text-xs font-medium text-ink">Lemari Arsip & Dokumen</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <FlaskConical className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Peralatan Lab Umum</span>
+                    <span className="text-xs font-medium text-ink">Peralatan Lab Umum</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <Stethoscope className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Perlengkapan Fasilitas Kesehatan</span>
+                    <span className="text-xs font-medium text-ink">Perlengkapan Fasilitas Kesehatan</span>
                   </div>
                 </div>
               </div>
 
-              <div className="text-[11px] text-muted border-t border-border/60 pt-4">
+              <div className="text-[11px] text-muted border-t border-rule pt-4">
                 Sesuai Klasifikasi KBLI Perdagangan Besar Perlengkapan Laboratorium, Kedokteran & Kantor
               </div>
             </div>
@@ -84,19 +84,19 @@ export default function SupportingPillarsSection() {
 
           {/* Pilar 4: Servis & Sewa */}
           {pilar4 && (
-            <div className="flex flex-col justify-between gap-6 p-7 sm:p-9 rounded-2xl bg-canvas border border-border transition-all duration-200 hover:border-accent/40 shadow-sm">
+            <div className="flex flex-col justify-between gap-6 p-7 sm:p-9 rounded-3xl bg-wash border border-rule transition-all duration-200 hover:border-accent/40 shadow-xs">
               <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 border border-accent/20 text-accent">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 border border-accent/20 text-accent">
                     <Wrench className="h-6 w-6" />
                   </div>
-                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-graphite border border-border text-muted">
+                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-surface border border-rule text-muted">
                     {pilar4.badge}
                   </span>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h3 className="font-heading text-xl sm:text-2xl font-semibold text-primary">
+                  <h3 className="font-heading text-xl sm:text-2xl font-semibold text-ink">
                     {pilar4.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-accent font-medium">
@@ -109,26 +109,26 @@ export default function SupportingPillarsSection() {
 
                 {/* Sub-item feature list */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <RefreshCw className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Pemeliharaan & Reparasi TI</span>
+                    <span className="text-xs font-medium text-ink">Pemeliharaan & Reparasi TI</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <Cpu className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Penyewaan Perangkat Komputasi</span>
+                    <span className="text-xs font-medium text-ink">Penyewaan Perangkat Komputasi</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <HeadphonesIcon className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Konsultasi Kebutuhan TI</span>
+                    <span className="text-xs font-medium text-ink">Konsultasi Kebutuhan TI</span>
                   </div>
-                  <div className="flex items-center gap-2.5 p-3 rounded-lg bg-graphite/40 border border-border/50">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-canvas border border-rule/80 shadow-xs">
                     <Wrench className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-xs font-medium text-primary">Dukungan Kontrak Servis Instansi</span>
+                    <span className="text-xs font-medium text-ink">Dukungan Kontrak Servis Instansi</span>
                   </div>
                 </div>
               </div>
 
-              <div className="text-[11px] text-muted border-t border-border/60 pt-4">
+              <div className="text-[11px] text-muted border-t border-rule pt-4">
                 Sesuai Klasifikasi KBLI Jasa Reparasi & Aktivitas Penyewaan Peralatan
               </div>
             </div>

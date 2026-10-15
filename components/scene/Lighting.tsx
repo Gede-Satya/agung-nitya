@@ -12,14 +12,14 @@ import React from "react";
 export default function Lighting() {
   return (
     <group>
-      {/* Ambient floor bounce baseline */}
-      <ambientLight intensity={0.45} color="#18181F" />
+      {/* Ambient white floor bounce baseline */}
+      <ambientLight intensity={0.6} color="#FFFFFF" />
 
-      {/* Key Light: Warm, upper-left directional */}
+      {/* Key Light: Crisp, upper-left directional */}
       <directionalLight
         position={[-5.5, 7.5, 5.0]}
-        intensity={2.8}
-        color="#FFF4E8"
+        intensity={2.2}
+        color="#FFFFFF"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -32,18 +32,18 @@ export default function Lighting() {
         shadow-bias={-0.0001}
       />
 
-      {/* Rim Light: Cool, high-contrast kicker from behind */}
+      {/* Rim Light: Gentle rim to separate the dark casing from the white page */}
       <directionalLight
         position={[4.5, 6.0, -6.5]}
-        intensity={2.4}
-        color="#D6E4FF"
+        intensity={1.8}
+        color="#E8F0FC"
       />
 
-      {/* Soft Low Fill: Counterbalances dark areas without washing out shadows */}
+      {/* Soft Low Fill: Counterbalances dark areas with clean white fill */}
       <directionalLight
         position={[6.0, -1.0, 4.0]}
-        intensity={0.65}
-        color="#8B92A0"
+        intensity={0.7}
+        color="#F0F2F5"
       />
     </group>
   );

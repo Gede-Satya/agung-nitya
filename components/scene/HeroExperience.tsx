@@ -27,15 +27,15 @@ export default function HeroExperience({ pointer, scrollProgress = 0 }: HeroExpe
       <Lighting />
       <StudioEnvironment />
 
-      {/* Ground Contact Shadow positioned directly under the device */}
+      {/* Ground Contact Shadow positioned directly under the device (DESIGN.md §6.2: soft grounding on white) */}
       <ContactShadows
         position={[0, -0.62, 0]}
-        opacity={0.65}
+        opacity={0.22}
         scale={8.5}
-        blur={2.2}
+        blur={2.5}
         far={3.5}
         resolution={512}
-        color="#000000"
+        color="#1a1a20"
       />
 
       {/* The Generic IT Device with 5 deconstructable layers */}

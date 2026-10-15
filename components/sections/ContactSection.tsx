@@ -12,15 +12,15 @@ export default function ContactSection() {
   );
 
   return (
-    <section id="kontak" className="relative z-10 w-full py-20 sm:py-28 bg-canvas border-t border-border">
+    <section id="kontak" className="relative z-10 w-full py-20 sm:py-28 bg-wash border-t border-rule">
       <div className="shell flex flex-col gap-12 sm:gap-16">
         {/* Section Header */}
         <div className="flex flex-col items-start gap-4 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-graphite px-3 py-1 text-xs text-muted">
-            <span className="font-medium text-primary">Komunikasi & Konsultasi</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-rule bg-canvas px-3.5 py-1.5 text-xs text-muted shadow-xs">
+            <span className="font-medium text-ink">Komunikasi & Konsultasi</span>
           </div>
 
-          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
             Hubungi Kami untuk{" "}
             <span className="text-accent">Kebutuhan Pengadaan Instansi</span>
           </h2>
@@ -34,8 +34,8 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Official Contact Information */}
           <div className="lg:col-span-5 flex flex-col gap-6">
-            <div className="flex flex-col gap-3 p-6 rounded-2xl bg-graphite/50 border border-border">
-              <h3 className="font-heading text-lg font-semibold text-primary">
+            <div className="flex flex-col gap-4 p-6 sm:p-8 rounded-3xl bg-canvas border border-rule shadow-xs">
+              <h3 className="font-heading text-lg font-semibold text-ink">
                 Informasi Badan Usaha
               </h3>
               <p className="text-xs text-muted leading-relaxed">
@@ -43,16 +43,16 @@ export default function ContactSection() {
                 spesifikasi teknis, dan verifikasi etalase katalog elektronik bagi instansi Anda.
               </p>
 
-              <div className="flex flex-col gap-4 pt-3">
+              <div className="flex flex-col gap-4 pt-2">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-accent shrink-0">
                     <Mail className="h-4 w-4" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs text-muted">Email Resmi</span>
                     <a
                       href={`mailto:${SITE_CONTENT.company.email}`}
-                      className="font-heading text-sm font-medium text-primary hover:text-accent transition-colors"
+                      className="font-heading text-sm font-medium text-ink hover:text-accent transition-colors"
                     >
                       {SITE_CONTENT.company.email}
                     </a>
@@ -60,24 +60,24 @@ export default function ContactSection() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-accent shrink-0">
                     <Phone className="h-4 w-4" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs text-muted">Kontak Telepon</span>
-                    <span className="font-heading text-sm font-medium text-muted/80">
+                    <span className="font-heading text-sm font-medium text-muted">
                       {SITE_CONTENT.company.phonePlaceholder}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent shrink-0">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-accent shrink-0">
                     <MapPin className="h-4 w-4" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs text-muted">Domisili Hukum</span>
-                    <span className="font-heading text-sm font-medium text-primary">
+                    <span className="font-heading text-sm font-medium text-ink">
                       {SITE_CONTENT.company.location} ({SITE_CONTENT.company.legalType})
                     </span>
                   </div>
@@ -85,20 +85,20 @@ export default function ContactSection() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-surface/30 border border-border/50 text-xs text-muted leading-relaxed">
-              <strong>Pemberitahuan Audiens:</strong> Kami menghormati alur resmi pengadaan pemerintah.
+            <div className="p-4 rounded-2xl bg-canvas border border-rule text-xs text-muted leading-relaxed shadow-xs">
+              <strong className="text-ink">Pemberitahuan Audiens:</strong> Kami menghormati alur resmi pengadaan pemerintah.
               Data yang dikirimkan hanya digunakan untuk keperluan tindak lanjut konsultasi teknis pengadaan instansi.
             </div>
           </div>
 
           {/* Right Column: Native Server Action Form */}
-          <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-graphite/60 border border-border shadow-sm">
+          <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-canvas border border-rule shadow-xs">
             {state?.success ? (
               <div className="flex flex-col items-center text-center gap-4 py-12">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">
                   <CheckCircle2 className="h-8 w-8" />
                 </div>
-                <h3 className="font-heading text-xl font-semibold text-primary">
+                <h3 className="font-heading text-xl font-semibold text-ink">
                   Pesan Berhasil Terkirim
                 </h3>
                 <p className="text-sm text-muted max-w-md">
@@ -108,7 +108,7 @@ export default function ContactSection() {
             ) : (
               <form action={formAction} className="flex flex-col gap-5">
                 {state?.error && (
-                  <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                  <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-error text-xs font-medium">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     <span>{state.error}</span>
                   </div>
@@ -126,7 +126,7 @@ export default function ContactSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="name" className="text-xs font-medium text-primary">
+                    <label htmlFor="name" className="text-xs font-medium text-ink">
                       Nama Lengkap <span className="text-accent">*</span>
                     </label>
                     <input
@@ -135,15 +135,15 @@ export default function ContactSection() {
                       type="text"
                       required
                       placeholder="Nama Anda"
-                      className="min-h-[44px] rounded-xl border border-border bg-surface/60 px-4 py-2.5 text-sm text-primary placeholder:text-muted/60 focus:border-accent focus:outline-none transition-colors"
+                      className="min-h-[44px] rounded-xl border border-rule bg-wash px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-accent focus:bg-canvas focus:outline-none transition-colors"
                     />
                     {state?.fieldErrors?.name && (
-                      <span className="text-[11px] text-red-400">{state.fieldErrors.name}</span>
+                      <span className="text-[11px] text-error font-medium">{state.fieldErrors.name}</span>
                     )}
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="text-xs font-medium text-primary">
+                    <label htmlFor="email" className="text-xs font-medium text-ink">
                       Email Instansi / Resmi <span className="text-accent">*</span>
                     </label>
                     <input
@@ -152,17 +152,17 @@ export default function ContactSection() {
                       type="email"
                       required
                       placeholder="nama@instansi.go.id"
-                      className="min-h-[44px] rounded-xl border border-border bg-surface/60 px-4 py-2.5 text-sm text-primary placeholder:text-muted/60 focus:border-accent focus:outline-none transition-colors"
+                      className="min-h-[44px] rounded-xl border border-rule bg-wash px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-accent focus:bg-canvas focus:outline-none transition-colors"
                     />
                     {state?.fieldErrors?.email && (
-                      <span className="text-[11px] text-red-400">{state.fieldErrors.email}</span>
+                      <span className="text-[11px] text-error font-medium">{state.fieldErrors.email}</span>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="agency" className="text-xs font-medium text-primary">
+                    <label htmlFor="agency" className="text-xs font-medium text-ink">
                       Nama Instansi / Dinas <span className="text-accent">*</span>
                     </label>
                     <input
@@ -170,16 +170,16 @@ export default function ContactSection() {
                       name="agency"
                       type="text"
                       required
-                      placeholder="Dinas / Lembaga / RSUD"
-                      className="min-h-[44px] rounded-xl border border-border bg-surface/60 px-4 py-2.5 text-sm text-primary placeholder:text-muted/60 focus:border-accent focus:outline-none transition-colors"
+                      placeholder="Dinas / Lembaga Instansi"
+                      className="min-h-[44px] rounded-xl border border-rule bg-wash px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-accent focus:bg-canvas focus:outline-none transition-colors"
                     />
                     {state?.fieldErrors?.agency && (
-                      <span className="text-[11px] text-red-400">{state.fieldErrors.agency}</span>
+                      <span className="text-[11px] text-error font-medium">{state.fieldErrors.agency}</span>
                     )}
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="phone" className="text-xs font-medium text-primary">
+                    <label htmlFor="phone" className="text-xs font-medium text-ink">
                       Nomor Telepon / WhatsApp (Opsional)
                     </label>
                     <input
@@ -187,13 +187,13 @@ export default function ContactSection() {
                       name="phone"
                       type="tel"
                       placeholder="08xxxxxxxxxx"
-                      className="min-h-[44px] rounded-xl border border-border bg-surface/60 px-4 py-2.5 text-sm text-primary placeholder:text-muted/60 focus:border-accent focus:outline-none transition-colors"
+                      className="min-h-[44px] rounded-xl border border-rule bg-wash px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-accent focus:bg-canvas focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="message" className="text-xs font-medium text-primary">
+                  <label htmlFor="message" className="text-xs font-medium text-ink">
                     Pesan Kebutuhan Pengadaan <span className="text-accent">*</span>
                   </label>
                   <textarea
@@ -202,17 +202,17 @@ export default function ContactSection() {
                     rows={4}
                     required
                     placeholder="Jelaskan kebutuhan sistem informasi, perangkat keras, atau katalog produk yang ingin dikonsultasikan..."
-                    className="rounded-xl border border-border bg-surface/60 p-4 text-sm text-primary placeholder:text-muted/60 focus:border-accent focus:outline-none transition-colors"
+                    className="rounded-xl border border-rule bg-wash p-4 text-sm text-ink placeholder:text-muted focus:border-accent focus:bg-canvas focus:outline-none transition-colors"
                   />
                   {state?.fieldErrors?.message && (
-                    <span className="text-[11px] text-red-400">{state.fieldErrors.message}</span>
+                    <span className="text-[11px] text-error font-medium">{state.fieldErrors.message}</span>
                   )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 font-heading text-sm font-medium text-white shadow-sm transition-all hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-7 py-3 font-heading text-sm font-medium text-white shadow-xs transition-all hover:bg-accent-strong disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <Send className="h-4 w-4" />
                   <span>{isPending ? "Mengirim Pesan..." : "Kirim Pesan"}</span>

@@ -19,9 +19,9 @@ export default function ConnectionTopology({ progress }: ConnectionTopologyProps
   // Institution nodes coordinates in 3D space
   const nodes = useMemo(
     () => [
-      { id: "node-1", pos: [-2.4, 0.4, -0.6] as [number, number, number], label: "Dinas / Instansi A" },
+      { id: "node-1", pos: [-2.4, 0.4, -0.6] as [number, number, number], label: "Dinas / Instansi Daerah" },
       { id: "node-2", pos: [2.5, 0.5, -0.8] as [number, number, number], label: "Pusat Data Wilayah" },
-      { id: "node-3", pos: [0.0, 0.8, -2.1] as [number, number, number], label: "Server Kementerian / LPSE" },
+      { id: "node-3", pos: [0.0, 0.8, -2.1] as [number, number, number], label: "Pusat Layanan Instansi Terintegrasi" },
     ],
     []
   );
@@ -63,19 +63,19 @@ export default function ConnectionTopology({ progress }: ConnectionTopologyProps
       {/* 3 Institution Nodes */}
       {nodes.map((node) => (
         <group key={node.id} position={node.pos}>
-          {/* Outer glowing halo ring */}
+          {/* Outer halo ring */}
           <mesh rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[0.09, 0.12, 24]} />
-            <meshBasicMaterial color="#5B7CFF" transparent opacity={0.6} side={THREE.DoubleSide} />
+            <meshBasicMaterial color="#0B6BAE" transparent opacity={0.4} side={THREE.DoubleSide} />
           </mesh>
 
           {/* Core Sphere */}
           <mesh>
             <sphereGeometry args={[0.065, 16, 16]} />
             <meshStandardMaterial
-              color="#5B7CFF"
-              emissive="#5B7CFF"
-              emissiveIntensity={2.5}
+              color="#0B6BAE"
+              emissive="#0B6BAE"
+              emissiveIntensity={2.0}
               roughness={0.2}
             />
           </mesh>
@@ -92,9 +92,9 @@ export default function ConnectionTopology({ progress }: ConnectionTopologyProps
               new THREE.Line(
                 lineGeo,
                 new THREE.LineBasicMaterial({
-                  color: "#5B7CFF",
+                  color: "#0B6BAE",
                   transparent: true,
-                  opacity: 0.55,
+                  opacity: 0.6,
                   linewidth: 1.5,
                 })
               )

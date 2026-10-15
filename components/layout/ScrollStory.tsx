@@ -87,7 +87,7 @@ export default function ScrollStory() {
   };
 
   return (
-    <div ref={containerRef} className="relative min-h-[420vh] w-full bg-canvas text-primary">
+    <div ref={containerRef} className="relative min-h-[420vh] w-full bg-canvas text-ink">
       {/* Sticky Stage Viewport */}
       <div
         onMouseMove={handleMouseMove}
@@ -111,17 +111,17 @@ export default function ScrollStory() {
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="flex flex-col items-start gap-4 sm:gap-6"
                   >
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-graphite/90 px-3 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-xs text-muted">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-rule bg-wash px-3 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-xs text-muted">
                       <span className="flex h-2 w-2 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
                       </span>
-                      <span className="font-medium text-primary tracking-wide">
+                      <span className="font-medium text-ink tracking-wide">
                         {SITE_CONTENT.headline.badge}
                       </span>
                     </div>
 
-                    <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+                    <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
                       <span>{SITE_CONTENT.headline.title}</span>{" "}
                       <span className="text-accent">{SITE_CONTENT.headline.titleAccent}</span>
                     </h1>
@@ -135,7 +135,7 @@ export default function ScrollStory() {
                         href={SITE_CONTENT.headline.ctaPrimary.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex min-h-[44px] sm:min-h-[48px] items-center justify-center gap-2 rounded-xl bg-accent px-5 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-medium text-white shadow-sm transition-all duration-150 hover:bg-accent-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                        className="inline-flex min-h-[44px] sm:min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent px-5 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-medium text-white shadow-sm transition-all duration-150 hover:bg-accent-strong active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                       >
                         <span>{SITE_CONTENT.headline.ctaPrimary.label}</span>
                         <ExternalLink className="h-4 w-4" />
@@ -143,26 +143,26 @@ export default function ScrollStory() {
                     </div>
 
                     {/* Verified Facts Chips */}
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 border-t border-border/80 w-full">
-                      <div className="flex flex-col items-start gap-1 p-2 rounded-lg bg-graphite/40 border border-border/50">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 border-t border-rule w-full">
+                      <div className="flex flex-col items-start gap-1 p-2.5 rounded-xl bg-wash border border-rule">
                         <Database className="h-3.5 w-3.5 text-accent shrink-0" />
-                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-primary">
+                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-ink">
                           {SITE_CONTENT.company.activeProductsCount} Produk
                         </span>
                         <span className="text-[9px] text-muted">Tayang INAPROC</span>
                       </div>
 
-                      <div className="flex flex-col items-start gap-1 p-2 rounded-lg bg-graphite/40 border border-border/50">
-                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-primary">
+                      <div className="flex flex-col items-start gap-1 p-2.5 rounded-xl bg-wash border border-rule">
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-ink">
                           Tipe {SITE_CONTENT.company.inaprocProviderType}
                         </span>
                         <span className="text-[9px] text-muted">Penyedia Resmi</span>
                       </div>
 
-                      <div className="flex flex-col items-start gap-1 p-2 rounded-lg bg-graphite/40 border border-border/50">
+                      <div className="flex flex-col items-start gap-1 p-2.5 rounded-xl bg-wash border border-rule">
                         <MapPin className="h-3.5 w-3.5 text-muted shrink-0" />
-                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-primary">
+                        <span className="font-heading text-[11px] sm:text-sm font-semibold text-ink">
                           Badung, Bali
                         </span>
                         <span className="text-[9px] text-muted">Perseroan Terbatas</span>
@@ -184,14 +184,14 @@ export default function ScrollStory() {
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="flex flex-col items-start gap-4 sm:gap-6"
                   >
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-graphite/90 px-3 py-1 text-xs text-muted">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-rule bg-wash px-3 py-1 text-xs text-muted">
                       <Cpu className="h-3.5 w-3.5 text-accent" />
-                      <span className="font-medium text-primary">
+                      <span className="font-medium text-ink">
                         Pilar 2 · Perangkat TI
                       </span>
                     </div>
 
-                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
                       Infrastruktur &{" "}
                       <span className="text-accent">Perangkat Keras Komputasi</span>
                     </h2>
@@ -209,12 +209,12 @@ export default function ScrollStory() {
                       ].map((item, idx) => (
                         <div
                           key={`hw-${idx}`}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-graphite/40 border border-border/60"
+                          className="flex items-center gap-3 p-3 rounded-xl bg-wash border border-rule"
                         >
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/20 text-accent text-xs font-semibold">
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/10 text-accent text-xs font-semibold">
                             {idx + 1}
                           </span>
-                          <span className="text-xs sm:text-sm font-medium text-primary">
+                          <span className="text-xs sm:text-sm font-medium text-ink">
                             {item}
                           </span>
                         </div>
@@ -236,14 +236,14 @@ export default function ScrollStory() {
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="flex flex-col items-start gap-4 sm:gap-6"
                   >
-                    <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs text-accent">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs text-accent">
                       <Layers className="h-3.5 w-3.5 text-accent" />
                       <span className="font-medium">
                         Pilar Utama · Software & Jasa TI (Headline)
                       </span>
                     </div>
 
-                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
                       Solusi Sistem Informasi &{" "}
                       <span className="text-accent">Rekayasa Perangkat Lunak</span>
                     </h2>
@@ -254,14 +254,14 @@ export default function ScrollStory() {
                     </p>
 
                     {/* Verified Official Software Product Spotlight */}
-                    <div className="p-4 rounded-xl bg-gradient-to-r from-accent/15 via-graphite to-graphite border border-accent/30 w-full">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-wash border border-accent/40 w-full shadow-xs">
                       <div className="flex items-center justify-between pb-1">
                         <span className="text-[10px] font-mono tracking-wider text-accent uppercase font-semibold">
                           PRODUK RESMI TAYANG DI KATALOG INAPROC
                         </span>
                         <span className="text-[10px] text-muted">Etalase Terdaftar</span>
                       </div>
-                      <h3 className="font-heading text-sm sm:text-base font-semibold text-primary">
+                      <h3 className="font-heading text-sm sm:text-base font-semibold text-ink">
                         SIMDINKES Layanan Manajemen dan SDM Kesehatan
                       </h3>
                       <p className="text-muted text-xs pt-1">
@@ -270,16 +270,16 @@ export default function ScrollStory() {
                     </div>
 
                     <div className="grid grid-cols-3 gap-2 w-full pt-1">
-                      <div className="p-2.5 rounded-lg bg-graphite/40 border border-border/50 text-center">
-                        <span className="block font-heading text-xs font-semibold text-primary">Pembuatan</span>
+                      <div className="p-2.5 rounded-xl bg-wash border border-rule text-center">
+                        <span className="block font-heading text-xs font-semibold text-ink">Pembuatan</span>
                         <span className="text-[10px] text-muted">Sistem Kustom</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-graphite/40 border border-border/50 text-center">
-                        <span className="block font-heading text-xs font-semibold text-primary">Implementasi</span>
+                      <div className="p-2.5 rounded-xl bg-wash border border-rule text-center">
+                        <span className="block font-heading text-xs font-semibold text-ink">Implementasi</span>
                         <span className="text-[10px] text-muted">Deployment & Migrasi</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-graphite/40 border border-border/50 text-center">
-                        <span className="block font-heading text-xs font-semibold text-primary">Reverse-Eng</span>
+                      <div className="p-2.5 rounded-xl bg-wash border border-rule text-center">
+                        <span className="block font-heading text-xs font-semibold text-ink">Reverse-Eng</span>
                         <span className="text-[10px] text-muted">Modernisasi Sistem</span>
                       </div>
                     </div>
@@ -299,14 +299,14 @@ export default function ScrollStory() {
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="flex flex-col items-start gap-4 sm:gap-6"
                   >
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-graphite/90 px-3 py-1 text-xs text-muted">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-rule bg-wash px-3 py-1 text-xs text-muted">
                       <Network className="h-3.5 w-3.5 text-accent" />
-                      <span className="font-medium text-primary">
+                      <span className="font-medium text-ink">
                         Layanan · Topologi & Integrasi
                       </span>
                     </div>
 
-                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight text-primary">
+                    <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-semibold leading-[1.12] tracking-tight text-ink">
                       Konektivitas Terpadu &{" "}
                       <span className="text-accent">Dukungan Berkelanjutan</span>
                     </h2>
@@ -324,12 +324,12 @@ export default function ScrollStory() {
                       ].map((item, idx) => (
                         <div
                           key={`srv-${idx}`}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-graphite/40 border border-border/60"
+                          className="flex items-center gap-3 p-3 rounded-xl bg-wash border border-rule"
                         >
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 text-xs font-semibold">
                             ✓
                           </span>
-                          <span className="text-xs sm:text-sm font-medium text-primary">
+                          <span className="text-xs sm:text-sm font-medium text-ink">
                             {item}
                           </span>
                         </div>
@@ -341,7 +341,7 @@ export default function ScrollStory() {
                         href={SITE_CONTENT.headline.ctaPrimary.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-accent px-5 py-2.5 font-heading text-xs sm:text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-heading text-xs sm:text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-strong"
                       >
                         <span>Cek Produk di INAPROC</span>
                         <ExternalLink className="h-4 w-4" />
@@ -354,25 +354,25 @@ export default function ScrollStory() {
 
             {/* Right Column: SATU Perangkat TI Generik (3D Canvas Terurai) */}
             <div className="lg:col-span-6 flex flex-col items-center justify-center w-full">
-              <div className="relative w-full h-[280px] sm:h-[400px] lg:h-[540px] rounded-2xl border border-border/70 bg-graphite/30 backdrop-blur-sm overflow-hidden flex items-center justify-center shadow-2xl">
+              <div className="relative w-full h-[280px] sm:h-[400px] lg:h-[540px] rounded-3xl bg-wash/60 border border-rule/70 overflow-hidden flex items-center justify-center shadow-xs">
                 {/* 3D Scene Canvas responding to scrollProgress */}
                 <SceneCanvas pointer={pointer} scrollProgress={smoothProgress} />
 
                 {/* Dynamic Status Pill */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] text-muted px-3 py-1.5 rounded-lg bg-canvas/85 border border-border/60 backdrop-blur-sm pointer-events-none">
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] text-muted px-3 py-1.5 rounded-full bg-canvas/90 border border-rule backdrop-blur-sm pointer-events-none shadow-xs">
                   <span className="flex items-center gap-2">
                     <span
                       className={`h-2 w-2 rounded-full transition-colors ${
                         activeStage === 1
                           ? "bg-emerald-500"
                           : activeStage === 2
-                          ? "bg-amber-400"
+                          ? "bg-amber-500"
                           : activeStage === 3
                           ? "bg-accent"
-                          : "bg-blue-400"
+                          : "bg-blue-500"
                       }`}
                     />
-                    <span className="font-medium text-primary">
+                    <span className="font-medium text-ink">
                       {activeStage === 1
                         ? "Tahap 1: Perangkat Utuh"
                         : activeStage === 2
@@ -394,7 +394,7 @@ export default function ScrollStory() {
         {/* Bottom Stage Timeline Navigator (Desktop) */}
         <div className="shell flex items-center justify-between pt-2">
           <div className="flex items-center gap-2 sm:gap-3 text-xs text-muted">
-            <span className="font-mono text-[10px] text-muted">ALUR CERITA:</span>
+            <span className="font-mono text-[10px] text-muted font-semibold tracking-wider">TAHAP:</span>
             {[
               { num: 1, label: "Hero" },
               { num: 2, label: "Perangkat TI" },
@@ -404,10 +404,10 @@ export default function ScrollStory() {
               <button
                 key={step.num}
                 onClick={() => jumpToStage(step.num)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
                   activeStage === step.num
-                    ? "bg-accent text-white"
-                    : "text-muted hover:text-primary hover:bg-graphite"
+                    ? "bg-accent text-white shadow-xs"
+                    : "text-muted hover:text-ink hover:bg-wash"
                 }`}
               >
                 <span>0{step.num}</span>
@@ -416,7 +416,7 @@ export default function ScrollStory() {
             ))}
           </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted">
+          <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted font-medium">
             <span>Scroll untuk eksplorasi</span>
             <ChevronDown className="h-3.5 w-3.5 animate-bounce text-accent" />
           </div>

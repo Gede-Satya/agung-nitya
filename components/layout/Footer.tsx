@@ -8,16 +8,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 w-full bg-graphite border-t border-border py-12 sm:py-16 text-muted">
+    <footer className="relative z-10 w-full bg-wash border-t border-rule py-12 sm:py-16 text-muted">
       <div className="shell flex flex-col gap-10 sm:gap-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Col 1: Identity & Legal */}
           <div className="md:col-span-5 flex flex-col items-start gap-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-canvas font-heading text-xs font-semibold text-accent">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-rule bg-canvas font-heading text-xs font-semibold text-accent shadow-xs">
                 AN
               </span>
-              <span className="font-heading text-base font-semibold text-primary">
+              <span className="font-heading text-base font-semibold text-ink">
                 {SITE_CONTENT.company.name}
               </span>
             </div>
@@ -28,14 +28,14 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center gap-2 text-xs pt-1">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
               <span>{SITE_CONTENT.company.legalType} · {SITE_CONTENT.company.location}</span>
             </div>
           </div>
 
           {/* Col 2: Quick Links */}
           <div className="md:col-span-4 flex flex-col gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <span className="text-xs font-semibold uppercase tracking-wider text-ink">
               Etalase & Verifikasi
             </span>
             <ul className="flex flex-col gap-2 text-xs">
@@ -44,24 +44,24 @@ export default function Footer() {
                   href={SITE_CONTENT.company.inaprocUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-accent transition-colors"
+                  className="inline-flex items-center gap-1.5 hover:text-accent transition-colors font-medium text-ink"
                 >
                   <span>INAPROC Katalog Elektronik</span>
-                  <ExternalLink className="h-3 w-3" />
+                  <ExternalLink className="h-3 w-3 text-muted" />
                 </a>
               </li>
               <li>
-                <span className="text-muted/80">
+                <span className="text-muted">
                   {SITE_CONTENT.company.activeProductsCount} Produk Tayang ({SITE_CONTENT.company.activeProductsDate})
                 </span>
               </li>
               <li>
-                <span className="text-muted/80">
+                <span className="text-muted">
                   Tipe Penyedia: {SITE_CONTENT.company.inaprocProviderType}
                 </span>
               </li>
               <li>
-                <span className="text-muted/60 text-[11px]">
+                <span className="text-muted/70 text-[11px]">
                   (TODO: cek aturan brand logo resmi INAPROC)
                 </span>
               </li>
@@ -70,31 +70,31 @@ export default function Footer() {
 
           {/* Col 3: Contact */}
           <div className="md:col-span-3 flex flex-col gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <span className="text-xs font-semibold uppercase tracking-wider text-ink">
               Kontak Resmi
             </span>
             <div className="flex flex-col gap-2 text-xs">
               <a
                 href={`mailto:${SITE_CONTENT.company.email}`}
-                className="hover:text-accent transition-colors"
+                className="hover:text-accent transition-colors font-medium text-ink"
               >
                 {SITE_CONTENT.company.email}
               </a>
-              <span className="text-muted/80">
+              <span className="text-muted">
                 {SITE_CONTENT.company.phonePlaceholder}
               </span>
-              <span className="text-muted/80">
+              <span className="text-muted">
                 Kab. Badung, Bali
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-border/60 text-[11px] text-muted">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-rule text-[11px] text-muted">
           <p>
             &copy; {currentYear} {SITE_CONTENT.company.name}. Seluruh hak cipta dilindungi undang-undang.
           </p>
-          <p className="text-muted/70">
+          <p className="text-muted/80">
             Disusun untuk transparansi pejabat pengadaan (PPK) & instansi pemerintah.
           </p>
         </div>

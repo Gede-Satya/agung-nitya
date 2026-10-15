@@ -14,17 +14,17 @@
  *   Nothing else in the codebase needs to change: every heading uses the
  *   `font-display` utility, which resolves to `--font-heading`.
  */
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 
-/** Heading family (fallback for Söhne Breit). Weight capped at 500 by design. */
-export const displayFont = Space_Grotesk({
+/** Heading family (DESIGN.md §4: Inter weight 600 neutral product-page aesthetic) */
+export const displayFont = Inter({
   subsets: ["latin"],
-  weight: ["500"],
+  weight: ["500", "600"],
   variable: "--font-heading",
   display: "swap",
 });
 
-/** Body family. */
+/** Body family (DESIGN.md §4: Inter weight 400/500) */
 export const bodyFont = Inter({
   subsets: ["latin"],
   weight: ["400", "500"],

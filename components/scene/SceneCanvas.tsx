@@ -47,8 +47,8 @@ export default function SceneCanvas({ pointer, scrollProgress = 0 }: SceneCanvas
         gl={{
           antialias: true,
           powerPreference: "high-performance",
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.05,
+          toneMapping: THREE.NeutralToneMapping,
+          toneMappingExposure: 1.0,
           alpha: true,
         }}
         frameloop={isTabVisible ? "always" : "never"}
@@ -58,7 +58,6 @@ export default function SceneCanvas({ pointer, scrollProgress = 0 }: SceneCanvas
           pointerEvents: "auto",
         }}
       >
-        <color attach="background" args={["#0B0B0D"]} />
         <HeroExperience pointer={pointer} scrollProgress={scrollProgress} />
       </Canvas>
     </div>
