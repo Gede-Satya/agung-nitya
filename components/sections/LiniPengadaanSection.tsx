@@ -24,9 +24,9 @@ export default function LiniPengadaanSection() {
       alt: "Business Workstations and Mobile PCs",
     },
     {
-      badge: "FASILITAS & KOMERSIAL",
-      title: "Smart TV, kulkas inverter, dan perlengkapan ruang modern.",
-      desc: "Elektronik komersial heavy-duty untuk ruang rapat eksekutif, pantry kantor, aula pertemuan, dan unit perhotelan.",
+      badge: "FASILITAS & DISPLAY KOMERSIAL",
+      title: "Smart display, monitor komersial, dan perlengkapan ruang modern.",
+      desc: "Monitor kantor presisi tinggi, panel interaktif, dan display komersial heavy-duty untuk ruang rapat eksekutif, aula, serta fasilitas instansi.",
       image: "/images/card-commercial-display.jpg",
       alt: "Commercial Displays and Facility Electronics",
     },
@@ -42,7 +42,7 @@ export default function LiniPengadaanSection() {
               Kenali lini pengadaan utama.
             </h2>
             <p className="text-[#707070] text-sm sm:text-base leading-relaxed">
-              Dukungan komprehensif mulai dari pusat data hingga meja kerja karyawan.
+              Dukungan komprehensif mulai dari pusat data, komputasi meja, hingga display modern.
             </p>
           </div>
 

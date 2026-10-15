@@ -7,26 +7,26 @@ export default function HeroShowcase() {
   return (
     <section className="relative w-full pt-12 sm:pt-16 pb-8 sm:pb-12 bg-white text-[#1d1d1f] overflow-hidden">
       <div className="shell flex flex-col items-center text-center">
-        {/* Two-Line Eyebrow / Kicker */}
+        {/* Two-Line Eyebrow / Kicker with Official Slogan */}
         <div className="flex flex-col items-center mb-2 sm:mb-2.5">
           <p className="font-heading text-[16px] sm:text-[18px] md:text-[19px] font-semibold tracking-[-0.2px] text-[#1d1d1f]">
-            Solusi Perangkat Keras Mitra Vendor
+            PT Agung Wijaya Nitya
           </p>
-          <p className="text-[12px] sm:text-[13px] text-[#86868b] tracking-[-0.12px] mt-0.5">
-            Vendor Pengadaan Perangkat IT Enterprise
+          <p className="text-[12px] sm:text-[13px] text-[#0071e3] font-medium tracking-tight mt-0.5">
+            Unlocking Innovation, Empowering Possibilities
           </p>
         </div>
 
-        {/* Display Headline (Exactly Two Lines matching reference mockup) */}
-        <h1 className="font-heading text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] font-bold leading-[1.12] tracking-[-1.2px] text-[#1d1d1f] max-w-5xl whitespace-normal">
-          Penyediaan Unit Laptop Enterprise Terbaik
+        {/* Display Headline (Option A: Exactly 2 Balanced Lines) */}
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-[40px] lg:text-[44px] font-bold leading-[1.14] tracking-[-1.2px] text-[#1d1d1f] max-w-6xl">
+          Penyediaan Perangkat IT & Display Enterprise Terbaik
           <br className="hidden md:inline" /> untuk Kebutuhan Bisnis Anda.
         </h1>
 
-        {/* Subhead / Statement */}
+        {/* Subhead / Statement with INAPROC facts */}
         <div className="mt-3 text-[13px] sm:text-[14px] text-[#6e6e73] leading-relaxed max-w-2xl text-balance">
           <p>Siap memenuhi volume besar untuk pengadaan korporasi, instansi, dan proyek pemerintah.</p>
-          <p>Konsultasi & Pengajuan Penawaran Hubungi Kami Sekarang.</p>
+          <p>Penyedia resmi e-Katalog LKPP / INAPROC dengan 742 produk tayang aktif per 15 Oktober 2026.</p>
         </div>
 
         {/* Hero Front-Facing Monitor Visual (Background Removed, Crisp Apple Style) */}
