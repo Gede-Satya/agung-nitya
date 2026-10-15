@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, Globe } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 
 export default function Navbar() {
@@ -9,96 +8,74 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full font-sans">
-      {/* Tier 1: Global Utility Navigation (38px, Apple Style) */}
-      <div className="w-full bg-[#161617]/95 text-[#f5f5f7] border-b border-[#333336] text-[11px] sm:text-[12px] tracking-[-0.12px]">
-        <div className="shell flex h-9 sm:h-10 items-center justify-between">
-          {/* Logo Glyph */}
-          <a href="#" className="flex items-center gap-1.5 font-heading font-bold text-white tracking-wider hover:opacity-85">
-            <span className="flex h-5 w-5 items-center justify-center rounded bg-white text-[#161617] text-[10px] font-black">
-              AWN
-            </span>
-          </a>
-
-          {/* Nav Categories */}
-          <nav className="hidden lg:flex items-center gap-6 text-[#d2d2d7]">
-            <a href="#infrastruktur" className="hover:text-white transition-colors">
-              Infrastruktur IT
-            </a>
-            <a href="#komputasi" className="hover:text-white transition-colors">
-              Komputasi
-            </a>
-            <a href="#elektronik" className="hover:text-white transition-colors">
-              Elektronik Komersial
-            </a>
-            <a href="#lini-utama" className="hover:text-white transition-colors">
-              Perangkat
-            </a>
-            <a href="#ekosistem" className="hover:text-white transition-colors">
-              Pengadaan B2B
-            </a>
-            <a href="#cta-pengadaan" className="hover:text-white transition-colors">
-              Kontak
-            </a>
-          </nav>
-
-          {/* Right Utilities */}
-          <div className="flex items-center gap-4 text-[#d2d2d7]">
-            <a href={SITE_CONTENT.company.inaprocUrl} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-flex items-center gap-1 hover:text-white transition-colors text-[11px]">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>INAPROC Aktif</span>
-            </a>
-            <button aria-label="Search" className="hover:text-white transition-colors">
-              <Search className="h-3.5 w-3.5" />
-            </button>
-            <div className="flex items-center gap-1 hover:text-white cursor-pointer">
-              <Globe className="h-3.5 w-3.5" />
-              <span className="text-[11px]">ID</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tier 2: Product Local Navigation Bar (46px, Sticky Apple Style) */}
+    <header className="fixed top-0 left-0 right-0 z-50 w-full font-sans transition-all duration-300">
+      {/* Apple-style Unified White Navigation Bar (48px) */}
       <div
         className={`w-full transition-all duration-300 ${
           isScrolled
-            ? "bg-white/95 border-b border-[#d6d6d6] shadow-[0_1px_3px_rgba(0,0,0,0.05)] backdrop-blur-md"
-            : "bg-white/90 border-b border-[#e6e6e8] backdrop-blur-sm"
+            ? "bg-white/85 backdrop-blur-xl border-b border-[#d2d2d7] shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+            : "bg-white/90 backdrop-blur-md border-b border-[#e6e6e8]"
         }`}
       >
         <div className="shell flex h-12 items-center justify-between">
-          {/* Brand Name & Tagline */}
-          <div className="flex items-center gap-2.5">
-            <a href="#" className="font-heading text-[15px] sm:text-[17px] font-semibold text-[#1d1d1f] tracking-[-0.2px] hover:opacity-85">
-              Agung Wijaya Nitya
+          {/* Brand Logo & Name */}
+          <div className="flex items-center gap-3">
+            <a href="#" className="flex items-center gap-2 hover:opacity-85 transition-opacity">
+              <span className="flex h-5 w-5 items-center justify-center rounded bg-[#1d1d1f] text-white text-[9px] font-black tracking-tighter">
+                AWN
+              </span>
+              <span className="font-heading text-[14px] sm:text-[15px] font-semibold text-[#1d1d1f] tracking-[-0.2px]">
+                Agung Wijaya Nitya
+              </span>
             </a>
-            <span className="hidden md:inline-block text-[#86868b] text-[12px] font-normal">
-              Mitra Resmi B2B & Korporat
-            </span>
           </div>
 
-          {/* Conversion Action Pills */}
+          {/* Central Category Links (Apple SF Pro Text 12px) */}
+          <nav className="hidden lg:flex items-center gap-7 text-[12px] text-[#1d1d1f]/80 font-normal tracking-[-0.12px]">
+            <a href="#infrastruktur" className="hover:text-[#0071e3] transition-colors">
+              Infrastruktur Server
+            </a>
+            <a href="#komputasi" className="hover:text-[#0071e3] transition-colors">
+              Komputasi Kantor
+            </a>
+            <a href="#elektronik" className="hover:text-[#0071e3] transition-colors">
+              Elektronik Komersial
+            </a>
+            <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
+              Ekosistem B2B
+            </a>
+            <a
+              href={SITE_CONTENT.company.inaprocUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 font-medium"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>INAPROC (742 Unit)</span>
+            </a>
+          </nav>
+
+          {/* Right Action Controls: Outlined Pill & Pricing Blue Pill */}
           <div className="flex items-center gap-2.5">
             <a
               href={SITE_CONTENT.company.inaprocUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-7 items-center justify-center rounded-full border border-[#86868b] bg-transparent px-3.5 text-[12px] font-normal tracking-[-0.12px] text-[#1d1d1f] transition-colors hover:border-[#1d1d1f]"
+              className="hidden sm:inline-flex h-7 items-center justify-center rounded-full border border-[#86868b] bg-transparent px-3 text-[12px] font-normal tracking-[-0.12px] text-[#1d1d1f] transition-all hover:border-[#1d1d1f] hover:bg-black/[0.02]"
             >
               <span>Katalog Lengkap</span>
             </a>
 
             <a
               href="#cta-pengadaan"
-              className="inline-flex h-7 items-center justify-center rounded-full bg-[#0071e3] px-3.5 text-[12px] font-normal tracking-[-0.12px] text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex h-7 items-center justify-center rounded-full bg-[#0071e3] px-3.5 text-[12px] font-normal tracking-[-0.12px] text-white transition-all hover:bg-[#0077ed] active:scale-[0.98]"
             >
               <span>Ajukan Penawaran</span>
             </a>
