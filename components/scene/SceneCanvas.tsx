@@ -10,6 +10,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface SceneCanvasProps {
   pointer?: { x: number; y: number };
+  scrollProgress?: number;
 }
 
 /**
@@ -19,7 +20,7 @@ interface SceneCanvasProps {
  * - Safe fallback to 2D StaticDiagram if WebGL fails or reduced motion requested
  * - Pauses render loop when browser tab is hidden
  */
-export default function SceneCanvas({ pointer }: SceneCanvasProps) {
+export default function SceneCanvas({ pointer, scrollProgress = 0 }: SceneCanvasProps) {
   const isWebGLSupported = useWebGLCapability();
   const prefersReduced = useReducedMotion();
   const [isTabVisible, setIsTabVisible] = useState(true);
@@ -41,7 +42,7 @@ export default function SceneCanvas({ pointer }: SceneCanvasProps) {
   return (
     <div className="relative h-full w-full">
       <Canvas
-        camera={{ position: [0, 2.0, 6.2], fov: 33 }}
+        camera={{ position: [0, 2.3, 7.6], fov: 32 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
@@ -58,7 +59,7 @@ export default function SceneCanvas({ pointer }: SceneCanvasProps) {
         }}
       >
         <color attach="background" args={["#0B0B0D"]} />
-        <HeroExperience pointer={pointer} />
+        <HeroExperience pointer={pointer} scrollProgress={scrollProgress} />
       </Canvas>
     </div>
   );

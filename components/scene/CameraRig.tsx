@@ -8,16 +8,23 @@ import { PerspectiveCamera } from "@react-three/drei";
 interface CameraRigProps {
   /** Optional pointer damping for desktop subtle mouse response */
   enablePointerResponse?: boolean;
+  /** Scroll progress through choreography (0.0 to 1.0) */
+  scrollProgress?: number;
+}
+
+function smoothstep(min: number, max: number, val: number) {
+  const x = Math.max(0, Math.min(1, (val - min) / (max - min)));
+  return x * x * (3 - 2 * x);
 }
 
 /**
  * CameraRig — DESIGN.md §5.3
- * Narrow FOV (30-35°) studio camera rig tailored for product photography.
- * Calibrated for clean framing of the Generic IT Device on both desktop (1440px)
- * and mobile portrait (390px).
+ * Narrow FOV (30-35°) studio camera rig with smooth scroll tracking
+ * and responsive framing across all viewport sizes.
  */
 export default function CameraRig({
   enablePointerResponse = true,
+  scrollProgress = 0,
 }: CameraRigProps) {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const pointerPos = useRef({ x: 0, y: 0 });
@@ -40,28 +47,35 @@ export default function CameraRig({
     if (!cam) return;
 
     const aspect = size.width / size.height;
+    const p = THREE.MathUtils.clamp(scrollProgress, 0, 1);
 
-    // Default Desktop framing (FOV 32°)
-    let targetX = 0;
-    let targetY = 2.3;
-    let targetZ = 7.6;
-    let targetFov = 32;
-    const lookAtX = 0;
-    const lookAtY = -0.15;
+    // Scroll transitions across 4 stages
+    const sHardware = smoothstep(0.18, 0.38, p);
+    const sSoftware = smoothstep(0.42, 0.65, p);
+    const sServices = smoothstep(0.68, 0.92, p);
+
+    let baseTargetX = 0;
+    let baseTargetY = 2.3 + sHardware * 0.4 - sSoftware * 0.2 - sServices * 0.2;
+    let baseTargetZ = 7.6 - sHardware * 0.4 + sSoftware * 0.5 + sServices * 0.5;
+    let targetFov = 32 + sServices * 1.5;
+    let lookAtY = -0.15 + sHardware * 0.15;
 
     if (aspect < 0.75) {
-      // Mobile portrait (390px): centered framing with comfortable buffer
-      targetX = 0;
-      targetY = 2.4;
-      targetZ = 8.2;
+      // Mobile portrait (390px): centered with comfortable buffer
+      baseTargetY = 2.3 + sHardware * 0.3;
+      baseTargetZ = 8.2 - sHardware * 0.2 + sSoftware * 0.4;
       targetFov = 33;
+      lookAtY = -0.1;
     } else if (aspect < 1.1) {
       // Tablet view
-      targetX = 0;
-      targetY = 2.3;
-      targetZ = 7.8;
+      baseTargetY = 2.3 + sHardware * 0.35;
+      baseTargetZ = 7.8 - sHardware * 0.3 + sSoftware * 0.4;
       targetFov = 32;
     }
+
+    let targetX = baseTargetX;
+    let targetY = baseTargetY;
+    let targetZ = baseTargetZ;
 
     // Subtle pointer response on desktop (restrained, gentle)
     if (enablePointerResponse && aspect >= 1.0) {
@@ -79,7 +93,7 @@ export default function CameraRig({
       cam.updateProjectionMatrix();
     }
 
-    const currentLookAt = new THREE.Vector3(lookAtX, lookAtY, 0);
+    const currentLookAt = new THREE.Vector3(0, lookAtY, 0);
     cam.lookAt(currentLookAt);
   });
 
@@ -87,8 +101,8 @@ export default function CameraRig({
     <PerspectiveCamera
       ref={cameraRef}
       makeDefault
-      position={[0, 2.0, 6.2]}
-      fov={33}
+      position={[0, 2.3, 7.6]}
+      fov={32}
       near={0.1}
       far={40}
     />

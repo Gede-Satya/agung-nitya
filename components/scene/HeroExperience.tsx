@@ -9,6 +9,7 @@ import CameraRig from "./CameraRig";
 
 interface HeroExperienceProps {
   pointer?: { x: number; y: number };
+  scrollProgress?: number;
 }
 
 /**
@@ -16,13 +17,13 @@ interface HeroExperienceProps {
  * Studio environment containing:
  * - Studio lighting & local Lightformers
  * - Contact shadows for realistic grounding
- * - SATU perangkat TI generik (GenericITDevice)
- * - Narrow FOV camera rig with smooth idle damping
+ * - SATU perangkat TI generik (GenericITDevice) with scroll-driven layers
+ * - Narrow FOV camera rig
  */
-export default function HeroExperience({ pointer }: HeroExperienceProps) {
+export default function HeroExperience({ pointer, scrollProgress = 0 }: HeroExperienceProps) {
   return (
     <>
-      <CameraRig />
+      <CameraRig scrollProgress={scrollProgress} />
       <Lighting />
       <StudioEnvironment />
 
@@ -37,8 +38,8 @@ export default function HeroExperience({ pointer }: HeroExperienceProps) {
         color="#000000"
       />
 
-      {/* The Generic IT Device */}
-      <GenericITDevice pointer={pointer} />
+      {/* The Generic IT Device with 5 deconstructable layers */}
+      <GenericITDevice pointer={pointer} scrollProgress={scrollProgress} />
     </>
   );
 }

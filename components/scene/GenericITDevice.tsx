@@ -4,10 +4,18 @@ import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
+import ConnectionTopology from "./ConnectionTopology";
 
 interface GenericITDeviceProps {
   /** Optional pointer response coordinates */
   pointer?: { x: number; y: number };
+  /** Scroll progress through choreography (0.0 to 1.0) */
+  scrollProgress?: number;
+}
+
+function smoothstep(min: number, max: number, val: number) {
+  const x = Math.max(0, Math.min(1, (val - min) / (max - min)));
+  return x * x * (3 - 2 * x);
 }
 
 /**
@@ -25,134 +33,144 @@ function createProceduralUITexture(): THREE.Texture {
   const ctx = canvas.getContext("2d");
 
   if (ctx) {
-    // Window background (Dark graphite UI surface)
-    ctx.fillStyle = "#151518";
+    // Window background (Crisp modern slate UI)
+    ctx.fillStyle = "#1E2026";
     ctx.fillRect(0, 0, 1024, 640);
 
-    // Header bar
-    ctx.fillStyle = "#1D1D21";
-    ctx.fillRect(0, 0, 1024, 70);
+    // Accent top highlight hairline
+    ctx.fillStyle = "#5B7CFF";
+    ctx.fillRect(0, 0, 1024, 4);
 
-    // Subtle header border
-    ctx.strokeStyle = "#34312D";
-    ctx.lineWidth = 2;
+    // Header bar
+    ctx.fillStyle = "#16181D";
+    ctx.fillRect(0, 4, 1024, 66);
+
+    ctx.strokeStyle = "#343842";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(0, 70);
     ctx.lineTo(1024, 70);
     ctx.stroke();
 
-    // Window controls
-    const dots = ["#5B7CFF", "#9B9892", "#34312D"];
+    // Window control pills
+    const dots = ["#5B7CFF", "#6E7280", "#3E424D"];
     dots.forEach((color, i) => {
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.arc(36 + i * 24, 35, 7, 0, Math.PI * 2);
+      ctx.arc(36 + i * 22, 37, 6, 0, Math.PI * 2);
       ctx.fill();
     });
 
     // Window title
     ctx.fillStyle = "#F1EEE8";
-    ctx.font = "bold 20px monospace";
-    ctx.fillText("SISTEM INFORMASI MANAJEMEN — MODUL INSTANSI", 130, 42);
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText("PT AGUNG WIJAYA NITYA — MODUL SISTEM INFORMASI INSTANSI", 120, 43);
 
     // Sidebar
-    ctx.fillStyle = "#111114";
+    ctx.fillStyle = "#121418";
     ctx.fillRect(0, 70, 240, 570);
 
-    // Sidebar items
     const navItems = [
-      "Ringkasan Sistem",
-      "Layanan Manajemen SDM",
-      "Perangkat Terkoneksi",
-      "Log Infrastruktur",
-      "Status Pengadaan",
+      "Dashboard Terpadu",
+      "SIMDINKES SDM",
+      "Perangkat Komputasi",
+      "Bridging Data Instansi",
+      "Log Operasional",
     ];
     navItems.forEach((text, i) => {
       if (i === 1) {
-        ctx.fillStyle = "rgba(91, 124, 255, 0.15)";
-        ctx.fillRect(16, 96 + i * 50, 208, 38);
-        ctx.fillStyle = "#5B7CFF";
+        ctx.fillStyle = "rgba(91, 124, 255, 0.25)";
+        ctx.fillRect(12, 92 + i * 48, 216, 36);
+        ctx.fillStyle = "#FFFFFF";
       } else {
         ctx.fillStyle = "#9B9892";
       }
-      ctx.font = "16px sans-serif";
-      ctx.fillText(text, 36, 120 + i * 50);
+      ctx.font = "15px sans-serif";
+      ctx.fillText(text, 28, 116 + i * 48);
     });
 
-    // Main content cards
-    // Metric Card 1
-    ctx.fillStyle = "#1D1D21";
-    ctx.strokeStyle = "#34312D";
+    // Metric Card 1 (SIMDINKES)
+    ctx.fillStyle = "#16181D";
+    ctx.strokeStyle = "#343842";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(270, 100, 330, 140, [12]);
+    ctx.roundRect(265, 95, 345, 140, [12]);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#9B9892";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("STATUS SISTEM INFORMASI", 294, 134);
-    ctx.fillStyle = "#22C55E";
-    ctx.beginPath();
-    ctx.arc(298, 170, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#F1EEE8";
-    ctx.font = "bold 24px sans-serif";
-    ctx.fillText("OPERASIONAL AKTIF", 316, 178);
-    ctx.fillStyle = "#9B9892";
-    ctx.font = "13px monospace";
-    ctx.fillText("SIMDINKES · KBLI TERDAFTAR", 294, 212);
-
-    // Metric Card 2
-    ctx.fillStyle = "#1D1D21";
-    ctx.beginPath();
-    ctx.roundRect(630, 100, 360, 140, [12]);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = "#9B9892";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("PRODUK TAYANG INAPROC", 654, 134);
     ctx.fillStyle = "#5B7CFF";
-    ctx.font = "bold 32px sans-serif";
-    ctx.fillText("742 PRODUK", 654, 178);
+    ctx.font = "bold 12px monospace";
+    ctx.fillText("PRODUK TAYANG INAPROC", 285, 125);
+    ctx.fillStyle = "#F1EEE8";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText("SIMDINKES", 285, 158);
     ctx.fillStyle = "#9B9892";
     ctx.font = "13px sans-serif";
-    ctx.fillText("Katalog Elektronik Terverifikasi", 654, 212);
+    ctx.fillText("Layanan Manajemen & SDM Kesehatan", 285, 185);
+    ctx.fillStyle = "#22C55E";
+    ctx.fillText("● Status: Terverifikasi Aktif", 285, 212);
+
+    // Metric Card 2 (Katalog Produk)
+    ctx.fillStyle = "#16181D";
+    ctx.strokeStyle = "#343842";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(635, 95, 360, 140, [12]);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#9B9892";
+    ctx.font = "12px monospace";
+    ctx.fillText("TOTAL PRODUK KATALOG", 655, 125);
+    ctx.fillStyle = "#5B7CFF";
+    ctx.font = "bold 32px sans-serif";
+    ctx.fillText("742 PRODUK", 655, 168);
+    ctx.fillStyle = "#9B9892";
+    ctx.font = "13px sans-serif";
+    ctx.fillText("Katalog Elektronik (15 Okt 2026)", 655, 205);
 
     // Data table / Telemetry rows
-    ctx.fillStyle = "#1A1A1E";
+    ctx.fillStyle = "#16181D";
+    ctx.strokeStyle = "#343842";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(270, 270, 720, 330, [14]);
+    ctx.roundRect(265, 260, 730, 345, [14]);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = "#F1EEE8";
     ctx.font = "bold 16px sans-serif";
-    ctx.fillText("Topologi Integrasi Layanan Instansi", 300, 310);
+    ctx.fillText("Pilar & Solusi Terdaftar", 290, 298);
 
-    for (let r = 0; r < 4; r++) {
-      const rowY = 345 + r * 60;
-      ctx.fillStyle = r % 2 === 0 ? "rgba(255, 255, 255, 0.02)" : "transparent";
-      ctx.fillRect(285, rowY - 18, 690, 48);
+    const rows = [
+      { pilar: "Software & Jasa TI", detail: "Pembuatan, Implementasi & Reverse-Engineering", status: "UTAMA" },
+      { pilar: "Perangkat TI", detail: "Komputer Kerja, Mini PC & Pemindai Data", status: "TERSEDIA" },
+      { pilar: "Peralatan & Perlengkapan", detail: "Rak Server, Lemari & Penunjang Fasilitas", status: "TERSEDIA" },
+      { pilar: "Servis & Sewa", detail: "Reparasi Perangkat & Penyewaan Komputasi", status: "TERSEDIA" },
+    ];
+
+    rows.forEach((r, idx) => {
+      const y = 330 + idx * 64;
+      ctx.fillStyle = idx % 2 === 0 ? "rgba(255, 255, 255, 0.03)" : "transparent";
+      ctx.fillRect(280, y - 18, 700, 52);
 
       ctx.fillStyle = "#5B7CFF";
-      ctx.fillRect(300, rowY + 2, 8, 8);
+      ctx.beginPath();
+      ctx.arc(298, y + 8, 4, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.fillStyle = "#F1EEE8";
-      ctx.font = "15px sans-serif";
-      const rowTitles = [
-        "Gateway Integrasi SIMDINKES & Manajemen SDM",
-        "Penyedia Perangkat Komputasi & Pemindai Data",
-        "Pemeliharaan Terjadwal & Penjaminan Operasional",
-        "Protokol Pengadaan Elektronik Terpadu",
-      ];
-      ctx.fillText(rowTitles[r] || "Modul Solusi", 324, rowY + 11);
+      ctx.font = "bold 15px sans-serif";
+      ctx.fillText(r.pilar, 316, y + 6);
 
       ctx.fillStyle = "#9B9892";
-      ctx.font = "13px monospace";
-      ctx.fillText("VERIFIKASI RESMI", 850, rowY + 11);
-    }
+      ctx.font = "13px sans-serif";
+      ctx.fillText(r.detail, 316, y + 25);
+
+      ctx.fillStyle = "#5B7CFF";
+      ctx.font = "bold 12px monospace";
+      ctx.fillText(r.status, 910, y + 14);
+    });
   }
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -162,24 +180,24 @@ function createProceduralUITexture(): THREE.Texture {
 }
 
 /**
- * GenericITDevice — DESIGN.md §5
+ * GenericITDevice — DESIGN.md §4 & §5
  * SATU perangkat TI generik tanpa emblem merek:
  * - Mini PC pipih bersudut membulat (RoundedBox)
- * - Struktur 5 lapisan <group> (Layer 1–5) siap terurai saat scroll di Fase 2
- * - Di Fase 1: tampil utuh, presisi, dengan idle float pelan dan satu LED indikator aksen
+ * - Struktur 5 lapisan <group> (Layer 1–5) yang terurai mengikuti scroll:
+ *   1. Hero: perangkat utuh
+ *   2. Perangkat keras: casing atas terangkat, komponen internal terlihat
+ *   3. Perangkat lunak: panel antarmuka melayang naik
+ *   4. Layanan: garis konektivitas tersambung ke titik instansi
  */
-export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
+export default function GenericITDevice({ pointer, scrollProgress = 0 }: GenericITDeviceProps) {
   const masterGroupRef = useRef<THREE.Group>(null);
-  const lowerCasingRef = useRef<THREE.Group>(null);
-  const componentBoardRef = useRef<THREE.Group>(null);
   const upperCasingRef = useRef<THREE.Group>(null);
   const interfacePanelRef = useRef<THREE.Group>(null);
-  const connectionTopologyRef = useRef<THREE.Group>(null);
 
-  // Reusable procedural texture for the interface panel
+  // Procedural UI mockup texture
   const uiTexture = useMemo(() => createProceduralUITexture(), []);
 
-  // Shared Physical Materials with varying roughness & metalness
+  // Shared Physical Materials
   const casingMaterial = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
@@ -233,26 +251,72 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
     []
   );
 
-  // Smooth, slow idle motion (DESIGN.md §5.3)
+  // Dynamic Scroll Choreography & Idle Float
   useFrame(({ clock }) => {
     const group = masterGroupRef.current;
+    const upperCasing = upperCasingRef.current;
+    const interfacePanel = interfacePanelRef.current;
     if (!group) return;
 
     const t = clock.getElapsedTime();
+    const p = THREE.MathUtils.clamp(scrollProgress, 0, 1);
 
-    // Idle tilt & subtle floating oscillation (slow, calm, power2.inOut feel)
-    const idlePitch = Math.sin(t * 0.45) * 0.025;
-    const idleYaw = Math.cos(t * 0.35) * 0.035;
-    const idleY = Math.sin(t * 0.7) * 0.04;
+    // 1. Idle tilt & subtle floating oscillation (reduced as scroll begins)
+    const idleFactor = Math.max(0, 1 - p * 3);
+    const idlePitch = Math.sin(t * 0.45) * 0.025 * idleFactor;
+    const idleYaw = Math.cos(t * 0.35) * 0.035 * idleFactor;
+    const idleY = Math.sin(t * 0.7) * 0.04 * idleFactor;
 
-    // Pointer parallax response (desktop)
-    const targetRotX = 0.32 + idlePitch + (pointer ? -pointer.y * 0.08 : 0);
-    const targetRotY = -0.48 + idleYaw + (pointer ? pointer.x * 0.12 : 0);
-    const targetY = idleY;
+    // 2. Master group orientation across scroll stages
+    // Stage 1 (Hero 0-0.2): [0.32, -0.48, 0]
+    // Stage 2 (Hardware 0.2-0.45): tilts forward to show board [0.44, -0.38, 0]
+    // Stage 3 (Software 0.45-0.7): settles [0.28, -0.32, 0]
+    // Stage 4 (Services 0.7-1.0): turns slightly front [0.22, -0.15, 0]
+    const stage2 = smoothstep(0.18, 0.4, p);
+    const stage3 = smoothstep(0.42, 0.65, p);
+    const stage4 = smoothstep(0.68, 0.92, p);
 
-    group.rotation.x = THREE.MathUtils.lerp(group.rotation.x, targetRotX, 0.04);
-    group.rotation.y = THREE.MathUtils.lerp(group.rotation.y, targetRotY, 0.04);
-    group.position.y = THREE.MathUtils.lerp(group.position.y, targetY, 0.04);
+    const baseRotX = 0.32 + stage2 * 0.12 - stage3 * 0.16 - stage4 * 0.06;
+    const baseRotY = -0.48 + stage2 * 0.1 + stage3 * 0.08 + stage4 * 0.15;
+
+    const targetRotX = baseRotX + idlePitch + (pointer ? -pointer.y * 0.08 : 0);
+    const targetRotY = baseRotY + idleYaw + (pointer ? pointer.x * 0.12 : 0);
+    const targetY = idleY - stage2 * 0.15 + stage3 * 0.1;
+
+    group.rotation.x = THREE.MathUtils.lerp(group.rotation.x, targetRotX, 0.05);
+    group.rotation.y = THREE.MathUtils.lerp(group.rotation.y, targetRotY, 0.05);
+    group.position.y = THREE.MathUtils.lerp(group.position.y, targetY, 0.05);
+
+    // 3. Layer 3 (Upper Casing / Lid Lifting)
+    if (upperCasing) {
+      // Lifts up on Stage 2 (Hardware), hovers higher on Stage 3 (Software)
+      const liftStage2 = smoothstep(0.18, 0.38, p);
+      const liftStage3 = smoothstep(0.42, 0.62, p);
+
+      const targetLidY = 0.19 + liftStage2 * 1.45 + liftStage3 * 0.45;
+      const targetLidRotX = -liftStage2 * 0.18;
+
+      upperCasing.position.y = THREE.MathUtils.lerp(upperCasing.position.y, targetLidY, 0.06);
+      upperCasing.rotation.x = THREE.MathUtils.lerp(upperCasing.rotation.x, targetLidRotX, 0.06);
+    }
+
+    // 4. Layer 4 (Interface Panel Emergence)
+    if (interfacePanel) {
+      // Emerges on Stage 3 (Software: 0.42 to 0.68)
+      const panelStage = smoothstep(0.40, 0.62, p);
+      const panelVisible = p > 0.36;
+      interfacePanel.visible = panelVisible;
+
+      if (panelVisible) {
+        const targetPanelY = 0.1 + panelStage * 1.38;
+        const targetPanelRotX = -0.38 + panelStage * 0.16;
+        const targetPanelScale = 0.65 + panelStage * 0.35;
+
+        interfacePanel.position.y = THREE.MathUtils.lerp(interfacePanel.position.y, targetPanelY, 0.06);
+        interfacePanel.rotation.x = THREE.MathUtils.lerp(interfacePanel.rotation.x, targetPanelRotX, 0.06);
+        interfacePanel.scale.setScalar(THREE.MathUtils.lerp(interfacePanel.scale.x, targetPanelScale, 0.06));
+      }
+    }
   });
 
   return (
@@ -261,7 +325,7 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
           LAPISAN 1: Casing Bawah (Lower Casing)
           Ventilasi, port I/O, satu LED kecil warna aksen #5B7CFF
           ──────────────────────────────────────────────────────── */}
-      <group ref={lowerCasingRef} name="layer-1-lower-casing" position={[0, -0.16, 0]}>
+      <group name="layer-1-lower-casing" position={[0, -0.16, 0]}>
         {/* Main Lower Chassis Tray */}
         <RoundedBox
           args={[3.4, 0.38, 2.8]}
@@ -296,7 +360,6 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
             smoothness={4}
             material={portMetalMaterial}
           />
-          {/* Blue USB 3.0 insert */}
           <mesh position={[0, 0, 0.005]}>
             <boxGeometry args={[0.22, 0.04, 0.01]} />
             <meshBasicMaterial color="#0A58CA" />
@@ -318,12 +381,10 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
 
         {/* Single Micro Status LED (Accent #5B7CFF) */}
         <group position={[1.15, 0.02, 1.415]}>
-          {/* Bezel */}
           <mesh rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.045, 0.045, 0.01, 16]} />
             <primitive object={darkAccentMaterial} />
           </mesh>
-          {/* Emissive Core */}
           <mesh position={[0, 0, 0.006]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.028, 0.028, 0.015, 16]} />
             <primitive object={ledAccentMaterial} />
@@ -360,12 +421,10 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
               smoothness={4}
               material={portMetalMaterial}
             />
-            {/* RJ45 socket cavity */}
             <mesh position={[0, -0.02, -0.01]}>
               <boxGeometry args={[0.24, 0.18, 0.02]} />
               <primitive object={darkAccentMaterial} />
             </mesh>
-            {/* Contact pins */}
             {[-0.06, -0.02, 0.02, 0.06].map((px, idx) => (
               <mesh key={`pin-${idx}`} position={[px, 0.04, -0.005]}>
                 <boxGeometry args={[0.015, 0.04, 0.01]} />
@@ -415,7 +474,7 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
           LAPISAN 2: Papan Komponen (Component Substrate)
           Kotak tipis, sirkuit, heatsink, dan micro chips
           ──────────────────────────────────────────────────────── */}
-      <group ref={componentBoardRef} name="layer-2-component-substrate" position={[0, 0.02, 0]}>
+      <group name="layer-2-component-substrate" position={[0, 0.02, 0]}>
         {/* Main PCB Slab */}
         <RoundedBox
           args={[3.15, 0.05, 2.55]}
@@ -444,7 +503,6 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
               })
             }
           />
-          {/* SoC core die reflection */}
           <mesh position={[0, 0.03, 0]}>
             <boxGeometry args={[0.55, 0.01, 0.55]} />
             <meshStandardMaterial color="#1E2024" roughness={0.15} metalness={0.9} />
@@ -478,10 +536,9 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
 
       {/* ────────────────────────────────────────────────────────
           LAPISAN 3: Casing Atas (Upper Casing / Lid)
-          Terpasang rapat dan presisi sebagai perangkat utuh di Fase 1
+          Terangkat vertikal saat scroll tahap perangkat keras
           ──────────────────────────────────────────────────────── */}
       <group ref={upperCasingRef} name="layer-3-upper-casing" position={[0, 0.19, 0]}>
-        {/* Top Lid Shell */}
         <RoundedBox
           args={[3.4, 0.16, 2.8]}
           radius={0.16}
@@ -491,7 +548,6 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
           receiveShadow
         />
 
-        {/* Fine precision perimeter chamfer inset */}
         <mesh position={[0, -0.075, 0]}>
           <boxGeometry args={[3.36, 0.015, 2.76]} />
           <primitive object={darkAccentMaterial} />
@@ -500,14 +556,14 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
 
       {/* ────────────────────────────────────────────────────────
           LAPISAN 4: Panel Antarmuka Melayang (Interface Panel)
-          Disimpan di dalam perangkat di Fase 1 (akan melayang di Fase 2)
+          Melayang naik saat scroll tahap perangkat lunak
           ──────────────────────────────────────────────────────── */}
       <group
         ref={interfacePanelRef}
         name="layer-4-interface-panel"
-        position={[0, 0.05, 0]}
+        position={[0, 0.1, 0]}
         rotation={[-Math.PI / 16, 0, 0]}
-        scale={[0.95, 0.95, 0.95]}
+        scale={[0.7, 0.7, 0.7]}
         visible={false}
       >
         <RoundedBox
@@ -523,28 +579,10 @@ export default function GenericITDevice({ pointer }: GenericITDeviceProps) {
       </group>
 
       {/* ────────────────────────────────────────────────────────
-          LAPISAN 5: Garis Penghubung & Simbol Instansi (Institutional Topology)
-          Disimpan untuk Fase 2 (tahap layanan)
+          LAPISAN 5: Garis Penghubung & Simbol Instansi
+          Mekar saat scroll tahap layanan
           ──────────────────────────────────────────────────────── */}
-      <group
-        ref={connectionTopologyRef}
-        name="layer-5-connection-topology"
-        position={[0, 0.35, 0]}
-        visible={false}
-      >
-        {[
-          { pos: [-2.1, 0.3, -1.2], label: "INSTANSI 1" },
-          { pos: [2.1, 0.4, -0.9], label: "INSTANSI 2" },
-          { pos: [0.0, 0.6, -1.8], label: "PUSAT DATA" },
-        ].map((node, i) => (
-          <group key={`node-${i}`} position={node.pos as [number, number, number]}>
-            <mesh>
-              <sphereGeometry args={[0.06, 16, 16]} />
-              <primitive object={ledAccentMaterial} />
-            </mesh>
-          </group>
-        ))}
-      </group>
+      <ConnectionTopology progress={scrollProgress} />
     </group>
   );
 }
