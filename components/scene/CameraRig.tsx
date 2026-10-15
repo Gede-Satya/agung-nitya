@@ -54,7 +54,7 @@ export default function CameraRig({
     const sSoftware = smoothstep(0.42, 0.65, p);
     const sServices = smoothstep(0.68, 0.92, p);
 
-    let baseTargetX = 0;
+    const baseTargetX = 0;
     let baseTargetY = 2.3 + sHardware * 0.4 - sSoftware * 0.2 - sServices * 0.2;
     let baseTargetZ = 7.6 - sHardware * 0.4 + sSoftware * 0.5 + sServices * 0.5;
     let targetFov = 32 + sServices * 1.5;
@@ -75,7 +75,7 @@ export default function CameraRig({
 
     let targetX = baseTargetX;
     let targetY = baseTargetY;
-    let targetZ = baseTargetZ;
+    const targetZ = baseTargetZ;
 
     // Subtle pointer response on desktop (restrained, gentle)
     if (enablePointerResponse && aspect >= 1.0) {
