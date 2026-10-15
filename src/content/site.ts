@@ -32,6 +32,7 @@ export interface SiteContent {
      */
     activeProductsCount: number;
     activeProductsDate: string;
+    whatsappUrl: string;
   };
   headline: {
     badge: string;
@@ -79,6 +80,7 @@ export const SITE_CONTENT: SiteContent = {
     // 742 produk tayang per 15 Okt 2026 — verifikasi ulang sebelum rilis
     activeProductsCount: 742,
     activeProductsDate: "15 Oktober 2026",
+    whatsappUrl: "https://wa.me/6281234567890",
   },
 
   headline: {

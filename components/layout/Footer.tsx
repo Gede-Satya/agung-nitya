@@ -1,102 +1,120 @@
 "use client";
 
 import React from "react";
-import { ExternalLink, ShieldCheck } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 w-full bg-studio-mist border-t border-hairline-silver py-12 sm:py-16 text-slate">
-      <div className="shell flex flex-col gap-10 sm:gap-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          {/* Col 1: Identity & Legal */}
-          <div className="md:col-span-5 flex flex-col items-start gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-hairline-silver bg-gallery-white font-heading text-xs font-semibold text-pricing-blue">
-                AN
+    <footer className="w-full bg-[#fbfbfd] border-t border-[#d2d2d7] py-14 text-[#6e6e73] text-[12px] leading-relaxed">
+      <div className="shell max-w-[1140px] mx-auto px-4">
+        {/* 4-Column Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-[#e6e6e8]">
+          {/* Column 1: Identity */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded bg-[#1d1d1f] text-white text-[10px] font-bold">
+                AWN
               </span>
-              <span className="font-heading text-base font-semibold text-ink">
-                {SITE_CONTENT.company.name}
+              <span className="font-semibold text-[#1d1d1f] text-[13px] tracking-tight">
+                PT Agung Wijaya Nitya
               </span>
             </div>
-
-            <p className="text-xs text-slate leading-relaxed max-w-sm">
-              Mitra pengadaan resmi solusi sistem informasi, implementasi sistem terpadu,
-              dan perangkat teknologi informasi untuk instansi pemerintah.
+            <p className="text-[#6e6e73]">
+              Penyedia perangkat keras, komputasi bisnis, dan instrumen riset komersial berstandar industri nasional.
             </p>
-
-            <div className="flex items-center gap-2 text-xs pt-1">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <div className="pt-1 text-[11px] text-[#86868b]">
               <span>{SITE_CONTENT.company.legalType} · {SITE_CONTENT.company.location}</span>
             </div>
           </div>
 
-          {/* Col 2: Quick Links */}
-          <div className="md:col-span-4 flex flex-col gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-ink">
-              Etalase & Verifikasi
-            </span>
-            <ul className="flex flex-col gap-2 text-xs">
+          {/* Column 2: Kantor Pusat & Operasional */}
+          <div className="flex flex-col gap-2">
+            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
+              Kantor Pusat & Workshop
+            </h4>
+            <p className="text-[#6e6e73]">
+              Jl. Sunset Road / Raya Kuta, Kab. Badung, Bali 80361, Indonesia.
+            </p>
+            <p className="text-[#1d1d1f] font-medium pt-1">
+              Telp / WA: {SITE_CONTENT.company.phonePlaceholder}
+            </p>
+            <p className="text-[#6e6e73]">
+              Email: {SITE_CONTENT.company.email}
+            </p>
+          </div>
+
+          {/* Column 3: Kredensial & Portal */}
+          <div className="flex flex-col gap-2">
+            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
+              Kredensial & Portal
+            </h4>
+            <ul className="flex flex-col gap-1.5">
               <li>
                 <a
                   href={SITE_CONTENT.company.inaprocUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-apple-blue transition-colors font-medium text-ink"
+                  className="hover:text-[#0071e3] transition-colors inline-flex items-center gap-1"
                 >
-                  <span>INAPROC Katalog Elektronik</span>
-                  <ExternalLink className="h-3 w-3 text-slate" />
+                  <span>INAPROC Katalog ({SITE_CONTENT.company.activeProductsCount} Produk)</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
                 </a>
               </li>
               <li>
-                <span className="text-slate">
-                  {SITE_CONTENT.company.activeProductsCount} Produk Tayang ({SITE_CONTENT.company.activeProductsDate})
-                </span>
+                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
+                  Kepatuhan TKDN & BMP
+                </a>
               </li>
               <li>
-                <span className="text-slate">
-                  Tipe Penyedia: {SITE_CONTENT.company.inaprocProviderType}
-                </span>
+                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
+                  Tata Rekanan B2B & B2G
+                </a>
               </li>
               <li>
-                <span className="text-slate/70 text-[11px]">
-                  (TODO: cek aturan brand logo resmi INAPROC)
-                </span>
+                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
+                  Pusat Regulasi Instansi
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Contact */}
-          <div className="md:col-span-3 flex flex-col gap-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-ink">
-              Kontak Resmi
-            </span>
-            <div className="flex flex-col gap-2 text-xs">
-              <a
-                href={`mailto:${SITE_CONTENT.company.email}`}
-                className="hover:text-apple-blue transition-colors font-medium text-ink"
-              >
-                {SITE_CONTENT.company.email}
-              </a>
-              <span className="text-slate">
-                {SITE_CONTENT.company.phonePlaceholder}
-              </span>
-              <span className="text-slate">
-                Kab. Badung, Bali
+          {/* Column 4: Jaminan Kualitas */}
+          <div className="flex flex-col gap-3">
+            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
+              Jaminan Kualitas
+            </h4>
+            <p className="text-[#6e6e73]">
+              Terakreditasi ISO 9001:2015 untuk Sistem Manajemen Pengadaan & Distribusi peralatan komersial.
+            </p>
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded border border-[#d2d2d7] bg-white px-2.5 py-1 text-[10px] font-semibold tracking-wider text-[#1d1d1f] uppercase shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                TERDAFTAR RESMI LPSE & KATALOG
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-hairline-silver text-[11px] text-slate">
+        {/* Bottom Bar */}
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#86868b]">
           <p>
-            &copy; {currentYear} {SITE_CONTENT.company.name}. Seluruh hak cipta dilindungi undang-undang.
+            &copy; {currentYear} PT Agung Wijaya Nitya (AWN). Hak Cipta Dilindungi Undang-Undang. Seluruh spesifikasi instrumen terverifikasi B2B/B2G.
           </p>
-          <p className="text-slate/80">
-            Disusun untuk transparansi pejabat pengadaan (PPK) & instansi pemerintah.
-          </p>
+
+          <div className="flex items-center gap-5">
+            <a href="#kebijakan" className="hover:text-[#1d1d1f] transition-colors">
+              Kebijakan Privasi
+            </a>
+            <a href="#syarat" className="hover:text-[#1d1d1f] transition-colors">
+              Syarat Pengadaan
+            </a>
+            <a href="#sla" className="hover:text-[#1d1d1f] transition-colors">
+              SLA Dukungan
+            </a>
+          </div>
         </div>
       </div>
     </footer>

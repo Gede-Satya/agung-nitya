@@ -1,23 +1,33 @@
 import Navbar from "@/components/layout/Navbar";
-import ScrollStory from "@/components/layout/ScrollStory";
-import VerificationSection from "@/components/sections/VerificationSection";
-import SupportingPillarsSection from "@/components/sections/SupportingPillarsSection";
-import ContactSection from "@/components/sections/ContactSection";
+import HeroShowcase from "@/components/sections/HeroShowcase";
+import LiniPengadaanSection from "@/components/sections/LiniPengadaanSection";
+import EkosistemPengadaanSection from "@/components/sections/EkosistemPengadaanSection";
+import UnitSiapPengadaanSection from "@/components/sections/UnitSiapPengadaanSection";
+import CtaPengadaanSection from "@/components/sections/CtaPengadaanSection";
 import Footer from "@/components/layout/Footer";
 
-/**
- * Landing Page PT Agung Wijaya Nitya
- * - FASE 1 & 2: 3D deconstruction & scroll story (Pilar 1 & 2)
- * - FASE 3: Section verifikasi legalitas/INAPROC, pilar pendukung statis (Pilar 3 & 4), form kontak server action, dan footer
- */
 export default function Home() {
   return (
-    <main className="min-h-screen bg-canvas text-ink relative selection:bg-accent/15 selection:text-ink">
+    <main className="min-h-screen bg-white text-[#1d1d1f] relative selection:bg-[#0071e3]/20 selection:text-[#1d1d1f]">
+      {/* Dual-Tier Apple Header */}
       <Navbar />
-      <ScrollStory />
-      <VerificationSection />
-      <SupportingPillarsSection />
-      <ContactSection />
+
+      {/* Hero Stage: Hardware Lineup & Floating Capsule */}
+      <HeroShowcase />
+
+      {/* Lini Pengadaan Utama: 3 High-Impact Cards */}
+      <LiniPengadaanSection />
+
+      {/* Ekosistem Pengadaan Resmi & SLA Jaminan Kontrak */}
+      <EkosistemPengadaanSection />
+
+      {/* Unit Siap Pengadaan: 4 Product Cards Grid */}
+      <UnitSiapPengadaanSection />
+
+      {/* CTA: RFQ Pill & Direct Consultation */}
+      <CtaPengadaanSection />
+
+      {/* Enterprise Footer */}
       <Footer />
     </main>
   );
