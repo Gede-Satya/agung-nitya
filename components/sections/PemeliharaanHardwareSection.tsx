@@ -349,16 +349,16 @@ export default function PemeliharaanHardwareSection() {
       style={{ height: "500vh" }}
       aria-label="Pemeliharaan perangkat keras"
     >
-      {/* Sticky Full-Height Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden px-4 sm:px-6 lg:px-10 py-4 sm:py-6">
+      {/* Sticky Full-Height Viewport Container (Offset by navbar height 3.5rem = 56px) */}
+      <div className="sticky top-14 h-[calc(100vh-3.5rem)] sm:h-[calc(100svh-3.5rem)] w-full flex flex-col justify-between overflow-hidden px-3 sm:px-6 lg:px-10 py-2.5 sm:py-4">
         
         {/* Top Header Strip: Single badge & title */}
-        <div className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-1 sm:gap-4 shrink-0">
-          <div className="flex flex-col gap-1">
-            <span className="text-[12px] font-semibold text-[#0B6BAE] uppercase tracking-wider">
+        <div className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-0.5 sm:gap-4 shrink-0">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[11px] sm:text-[12px] font-semibold text-[#0B6BAE] uppercase tracking-wider">
               {config.sectionBadge}
             </span>
-            <h2 className="font-heading text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-ink leading-tight">
+            <h2 className="font-heading text-lg sm:text-2xl lg:text-[26px] font-bold tracking-tight text-ink leading-tight">
               {config.sectionTitle}
             </h2>
           </div>
@@ -372,7 +372,7 @@ export default function PemeliharaanHardwareSection() {
         {/* Center Stage Card (#F5F5F7 backdrop with rounded corners matching site) */}
         <div
           ref={stageCardRef}
-          className="relative w-full max-w-6xl mx-auto flex-1 my-2 sm:my-3 rounded-[24px] sm:rounded-[28px] bg-[#ECECED] border border-black/[0.06] shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-0"
+          className="relative w-full max-w-6xl mx-auto flex-1 my-1.5 sm:my-2.5 rounded-[20px] sm:rounded-[28px] bg-[#ECECED] border border-black/[0.06] shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-0"
         >
           {/* Canvas for responsive object-contain frame drawing */}
           <canvas
@@ -389,17 +389,17 @@ export default function PemeliharaanHardwareSection() {
             </div>
           )}
 
-          {/* Active Stage Callout Card (Desktop: Top-left inside stage, mobile: positioned clean) */}
-          <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20 max-w-[280px] sm:max-w-[340px] pointer-events-none">
+          {/* Desktop Active Stage Callout Card (Sits top-left inside stage, hidden on mobile) */}
+          <div className="hidden md:block absolute top-4 left-4 lg:top-5 lg:left-5 z-20 max-w-[320px] lg:max-w-[340px] pointer-events-none">
             <div
               key={currentStage.id}
-              className="bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-black/10 shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex flex-col gap-2 transition-all duration-300"
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-4 lg:p-5 border border-black/10 shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex flex-col gap-2 transition-all duration-300"
             >
               <span className="text-xs font-mono font-bold tracking-wider text-[#0B6BAE]">
                 {currentStage.number} / 04 · {currentStage.kicker}
               </span>
 
-              <h3 className="font-heading text-base sm:text-lg font-bold text-ink leading-snug">
+              <h3 className="font-heading text-base lg:text-lg font-bold text-ink leading-snug">
                 {currentStage.title}
               </h3>
 
@@ -408,7 +408,7 @@ export default function PemeliharaanHardwareSection() {
               </p>
 
               {/* Specification Chips (Minimum text 13px) */}
-              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-black/5">
+              <div className="flex flex-wrap gap-1.5 pt-1 border-t border-black/5">
                 {currentStage.chips.map((chip, idx) => (
                   <span
                     key={idx}
@@ -439,7 +439,7 @@ export default function PemeliharaanHardwareSection() {
 
           {/* Quiet scroll hint (fades out as soon as user starts scrolling) */}
           <div
-            className={`absolute bottom-3 right-4 z-20 pointer-events-none transition-opacity duration-300 text-xs text-slate-500 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full border border-black/5 ${
+            className={`absolute bottom-2.5 right-3.5 z-20 pointer-events-none transition-opacity duration-300 text-[11px] sm:text-xs text-slate-500 bg-white/70 backdrop-blur-sm px-3 py-1 rounded-full border border-black/5 ${
               scrollProgress > 0.03 ? "opacity-0" : "opacity-100"
             }`}
           >
@@ -447,16 +447,48 @@ export default function PemeliharaanHardwareSection() {
           </div>
 
           {/* Quiet stage caption */}
-          <div className="absolute bottom-3 left-4 z-20 pointer-events-none text-xs text-slate-400 font-medium">
+          <div className="absolute bottom-2.5 left-3.5 z-20 pointer-events-none text-[11px] sm:text-xs text-slate-400 font-medium">
             {config.caption}
           </div>
         </div>
 
+        {/* Mobile Active Stage Card (Positioned below the canvas stage) */}
+        <div className="block md:hidden w-full max-w-6xl mx-auto shrink-0 mb-1.5">
+          <div
+            key={currentStage.id}
+            className="bg-white rounded-xl p-3 border border-black/10 shadow-xs flex flex-col gap-1 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono font-bold tracking-wider text-[#0B6BAE]">
+                {currentStage.number} / 04 · {currentStage.kicker}
+              </span>
+              <div className="flex gap-1">
+                {currentStage.chips.map((chip, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-0.5 rounded text-[11px] font-medium bg-[#F5F5F7] text-slate-700"
+                  >
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <h3 className="font-heading text-sm font-bold text-ink leading-tight">
+              {currentStage.title}
+            </h3>
+
+            <p className="text-[12px] text-slate-600 leading-snug line-clamp-2">
+              {currentStage.body}
+            </p>
+          </div>
+        </div>
+
         {/* Bottom Stepper Navigation (01-04 Real Clickable Buttons) */}
-        <div className="w-full max-w-4xl mx-auto shrink-0 pb-1">
+        <div className="w-full max-w-4xl mx-auto shrink-0 pb-0.5">
           <nav
             aria-label="Tahapan pemeliharaan"
-            className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2"
           >
             {config.stages.map((stage, idx) => {
               const isActive = activeStageIndex === idx;
@@ -466,13 +498,13 @@ export default function PemeliharaanHardwareSection() {
                   type="button"
                   onClick={() => scrollToStage(idx)}
                   aria-current={isActive ? "step" : undefined}
-                  className={`text-left px-3 py-2 sm:py-2.5 rounded-xl transition-all flex flex-col gap-0.5 border cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0B6BAE] focus:ring-offset-2 ${
+                  className={`text-left px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl transition-all flex flex-col gap-0.5 border cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0B6BAE] focus:ring-offset-2 ${
                     isActive
                       ? "bg-white text-ink border-black/15 shadow-sm scale-[1.01]"
                       : "bg-white/50 hover:bg-white/80 text-slate-500 border-black/5"
                   }`}
                 >
-                  <div className="flex items-center justify-between text-[11px] font-mono">
+                  <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono">
                     <span className={isActive ? "text-[#0B6BAE] font-bold" : "text-slate-400"}>
                       {stage.number}
                     </span>
@@ -481,7 +513,7 @@ export default function PemeliharaanHardwareSection() {
                     )}
                   </div>
                   <span
-                    className={`text-xs sm:text-[13px] font-semibold truncate ${
+                    className={`text-[11px] sm:text-[13px] font-semibold truncate ${
                       isActive ? "text-ink" : "text-slate-600"
                     }`}
                   >
