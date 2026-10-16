@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import HeroShowcase from "@/components/sections/HeroShowcase";
 import LiniPengadaanSection from "@/components/sections/LiniPengadaanSection";
+import PemeliharaanHardwareSection from "@/components/sections/PemeliharaanHardwareSection";
 import EkosistemPengadaanSection from "@/components/sections/EkosistemPengadaanSection";
 import UnitSiapPengadaanSection from "@/components/sections/UnitSiapPengadaanSection";
 import CtaPengadaanSection from "@/components/sections/CtaPengadaanSection";
@@ -8,7 +9,7 @@ import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-[#1d1d1f] relative selection:bg-[#0071e3]/20 selection:text-[#1d1d1f]">
+    <main id="konten-utama" className="min-h-screen bg-canvas text-ink relative selection:bg-accent/20 selection:text-ink">
       {/* Dual-Tier Apple Header */}
       <Navbar />
 
@@ -17,6 +18,9 @@ export default function Home() {
 
       {/* Lini Pengadaan Utama: 3 High-Impact Cards */}
       <LiniPengadaanSection />
+
+      {/* Scroll-Driven Hardware Maintenance & Exploded View Architecture */}
+      <PemeliharaanHardwareSection />
 
       {/* Ekosistem Pengadaan Resmi & SLA Jaminan Kontrak */}
       <EkosistemPengadaanSection />

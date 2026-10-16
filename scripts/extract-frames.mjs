@@ -1,6 +1,5 @@
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { exec } from 'child_process';
-import path from 'path';
 
 const ffmpegPath = ffmpegInstaller.path;
 const videoPath = 'public/videos/gemini_generated_video_ac174090.mp4';
