@@ -48,7 +48,7 @@ export default function KatalogPage() {
             </h1>
 
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-              Jelajahi produk hardware, audio visual, sanitasi, dan jasa pemeliharaan yang disediakan secara resmi oleh <strong>PT Agung Wijaya Nitya</strong> di platform INAPROC untuk instansi pemerintah dan BUMN.
+              Jelajahi seluruh 742 produk perangkat TI, sistem informasi/software, peralatan, dan jasa pemeliharaan yang disediakan secara resmi oleh <strong>PT Agung Wijaya Nitya</strong> di platform e-Katalog INAPROC LKPP untuk instansi pemerintah dan BUMN.
             </p>
           </div>
 

@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState, useMemo, useId } from "react";
+import React, { useState, useMemo, useId, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Search,
   X,
   ExternalLink,
-  SlidersHorizontal,
   CheckCircle2,
   Building2,
   MapPin,
@@ -15,34 +13,78 @@ import {
   Layers,
   ArrowUpDown,
   ShoppingBag,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  ShieldCheck,
+  Tag,
+  Boxes,
 } from "lucide-react";
 import {
-  INAPROC_PRODUCTS,
-  CATALOG_CATEGORIES,
+  ALL_INAPROC_PRODUCTS,
+  POPULAR_CATEGORIES,
   InaprocProduct,
 } from "@/src/data/inaprocCatalog";
+
+const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
 
 export default function CatalogExplorer() {
   const searchInputId = useId();
   const sortSelectId = useId();
+  const typeSelectId = useId();
+  const perPageSelectId = useId();
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("semua");
-  const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "name">("featured");
-  const [selectedOrigin, setSelectedOrigin] = useState<"all" | "PDN" | "Import">("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
+  const [selectedOrigin, setSelectedOrigin] = useState<"all" | "PDN" | "Impor">("all");
+  const [selectedType, setSelectedType] = useState<"all" | "Barang" | "Jasa" | "Digital">("all");
+  const [sortBy, setSortBy] = useState<"default" | "price-asc" | "price-desc" | "name">("default");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(24);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Filter and sort products
+  // Reset to page 1 on filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedOrigin, selectedType, sortBy, itemsPerPage]);
+
+  // Dynamic category counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { Semua: ALL_INAPROC_PRODUCTS.length };
+    for (const p of ALL_INAPROC_PRODUCTS) {
+      if (POPULAR_CATEGORIES.includes(p.category)) {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      } else {
+        counts["Lainnya"] = (counts["Lainnya"] || 0) + 1;
+      }
+    }
+    return counts;
+  }, []);
+
+  // Filtered and sorted list
   const filteredProducts = useMemo(() => {
-    let result = [...INAPROC_PRODUCTS];
+    let result = [...ALL_INAPROC_PRODUCTS];
 
     // Filter by Category
-    if (selectedCategory !== "semua") {
-      result = result.filter((p) => p.categorySlug === selectedCategory);
+    if (selectedCategory !== "Semua") {
+      if (selectedCategory === "Lainnya") {
+        result = result.filter(
+          (p) =>
+            !POPULAR_CATEGORIES.filter((c) => c !== "Semua" && c !== "Lainnya").includes(p.category)
+        );
+      } else {
+        result = result.filter((p) => p.category === selectedCategory);
+      }
     }
 
-    // Filter by Origin (PDN vs Import)
+    // Filter by Origin
     if (selectedOrigin !== "all") {
       result = result.filter((p) => p.origin === selectedOrigin);
+    }
+
+    // Filter by Type
+    if (selectedType !== "all") {
+      result = result.filter((p) => p.type === selectedType);
     }
 
     // Filter by Search Query
@@ -52,206 +94,257 @@ export default function CatalogExplorer() {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
-          p.summary.toLowerCase().includes(q) ||
-          p.specs.some((s) => s.toLowerCase().includes(q)) ||
-          (p.kbkiCode && p.kbkiCode.includes(q))
+          p.brand.toLowerCase().includes(q) ||
+          p.slug.toLowerCase().includes(q)
       );
     }
 
     // Sort
     if (sortBy === "price-asc") {
-      result.sort((a, b) => a.priceRaw - b.priceRaw);
+      result.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
-      result.sort((a, b) => b.priceRaw - a.priceRaw);
+      result.sort((a, b) => b.price - a.price);
     } else if (sortBy === "name") {
       result.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedOrigin, sortBy]);
+  }, [searchQuery, selectedCategory, selectedOrigin, selectedType, sortBy]);
 
-  // Counts per category for pills
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { semua: INAPROC_PRODUCTS.length };
-    for (const p of INAPROC_PRODUCTS) {
-      counts[p.categorySlug] = (counts[p.categorySlug] || 0) + 1;
-    }
-    return counts;
-  }, []);
+  // Pagination calculation
+  const totalItems = filteredProducts.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedProducts = useMemo(() => {
+    return filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredProducts, startIndex, itemsPerPage]);
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setSelectedCategory("semua");
+    setSelectedCategory("Semua");
     setSelectedOrigin("all");
-    setSortBy("featured");
+    setSelectedType("all");
+    setSortBy("default");
+    setCurrentPage(1);
   };
 
   const handleSimulateRefresh = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 600);
+    }, 400);
   };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    // Smooth scroll to top of product list
+    const el = document.getElementById("catalog-results");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // Generate pagination buttons with ellipsis
+  const paginationRange = useMemo(() => {
+    const range: (number | string)[] = [];
+    const delta = 2;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        range.push(i);
+      } else if (range[range.length - 1] !== "...") {
+        range.push("...");
+      }
+    }
+    return range;
+  }, [currentPage, totalPages]);
 
   return (
     <div className="w-full flex flex-col gap-8 sm:gap-10">
-      {/* Official INAPROC Transparency & Sync Notice Banner */}
+      {/* Official INAPROC Store Sync Status Header */}
       <div className="w-full rounded-2xl bg-white border border-black/8 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0 mt-0.5">
+          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 text-accent">
             <Building2 className="w-5 h-5" />
           </div>
           <div className="flex flex-col gap-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                Status Verifikasi Data
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-semibold text-ink">
+                Etalase Resmi INAPROC LKPP — PT Agung Wijaya Nitya
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                 <CheckCircle2 className="w-3 h-3" />
-                Data Faktual Terverifikasi
+                742 Produk Sinkron
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
+                <ShieldCheck className="w-3 h-3" />
+                UMKK Terverifikasi
               </span>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">
-              Menampilkan kurasi produk dan jasa terverifikasi dengan foto asli, spesifikasi teknis, dan tautan resmi dari etalase toko <strong>PT Agung Wijaya Nitya</strong> di e-Katalog INAPROC LKPP (skala UMKK, Kab. Badung, Bali).
+            <p className="text-xs text-slate-500 max-w-2xl">
+              Memuat seluruh 742 barang, jasa pemeliharaan, dan sistem informasi yang terdaftar resmi pada etalase penyedia LKPP. Seluruh harga dan spesifikasi faktual langsung dari e-Katalog Republik Indonesia.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-black/5">
+        <div className="flex items-center gap-2.5 shrink-0 self-stretch md:self-auto justify-end">
           <button
-            type="button"
             onClick={handleSimulateRefresh}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium text-slate-700 bg-[#F5F5F7] hover:bg-slate-200 transition-colors cursor-pointer"
+            aria-label="Refresh data katalog"
+            className="p-2.5 rounded-xl border border-black/10 hover:bg-slate-50 text-slate-600 transition-colors"
             title="Muat ulang data"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-            <span>Segarkan</span>
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-accent" : ""}`} />
           </button>
-
           <a
             href="https://katalog.inaproc.id/agung-wijaya-nitya"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-2xs group"
           >
-            <span>Buka Toko INAPROC (742 Item)</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <span>Buka di INAPROC</span>
+            <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
         </div>
       </div>
 
-      {/* Control Bar: Search Input, Category Filter, and Sorting */}
+      {/* Search & Filter Control Bar */}
       <div className="w-full flex flex-col gap-4">
-        {/* Search Input and Sort Row */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          {/* Search box */}
-          <div className="relative flex-1">
+        {/* Top Filter Row: Search Input + Sort + Origin + Type */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+          {/* Search Box */}
+          <div className="sm:col-span-2 lg:col-span-5 relative">
             <label htmlFor={searchInputId} className="sr-only">
-              Cari produk atau jasa di e-Katalog INAPROC
+              Cari nama produk, brand, atau kategori
             </label>
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              id={searchInputId}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari nama produk, spesifikasi, atau kata kunci..."
-              className="w-full h-11 pl-10 pr-10 rounded-xl bg-white border border-black/10 text-sm text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-2xs"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-ink transition-colors cursor-pointer"
-                aria-label="Hapus kata pencarian"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+            <div className="relative flex items-center w-full">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+              <input
+                id={searchInputId}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari dari 742 produk (cth: Sony, Epson, SIMDINKES, Soundcard)..."
+                className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-white border border-black/10 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink placeholder:text-slate-400 transition-all shadow-2xs"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 text-slate-400 hover:text-ink transition-colors p-0.5"
+                  aria-label="Hapus kata kunci pencarian"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Sort & Origin controls */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* Origin Pill (All / PDN / Import) */}
-            <div className="flex items-center p-1 bg-white border border-black/10 rounded-xl text-xs font-medium text-slate-600 shadow-2xs">
+          {/* Type Filter */}
+          <div className="lg:col-span-2">
+            <label htmlFor={typeSelectId} className="sr-only">
+              Filter Tipe
+            </label>
+            <div className="relative">
+              <select
+                id={typeSelectId}
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value as any)}
+                className="w-full py-2.5 pl-3 pr-8 text-xs bg-white border border-black/10 rounded-xl appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs"
+              >
+                <option value="all">Semua Tipe</option>
+                <option value="Barang">Tipe: Barang</option>
+                <option value="Jasa">Tipe: Jasa Layanan</option>
+                <option value="Digital">Tipe: Digital / Software</option>
+              </select>
+              <Boxes className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Origin Filter */}
+          <div className="lg:col-span-2">
+            <div className="flex p-0.5 bg-slate-100 rounded-xl border border-black/5 h-full items-center">
               <button
-                type="button"
                 onClick={() => setSelectedOrigin("all")}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
                   selectedOrigin === "all"
-                    ? "bg-[#F5F5F7] text-ink font-semibold"
-                    : "hover:text-ink"
+                    ? "bg-white text-ink shadow-2xs font-semibold"
+                    : "text-slate-500 hover:text-ink"
                 }`}
               >
-                Semua
+                Semua Asal
               </button>
               <button
-                type="button"
                 onClick={() => setSelectedOrigin("PDN")}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
                   selectedOrigin === "PDN"
-                    ? "bg-[#F5F5F7] text-ink font-semibold"
-                    : "hover:text-ink"
+                    ? "bg-white text-emerald-700 shadow-2xs font-semibold"
+                    : "text-slate-500 hover:text-ink"
                 }`}
               >
                 PDN
               </button>
               <button
-                type="button"
-                onClick={() => setSelectedOrigin("Import")}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  selectedOrigin === "Import"
-                    ? "bg-[#F5F5F7] text-ink font-semibold"
-                    : "hover:text-ink"
+                onClick={() => setSelectedOrigin("Impor")}
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
+                  selectedOrigin === "Impor"
+                    ? "bg-white text-blue-700 shadow-2xs font-semibold"
+                    : "text-slate-500 hover:text-ink"
                 }`}
               >
-                Import
+                Impor
               </button>
             </div>
+          </div>
 
-            {/* Sort Dropdown */}
+          {/* Sorting */}
+          <div className="lg:col-span-3">
+            <label htmlFor={sortSelectId} className="sr-only">
+              Urutkan berdasarkan
+            </label>
             <div className="relative">
-              <label htmlFor={sortSelectId} className="sr-only">
-                Urutkan produk berdasarkan
-              </label>
-              <div className="relative flex items-center">
-                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
-                <select
-                  id={sortSelectId}
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="h-11 pl-8 pr-8 rounded-xl bg-white border border-black/10 text-xs font-medium text-ink focus:outline-none focus:ring-2 focus:ring-accent transition-all shadow-2xs cursor-pointer appearance-none"
-                >
-                  <option value="featured">Urutkan: Rekomendasi</option>
-                  <option value="price-asc">Harga: Terendah</option>
-                  <option value="price-desc">Harga: Tertinggi</option>
-                  <option value="name">Nama: A - Z</option>
-                </select>
-              </div>
+              <select
+                id={sortSelectId}
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="w-full py-2.5 pl-3 pr-8 text-xs bg-white border border-black/10 rounded-xl appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs"
+              >
+                <option value="default">Urutkan: Default INAPROC</option>
+                <option value="price-asc">Harga: Terendah → Tertinggi</option>
+                <option value="price-desc">Harga: Tertinggi → Terendah</option>
+                <option value="name">Nama: A → Z</option>
+              </select>
+              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
         </div>
 
-        {/* Category Pills Navigation */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {CATALOG_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.slug;
-            const count = categoryCounts[cat.slug] || 0;
+        {/* Category Filter Pills with Badges */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {POPULAR_CATEGORIES.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            const count = categoryCounts[cat] || 0;
+
             return (
               <button
-                key={cat.slug}
-                type="button"
-                onClick={() => setSelectedCategory(cat.slug)}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer border ${
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                   isSelected
-                    ? "bg-ink text-white border-ink shadow-sm"
-                    : "bg-white text-slate-600 hover:text-ink hover:bg-slate-50 border-black/8"
+                    ? "bg-ink text-white shadow-2xs"
+                    : "bg-white text-slate-600 border border-black/8 hover:bg-slate-50 hover:text-ink"
                 }`}
               >
-                <span>{cat.name}</span>
+                <span>{cat}</span>
                 <span
-                  className={`text-[11px] px-1.5 py-0.2 rounded-full ${
-                    isSelected ? "bg-white/20 text-white" : "bg-[#F5F5F7] text-slate-500"
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
+                    isSelected
+                      ? "bg-white/20 text-white"
+                      : "bg-slate-100 text-slate-500"
                   }`}
                 >
                   {count}
@@ -262,67 +355,185 @@ export default function CatalogExplorer() {
         </div>
       </div>
 
-      {/* Result Count and Active Filter Indicators */}
-      <div className="flex items-center justify-between text-xs text-slate-500 px-1">
-        <span>
-          Menampilkan <strong>{filteredProducts.length}</strong> produk dan solusi
-          {selectedCategory !== "semua" && ` dalam kategori ${CATALOG_CATEGORIES.find((c) => c.slug === selectedCategory)?.name}`}
-          {searchQuery && ` untuk "${searchQuery}"`}
-        </span>
-        {(searchQuery || selectedCategory !== "semua" || selectedOrigin !== "all") && (
-          <button
-            type="button"
-            onClick={handleResetFilters}
-            className="text-accent hover:underline font-medium cursor-pointer"
+      {/* Results Header Info & Active Filters Count */}
+      <div id="catalog-results" className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-black/6">
+        <div className="flex items-center gap-2">
+          <span className="font-medium text-ink">
+            Menampilkan {totalItems === 0 ? 0 : startIndex + 1}–{Math.min(startIndex + itemsPerPage, totalItems)} dari {totalItems} produk
+          </span>
+          {(searchQuery || selectedCategory !== "Semua" || selectedOrigin !== "all" || selectedType !== "all" || sortBy !== "default") && (
+            <button
+              onClick={handleResetFilters}
+              className="text-accent hover:underline font-semibold flex items-center gap-1 ml-2"
+            >
+              <X className="w-3 h-3" />
+              Reset filter
+            </button>
+          )}
+        </div>
+
+        {/* Items Per Page Selector */}
+        <div className="flex items-center gap-2">
+          <label htmlFor={perPageSelectId} className="text-slate-400 hidden sm:inline">
+            Tampilkan:
+          </label>
+          <select
+            id={perPageSelectId}
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="py-1 px-2 text-xs bg-white border border-black/10 rounded-lg text-ink focus:outline-hidden focus:border-accent"
           >
-            Reset Filter
-          </button>
-        )}
+            {ITEMS_PER_PAGE_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt} per halaman
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Product Cards Grid or Empty State */}
+      {/* Loading Skeleton State */}
       {isLoading ? (
-        // Loading Skeleton State
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, idx) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {Array.from({ length: 8 }).map((_, i) => (
             <div
-              key={idx}
-              className="rounded-2xl bg-white border border-black/5 p-5 flex flex-col gap-4 animate-pulse shadow-xs"
+              key={i}
+              className="rounded-2xl bg-white border border-black/8 p-4 flex flex-col gap-3 animate-pulse"
             >
-              <div className="w-full aspect-4/3 bg-slate-100 rounded-xl" />
-              <div className="h-4 bg-slate-100 rounded w-1/3" />
-              <div className="h-6 bg-slate-100 rounded w-4/5" />
-              <div className="h-4 bg-slate-100 rounded w-full" />
-              <div className="h-4 bg-slate-100 rounded w-2/3" />
-              <div className="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center">
-                <div className="h-6 bg-slate-100 rounded w-1/3" />
-                <div className="h-9 bg-slate-100 rounded w-1/3" />
-              </div>
+              <div className="w-full aspect-square rounded-xl bg-slate-100" />
+              <div className="h-4 bg-slate-100 rounded-md w-3/4" />
+              <div className="h-3 bg-slate-100 rounded-md w-1/2" />
+              <div className="h-6 bg-slate-100 rounded-md w-2/3 mt-2" />
+              <div className="h-9 bg-slate-100 rounded-xl w-full mt-auto" />
             </div>
           ))}
         </div>
-      ) : filteredProducts.length === 0 ? (
-        // Empty State
-        <div className="w-full rounded-2xl bg-white border border-black/8 p-10 sm:p-14 flex flex-col items-center justify-center text-center gap-4 shadow-xs">
-          <div className="w-14 h-14 rounded-full bg-[#F5F5F7] text-slate-400 flex items-center justify-center">
-            <Search className="w-6 h-6" />
+      ) : paginatedProducts.length > 0 ? (
+        /* Product Grid */
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {paginatedProducts.map((product) => {
+            return (
+              <div
+                key={product.id}
+                className="group rounded-2xl bg-white border border-black/8 hover:border-black/15 p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-md relative"
+              >
+                {/* Top Section: Media & Badges */}
+                <div className="flex flex-col gap-3">
+                  {/* Image Container */}
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#F5F5F7] border border-black/5 flex items-center justify-center">
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <ShoppingBag className="w-12 h-12 text-slate-300" />
+                    )}
+
+                    {/* Floating Badges */}
+                    <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/90 backdrop-blur-xs text-ink shadow-2xs border border-black/5">
+                        {product.type}
+                      </span>
+                      {product.tkdn && (
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-600 text-white shadow-2xs">
+                          TKDN {product.tkdn}%
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="absolute top-2 right-2">
+                      <span
+                        className={`px-2 py-0.5 rounded-md text-[10px] font-semibold shadow-2xs ${
+                          product.origin === "PDN"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : "bg-blue-50 text-blue-700 border border-blue-200"
+                        }`}
+                      >
+                        {product.origin}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Category & Brand */}
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 gap-2">
+                    <span className="truncate font-medium text-accent">
+                      {product.category}
+                    </span>
+                    {product.brand && (
+                      <span className="truncate max-w-[110px] text-slate-500 font-normal">
+                        {product.brand}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Product Title */}
+                  <h3
+                    className="text-sm font-semibold text-ink line-clamp-2 leading-snug group-hover:text-accent transition-colors"
+                    title={product.name}
+                  >
+                    {product.name}
+                  </h3>
+
+                  {/* Metadata: Location & Scale */}
+                  <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <span className="flex items-center gap-1 truncate">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      {product.location}
+                    </span>
+                    <span>•</span>
+                    <span className="shrink-0">{product.scale}</span>
+                  </div>
+                </div>
+
+                {/* Bottom Section: Price & CTA */}
+                <div className="flex flex-col gap-3 pt-3 mt-3 border-t border-black/5">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+                      Harga Termasuk Pajak (PPN)
+                    </span>
+                    <span className="text-base font-bold text-ink">
+                      {product.priceFormatted}
+                    </span>
+                  </div>
+
+                  {/* INAPROC Direct Button */}
+                  <a
+                    href={product.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold bg-[#F5F5F7] text-ink hover:bg-accent hover:text-white transition-all group/btn"
+                  >
+                    <span>Lihat di INAPROC</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-white transition-colors" />
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* Empty State */
+        <div className="w-full rounded-2xl bg-white border border-black/8 p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+            <Search className="w-8 h-8" />
           </div>
           <div className="flex flex-col gap-1 max-w-md">
-            <h3 className="font-heading text-lg font-semibold text-ink">
-              Produk Tidak Ditemukan
+            <h3 className="text-base font-semibold text-ink">
+              Produk tidak ditemukan
             </h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Tidak ada produk yang cocok dengan pencarian{" "}
-              {searchQuery && <strong>&ldquo;{searchQuery}&rdquo;</strong>}
-              {selectedCategory !== "semua" && ` pada kategori ${CATALOG_CATEGORIES.find((c) => c.slug === selectedCategory)?.name}`}.
-              Anda dapat mereset filter atau memeriksa langsung di etalase resmi INAPROC.
+            <p className="text-xs text-slate-500">
+              Tidak ada produk yang cocok dengan kata kunci &ldquo;{searchQuery}&rdquo; atau filter yang dipilih. Silakan coba kata kunci lain atau reset filter.
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex items-center gap-3 pt-2">
             <button
-              type="button"
               onClick={handleResetFilters}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] text-ink hover:bg-slate-200 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-2xs"
             >
               Reset Semua Filter
             </button>
@@ -330,184 +541,78 @@ export default function CatalogExplorer() {
               href="https://katalog.inaproc.id/agung-wijaya-nitya"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-ink hover:bg-slate-200 transition-colors"
             >
-              <span>Cari di Toko Resmi INAPROC</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Buka Etalase INAPROC</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
             </a>
           </div>
         </div>
-      ) : (
-        // Product Cards Grid
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
       )}
 
-      {/* Bottom Information & RFQ Guidance */}
-      <div className="w-full rounded-2xl bg-white border border-black/8 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs mt-4">
-        <div className="flex flex-col gap-1.5 max-w-2xl">
-          <span className="text-xs font-semibold text-accent uppercase tracking-wider">
-            Pengadaan Skala Instansi & Pemerintahan
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-black/8">
+          <span className="text-xs text-slate-500 order-2 sm:order-1">
+            Halaman {currentPage} dari {totalPages} ({totalItems} total produk)
           </span>
-          <h3 className="font-heading text-xl font-bold text-ink">
-            Membutuhkan SKU Produk Lain yang Tercantum di INAPROC?
-          </h3>
-          <p className="text-sm text-slate-600 leading-relaxed">
-            PT Agung Wijaya Nitya memiliki lebih dari 700 produk terdaftar pada etalase e-Katalog LKPP. Jika instansi Anda memerlukan surat penawaran harga resmi (SPH), verifikasi stok, atau konsultasi paket pengadaan khusus, tim kami siap mendampingi.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 shrink-0 w-full md:w-auto">
-          <Link
-            href="/#cta-pengadaan"
-            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-ink text-white hover:bg-black/85 transition-all shadow-xs w-full sm:w-auto"
+
+          <nav
+            aria-label="Navigasi halaman katalog"
+            className="flex items-center gap-1 order-1 sm:order-2"
           >
-            Minta Penawaran (RFQ)
-          </Link>
-          <a
-            href="https://katalog.inaproc.id/agung-wijaya-nitya"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-[#F5F5F7] text-ink hover:bg-slate-200 transition-colors w-full sm:w-auto"
-          >
-            <span>Katalog Resmi LKPP</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Individual Product Card Component
-function ProductCard({ product }: { product: InaprocProduct }) {
-  const [showAllSpecs, setShowAllSpecs] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
-  return (
-    <article className="group rounded-2xl bg-white border border-black/8 hover:border-black/15 hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden">
-      {/* Product Image Stage */}
-      <div className="relative w-full aspect-4/3 bg-[#F8F9FA] overflow-hidden flex items-center justify-center p-4">
-        {/* Badges Overlay */}
-        <div className="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5">
-          <span
-            className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide ${
-              product.origin === "PDN"
-                ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                : "bg-blue-100 text-blue-800 border border-blue-200"
-            }`}
-          >
-            {product.origin}
-          </span>
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-white/90 backdrop-blur-xs text-slate-700 border border-black/5">
-            {product.type}
-          </span>
-          {product.soldCount && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
-              Terjual {product.soldCount}
-            </span>
-          )}
-        </div>
-
-        {/* Location Badge */}
-        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 text-[11px] font-medium text-slate-500 bg-white/85 backdrop-blur-xs px-2 py-0.5 rounded-full border border-black/5">
-          <MapPin className="w-3 h-3 text-slate-400" />
-          <span>{product.location}</span>
-        </div>
-
-        {/* Image Display */}
-        {product.imageUrl && !imageError ? (
-          <div className="relative w-full h-full">
-            <Image
-              src={product.imageUrl}
-              alt={`Foto produk ${product.name} di e-Katalog INAPROC`}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain transition-transform duration-500 group-hover:scale-105"
-              onError={() => setImageError(true)}
-            />
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5">
-            <ShoppingBag className="w-8 h-8 stroke-1" />
-            <span className="text-xs">Foto resmi di INAPROC</span>
-          </div>
-        )}
-      </div>
-
-      {/* Content Area */}
-      <div className="p-5 flex-1 flex flex-col gap-3">
-        {/* Category & KBKI */}
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-accent uppercase tracking-wider">
-            {product.category}
-          </span>
-          {product.kbkiCode && (
-            <span className="font-mono text-[11px] text-slate-400">
-              KBKI: {product.kbkiCode}
-            </span>
-          )}
-        </div>
-
-        {/* Product Title */}
-        <h3 className="font-heading text-base font-semibold text-ink leading-snug line-clamp-2 min-h-[2.75rem]">
-          {product.name}
-        </h3>
-
-        {/* Price Tag */}
-        <div className="flex flex-col">
-          <span className="text-lg font-bold text-ink tracking-tight">
-            {product.priceFormatted}
-          </span>
-          <span className="text-[11px] text-slate-500 font-medium">
-            {product.priceNote}
-          </span>
-        </div>
-
-        {/* Factual Summary */}
-        <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
-          {product.summary}
-        </p>
-
-        {/* Specifications Preview */}
-        <div className="pt-2 border-t border-black/5 flex flex-col gap-1.5 text-xs">
-          <span className="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">
-            Spesifikasi Utama:
-          </span>
-          <ul className="flex flex-col gap-1 text-slate-600">
-            {(showAllSpecs ? product.specs : product.specs.slice(0, 3)).map((spec, idx) => (
-              <li key={idx} className="flex items-start gap-1.5 leading-snug">
-                <span className="w-1 h-1 rounded-full bg-accent mt-1.5 shrink-0" />
-                <span className="line-clamp-1">{spec}</span>
-              </li>
-            ))}
-          </ul>
-          {product.specs.length > 3 && (
+            {/* Previous Page */}
             <button
-              type="button"
-              onClick={() => setShowAllSpecs(!showAllSpecs)}
-              className="text-[11px] text-accent hover:underline font-medium text-left mt-0.5 cursor-pointer"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              aria-label="Halaman sebelumnya"
+              className="p-2 rounded-lg border border-black/8 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors"
             >
-              {showAllSpecs ? "Tampilkan lebih sedikit" : `+${product.specs.length - 3} spesifikasi lainnya`}
+              <ChevronLeft className="w-4 h-4" />
             </button>
-          )}
-        </div>
 
-        {/* Action Button: Direct link to official INAPROC product page */}
-        <div className="mt-auto pt-4 border-t border-black/5">
-          <a
-            href={product.inaprocUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#F5F5F7] text-ink hover:bg-accent hover:text-white transition-all duration-200 cursor-pointer shadow-2xs group/btn"
-          >
-            <span>Lihat di INAPROC</span>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-white transition-colors" />
-          </a>
+            {/* Page Number Buttons */}
+            {paginationRange.map((page, index) => {
+              if (page === "...") {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="px-2 py-1 text-xs text-slate-400 select-none"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
+              const isCurrent = page === currentPage;
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(Number(page))}
+                  aria-current={isCurrent ? "page" : undefined}
+                  className={`min-w-8 h-8 px-2 rounded-lg text-xs font-semibold transition-all ${
+                    isCurrent
+                      ? "bg-accent text-white shadow-2xs"
+                      : "bg-white border border-black/8 text-slate-600 hover:bg-slate-50 hover:text-ink"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            {/* Next Page */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              aria-label="Halaman berikutnya"
+              className="p-2 rounded-lg border border-black/8 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </nav>
         </div>
-      </div>
-    </article>
+      )}
+    </div>
   );
 }
