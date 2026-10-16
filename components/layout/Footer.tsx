@@ -9,10 +9,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#fbfbfd] border-t border-[#d2d2d7] py-14 text-[#6e6e73] text-[12px] leading-relaxed">
+    <footer className="w-full bg-wash border-t border-rule py-14 text-muted text-[13px] leading-relaxed">
       <div className="shell max-w-[1140px] mx-auto px-4">
         {/* 4-Column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-[#e6e6e8]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-rule/70">
           {/* Column 1: Identity */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2.5">
@@ -25,37 +25,51 @@ export default function Footer() {
                   sizes="24px"
                 />
               </div>
-              <span className="font-semibold text-[#1d1d1f] text-[13px] tracking-tight">
+              <span className="font-semibold text-ink text-[14px] tracking-tight">
                 PT Agung Wijaya Nitya
               </span>
             </div>
-            <p className="text-[#6e6e73]">
-              Penyedia perangkat keras, komputasi bisnis, dan instrumen riset komersial berstandar industri nasional.
+            <p className="text-muted">
+              Mitra pengadaan perangkat TI dan display enterprise untuk
+              korporat dan instansi.
             </p>
-            <div className="pt-1 text-[11px] text-[#86868b]">
+            <div className="pt-1 text-[12px] text-muted">
               <span>{SITE_CONTENT.company.legalType} · {SITE_CONTENT.company.location}</span>
             </div>
           </div>
 
-          {/* Column 2: Kantor Pusat & Operasional */}
+          {/* Column 2: Kantor & Kontak */}
           <div className="flex flex-col gap-2">
-            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
-              Kantor Pusat & Workshop
+            <h4 className="font-semibold text-ink text-[12px] uppercase tracking-wider mb-1">
+              Kantor & Kontak
             </h4>
-            <p className="text-[#6e6e73]">
-              Jl. Sunset Road / Raya Kuta, Kab. Badung, Bali 80361, Indonesia.
+            <p className="text-muted">
+              Kab. Badung, Bali, Indonesia.
             </p>
-            <p className="text-[#1d1d1f] font-medium pt-1">
-              Telp / WA: {SITE_CONTENT.company.phonePlaceholder}
+            <p className="text-muted">
+              Email:{" "}
+              <a
+                href={`mailto:${SITE_CONTENT.company.email}`}
+                className="text-ink font-medium hover:text-accent transition-colors"
+              >
+                {SITE_CONTENT.company.email}
+              </a>
             </p>
-            <p className="text-[#6e6e73]">
-              Email: {SITE_CONTENT.company.email}
+            <p>
+              <a
+                href={SITE_CONTENT.company.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center font-medium text-accent-strong hover:underline underline-offset-4"
+              >
+                Hubungi via WhatsApp
+              </a>
             </p>
           </div>
 
           {/* Column 3: Kredensial & Portal */}
           <div className="flex flex-col gap-2">
-            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
+            <h4 className="font-semibold text-ink text-[12px] uppercase tracking-wider mb-1">
               Kredensial & Portal
             </h4>
             <ul className="flex flex-col gap-1.5">
@@ -64,62 +78,57 @@ export default function Footer() {
                   href={SITE_CONTENT.company.inaprocUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[#0071e3] transition-colors inline-flex items-center gap-1"
+                  className="inline-flex min-h-11 items-center gap-1 hover:text-accent transition-colors"
                 >
-                  <span>INAPROC Katalog ({SITE_CONTENT.company.activeProductsCount} Produk)</span>
+                  <span>INAPROC Katalog Elektronik</span>
                   <ExternalLink className="h-2.5 w-2.5" />
                 </a>
               </li>
               <li>
-                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
-                  Kepatuhan TKDN & BMP
+                <a href="#lini-utama" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">
+                  Lini pengadaan utama
                 </a>
               </li>
               <li>
-                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
-                  Tata Rekanan B2B & B2G
+                <a href="#unit-pengadaan" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">
+                  Unit siap pengadaan
                 </a>
               </li>
               <li>
-                <a href="#ekosistem" className="hover:text-[#0071e3] transition-colors">
-                  Pusat Regulasi Instansi
+                <a href="#ekosistem" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">
+                  Alur pengadaan
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Jaminan Kualitas */}
+          {/* Column 4: Tentang */}
           <div className="flex flex-col gap-3">
-            <h4 className="font-semibold text-[#1d1d1f] text-[12px] uppercase tracking-wider mb-1">
-              Jaminan Kualitas
+            <h4 className="font-semibold text-ink text-[12px] uppercase tracking-wider mb-1">
+              Tentang Kami
             </h4>
-            <p className="text-[#6e6e73]">
-              Terakreditasi ISO 9001:2015 untuk Sistem Manajemen Pengadaan & Distribusi peralatan komersial.
+            <p className="text-muted">
+              Berbasis di Kab. Badung, Bali — melayani pengadaan korporat dan
+              instansi dengan dokumen penawaran yang rapi dan terverifikasi.
             </p>
-            <div>
-              <span className="inline-flex items-center gap-1.5 rounded border border-[#d2d2d7] bg-white px-2.5 py-1 text-[10px] font-semibold tracking-wider text-[#1d1d1f] uppercase shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                TERDAFTAR RESMI LPSE & KATALOG
-              </span>
-            </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#86868b]">
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-muted">
           <p>
-            &copy; {currentYear} PT Agung Wijaya Nitya (AWN). Hak Cipta Dilindungi Undang-Undang. Seluruh spesifikasi instrumen terverifikasi B2B/B2G.
+            &copy; {currentYear} PT Agung Wijaya Nitya (AWN). Hak cipta dilindungi undang-undang.
           </p>
 
           <div className="flex items-center gap-5">
-            <a href="#kebijakan" className="hover:text-[#1d1d1f] transition-colors">
-              Kebijakan Privasi
+            <a href="#lini-utama" className="inline-flex min-h-11 items-center hover:text-ink transition-colors">
+              Lini Pengadaan
             </a>
-            <a href="#syarat" className="hover:text-[#1d1d1f] transition-colors">
-              Syarat Pengadaan
+            <a href="#ekosistem" className="inline-flex min-h-11 items-center hover:text-ink transition-colors">
+              Ekosistem
             </a>
-            <a href="#sla" className="hover:text-[#1d1d1f] transition-colors">
-              SLA Dukungan
+            <a href="#cta-pengadaan" className="inline-flex min-h-11 items-center hover:text-ink transition-colors">
+              Kontak
             </a>
           </div>
         </div>

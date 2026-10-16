@@ -38,8 +38,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B0B0D",
-  colorScheme: "dark",
+  themeColor: "#FFFFFF",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
 };
@@ -48,8 +48,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`dark ${fontVariables}`}>
+    <html lang="id" className={`${fontVariables}`}>
       <body className="bg-canvas text-primary antialiased selection:bg-accent/30 selection:text-primary">
+        <a href="#konten-utama" className="skip-link">
+          Lewati ke konten utama
+        </a>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>

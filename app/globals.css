@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────
-   Design Tokens — Dark Premium (DESIGN.md §4)
+   Design Tokens — Light Gallery (DESIGN.md §3)
    ────────────────────────────────────────────────────────────── */
 
 @theme {
@@ -24,14 +24,14 @@
   --color-surface: #e6e6e8;
   --color-rule: #d6d6d6;
   --color-muted: #707070;
-  --color-accent: #0071e3;
-  --color-accent-strong: #0066cc;
+  --color-accent: #0B6BAE;
+  --color-accent-strong: #08568c;
   --color-on-accent: #ffffff;
   --color-error: #c9272d;
   --color-border: #d6d6d6;
   --color-primary: #1d1d1f;
   --color-graphite: #f5f5f7;
-  --color-accent-hover: #0066cc;
+  --color-accent-hover: #08568c;
 
   /* Radii per DESIGN.md */
   --radius-cards: 28px;

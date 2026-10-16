@@ -37,7 +37,7 @@ If an effect reduces readability, trust, or performance, the effect loses.
 | Fact                                                                                                                                                                                                              | Source / note                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Active provider on INAPROC Katalog Elektronik, provider type UMKK, Kab. Badung                                                                                                                                    | https://katalog.inaproc.id/agung-wijaya-nitya                                          |
-| 742 products listed in the catalog (as of 15 Oct 2026)                                                                                                                                                            | Keep as a constant in `src/content/site.ts` with a comment: "re-verify before release" |
+| 742 products listed in the catalog (as of 15 Oct 2026)                                                                                                                                                            | Keep as a constant in `src/content/site.ts` with a comment: "re-verify before release". NOTE (Oct 2026, per owner): badge & count are currently hidden from the UI; only a small text link to the INAPROC profile remains |
 | Services stated on the company's own site: system building, system implementation, system reverse-engineering                                                                                                     | Company site                                                                           |
 | One listed software product: "SIMDINKES Layanan Manajemen dan SDM Kesehatan"                                                                                                                                      | Mention only as one listed product, never as a general capability claim                |
 | Registered business fields (KBLI): software and IT services; computer and electronics trade; repair; general wholesale (including laboratory and medical equipment); equipment rental; consulting and advertising | INAPROC "Daftar KBLI" tab. KBLI shows registered scope, not proof of activity          |
@@ -289,7 +289,9 @@ Show only: active provider status on INAPROC, the listed-product count (with the
 ### Fallback concept
 
 If the hero frame is not approved after 2–3 revision rounds, switch to a **showroom walkthrough**: a minimal bright room where the camera visits one station per pillar. Do not build this unless explicitly instructed. -->
+
 # Apple — Style Reference
+
 > foldable device in a white gallery. Center product renders as the visual event, with typography and blue controls kept deliberately quiet around it.
 
 **Theme:** light
@@ -300,23 +302,24 @@ Apple treats the product page as a white gallery: enormous product photography o
 
 ## Tokens — Colors
 
-| Name | Value | Token | Role |
-|------|-------|-------|------|
-| Gallery White | `#ffffff` | `--color-gallery-white` | Primary page canvas, hero background, product story sections, and feature-card surfaces |
-| Studio Mist | `#f5f5f7` | `--color-studio-mist` | Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks |
-| Paper Frost | `#fafafc` | `--color-paper-frost` | Opened global-navigation surface and secondary pale fill |
-| Hairline Silver | `#d6d6d6` | `--color-hairline-silver` | 1px dividers, restrained control outlines, and subtle separators |
-| Control Gray | `#e6e6e8` | `--color-control-gray` | Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment |
-| Ink | `#1d1d1f` | `--color-ink` | Headlines, primary body copy, navigation labels, and dark utility icons |
-| Slate | `#707070` | `--color-slate` | Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs |
-| Steel | `#86868b` | `--color-steel` | Input outlines, inactive indicators, and fine outlined-control edges |
-| Apple Blue | `#0066cc` | `--color-apple-blue` | Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling |
-| Pricing Blue | `#0071e3` | `--color-pricing-blue` | Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments |
-| Launch Orange | `#b64400` | `--color-launch-orange` | Small launch-status labels such as new-product markers |
+| Name            | Value     | Token                     | Role                                                                                                                     |
+| --------------- | --------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Gallery White   | `#ffffff` | `--color-gallery-white`   | Primary page canvas, hero background, product story sections, and feature-card surfaces                                  |
+| Studio Mist     | `#f5f5f7` | `--color-studio-mist`     | Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks                |
+| Paper Frost     | `#fafafc` | `--color-paper-frost`     | Opened global-navigation surface and secondary pale fill                                                                 |
+| Hairline Silver | `#d6d6d6` | `--color-hairline-silver` | 1px dividers, restrained control outlines, and subtle separators                                                         |
+| Control Gray    | `#e6e6e8` | `--color-control-gray`    | Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment                             |
+| Ink             | `#1d1d1f` | `--color-ink`             | Headlines, primary body copy, navigation labels, and dark utility icons                                                  |
+| Slate           | `#707070` | `--color-slate`           | Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs                                          |
+| Steel           | `#86868b` | `--color-steel`           | Input outlines, inactive indicators, and fine outlined-control edges                                                     |
+| Apple Blue      | `#0066cc` | `--color-apple-blue`      | Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling |
+| Pricing Blue    | `#0071e3` | `--color-pricing-blue`    | Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments        |
+| Launch Orange   | `#b64400` | `--color-launch-orange`   | Small launch-status labels such as new-product markers                                                                   |
 
 ## Tokens — Typography
 
 ### SF Pro Display — Product names, display headlines, large feature statements, and section-level product claims. The 80px/600 hero treatment tightens to -1.2px, making the largest type feel compact rather than promotional. · `--font-sf-pro-display`
+
 - **Substitute:** Inter, Helvetica Neue, Arial
 - **Weights:** 400, 500, 600
 - **Sizes:** 19px, 21px, 24px, 28px, 40px, 48px, 80px
@@ -326,6 +329,7 @@ Apple treats the product page as a white gallery: enormous product photography o
 - **Role:** Product names, display headlines, large feature statements, and section-level product claims. The 80px/600 hero treatment tightens to -1.2px, making the largest type feel compact rather than promotional.
 
 ### SF Pro Text — Navigation, body copy, links, compact buttons, pricing details, labels, and footnotes. The consistently negative tracking lets small interface text remain dense and Apple-specific instead of looking like generic system UI. · `--font-sf-pro-text`
+
 - **Substitute:** Inter, Helvetica Neue, Arial
 - **Weights:** 400, 500, 600
 - **Sizes:** 10px, 12px, 14px, 17px, 20px, 26px, 44px
@@ -335,6 +339,7 @@ Apple treats the product page as a white gallery: enormous product photography o
 - **Role:** Navigation, body copy, links, compact buttons, pricing details, labels, and footnotes. The consistently negative tracking lets small interface text remain dense and Apple-specific instead of looking like generic system UI.
 
 ### Arial — Fallback text inside the observed search/input control only. · `--font-arial`
+
 - **Substitute:** Arial
 - **Weights:** 400
 - **Sizes:** 13px
@@ -343,17 +348,17 @@ Apple treats the product page as a white gallery: enormous product photography o
 
 ### Type Scale
 
-| Role | Family | Weight | Size | Line Height | Letter Spacing | Token |
-|------|--------|--------|------|-------------|----------------|-------|
-| global-nav | SF Pro Text | 400 | 12px | 1 | -0.12px | `--text-global-nav` |
-| compact-control | SF Pro Text | 400 | 12px | 1.33 | -0.12px | `--text-compact-control` |
-| body-small | SF Pro Text | 400 | 14px | 1.29 | -0.224px | `--text-body-small` |
-| body | SF Pro Text | 400 | 17px | 1.47 | -0.374px | `--text-body` |
-| feature-copy | SF Pro Text | 400 | 17px | 1.24 | -0.374px | `--text-feature-copy` |
-| product-nav-title | SF Pro Display | 600 | 19px | 1.21 | 0.228px | `--text-product-nav-title` |
-| product-kicker | SF Pro Display | 600 | 21px | 1 | 0.231px | `--text-product-kicker` |
-| feature-heading | SF Pro Display | 600 | 40px | 1 | 0px | `--text-feature-heading` |
-| hero-display | SF Pro Display | 600 | 80px | 1.05 | -1.2px | `--text-hero-display` |
+| Role              | Family         | Weight | Size | Line Height | Letter Spacing | Token                      |
+| ----------------- | -------------- | ------ | ---- | ----------- | -------------- | -------------------------- |
+| global-nav        | SF Pro Text    | 400    | 12px | 1           | -0.12px        | `--text-global-nav`        |
+| compact-control   | SF Pro Text    | 400    | 12px | 1.33        | -0.12px        | `--text-compact-control`   |
+| body-small        | SF Pro Text    | 400    | 14px | 1.29        | -0.224px       | `--text-body-small`        |
+| body              | SF Pro Text    | 400    | 17px | 1.47        | -0.374px       | `--text-body`              |
+| feature-copy      | SF Pro Text    | 400    | 17px | 1.24        | -0.374px       | `--text-feature-copy`      |
+| product-nav-title | SF Pro Display | 600    | 19px | 1.21        | 0.228px        | `--text-product-nav-title` |
+| product-kicker    | SF Pro Display | 600    | 21px | 1           | 0.231px        | `--text-product-kicker`    |
+| feature-heading   | SF Pro Display | 600    | 40px | 1           | 0px            | `--text-feature-heading`   |
+| hero-display      | SF Pro Display | 600    | 80px | 1.05        | -1.2px         | `--text-hero-display`      |
 
 ## Tokens — Spacing & Shapes
 
@@ -363,43 +368,43 @@ Apple treats the product page as a white gallery: enormous product photography o
 
 ### Spacing Scale
 
-| Name | Value | Token |
-|------|-------|-------|
-| 4 | 4px | `--spacing-4` |
-| 8 | 8px | `--spacing-8` |
-| 12 | 12px | `--spacing-12` |
-| 16 | 16px | `--spacing-16` |
-| 20 | 20px | `--spacing-20` |
-| 24 | 24px | `--spacing-24` |
-| 28 | 28px | `--spacing-28` |
-| 32 | 32px | `--spacing-32` |
-| 40 | 40px | `--spacing-40` |
-| 48 | 48px | `--spacing-48` |
-| 52 | 52px | `--spacing-52` |
-| 64 | 64px | `--spacing-64` |
-| 76 | 76px | `--spacing-76` |
-| 80 | 80px | `--spacing-80` |
-| 128 | 128px | `--spacing-128` |
-| 144 | 144px | `--spacing-144` |
+| Name | Value | Token           |
+| ---- | ----- | --------------- |
+| 4    | 4px   | `--spacing-4`   |
+| 8    | 8px   | `--spacing-8`   |
+| 12   | 12px  | `--spacing-12`  |
+| 16   | 16px  | `--spacing-16`  |
+| 20   | 20px  | `--spacing-20`  |
+| 24   | 24px  | `--spacing-24`  |
+| 28   | 28px  | `--spacing-28`  |
+| 32   | 32px  | `--spacing-32`  |
+| 40   | 40px  | `--spacing-40`  |
+| 48   | 48px  | `--spacing-48`  |
+| 52   | 52px  | `--spacing-52`  |
+| 64   | 64px  | `--spacing-64`  |
+| 76   | 76px  | `--spacing-76`  |
+| 80   | 80px  | `--spacing-80`  |
+| 128  | 128px | `--spacing-128` |
+| 144  | 144px | `--spacing-144` |
 
 ### Border Radius
 
-| Element | Value |
-|---------|-------|
-| cards | 28px |
-| links | 10px |
-| pills | 36px |
-| badges | 0px |
-| images | 28px |
-| inputs | 980px |
-| buttons | 9999px |
-| navigation | 20px |
+| Element    | Value  |
+| ---------- | ------ |
+| cards      | 28px   |
+| links      | 10px   |
+| pills      | 36px   |
+| badges     | 0px    |
+| images     | 28px   |
+| inputs     | 980px  |
+| buttons    | 9999px |
+| navigation | 20px   |
 
 ### Shadows
 
-| Name | Value | Token |
-|------|-------|-------|
-| subtle | `rgb(230, 230, 232) 0px 0px 0px 1px` | `--shadow-subtle` |
+| Name     | Value                                | Token               |
+| -------- | ------------------------------------ | ------------------- |
+| subtle   | `rgb(230, 230, 232) 0px 0px 0px 1px` | `--shadow-subtle`   |
 | subtle-2 | `rgb(134, 134, 139) 0px 0px 0px 1px` | `--shadow-subtle-2` |
 
 ### Layout
@@ -411,66 +416,79 @@ Apple treats the product page as a white gallery: enormous product photography o
 ## Components
 
 ### Global Store Navigation
+
 **Role:** Persistent utility navigation
 
 A 44px-tall white navigation bar with Apple glyph, compact SF Pro Text 12px/400 links, and rgba(0,0,0,0.8) labels. Keep controls unboxed; opened navigation uses #fafafc with a 1px #e6e6e8 edge and blur(20px).
 
 ### Product Local Navigation
+
 **Role:** Product-page header and conversion controls
 
 A white local bar carries the product name in SF Pro Display 19px/600 and compact right-aligned pill controls. Use a 20px container radius where the local bar is floated over the page, with #d6d6d6 as the hairline boundary.
 
 ### Outlined Explore Pill
+
 **Role:** Secondary product-navigation control
 
 Use transparent fill, #1d1d1f text, a 1px #86868b outline, and a 9999px radius. Set compact SF Pro Text 12px/400 type with 16px line height; do not give this secondary control a colored fill.
 
 ### Pricing Blue Pill
+
 **Role:** Filled conversion control
 
 Use #0071e3 fill with #ffffff SF Pro Text 12px/400 at 16px line height and -0.12px tracking. Set a 9999px radius; this blue treatment stays compact inside the product bar and floating pricing callout.
 
 ### Hero Product Stage
+
 **Role:** Launch introduction
 
 Set a #ffffff full-bleed visual stage with centered product name in SF Pro Display 21px/600, then an 80px/600 display statement at 84px line height and -1.2px tracking. Place the foldable-device render directly beneath the text without a containing card.
 
 ### Floating Pricing Callout
+
 **Role:** Purchase context over product imagery
 
 Float a #ffffff rounded 28px capsule near the lower product render with 14px/600 #1d1d1f pricing text and compact secondary copy. Keep the blue Pricing Blue pill inside the callout; do not use drop shadows.
 
 ### Section Anchor Navigation
+
 **Role:** In-page feature navigation
 
 Render a horizontal list of SF Pro Text 17px/500 labels at 25px line height and -0.374px tracking in #1d1d1f. Use transparent backgrounds, 28px vertical padding, and no card or underline treatment.
 
 ### Highlights Stage
+
 **Role:** Feature-carousel section
 
 Use #f5f5f7 as the full section background, with a large #1d1d1f section heading and an Apple Blue text link aligned opposite it. Feature slides are #ffffff 28px-radius cards with no shadow.
 
 ### Feature Media Card
+
 **Role:** Product-detail showcase
 
 Use a #ffffff surface, 28px radius, no border, and no shadow. Center the device render with an SF Pro Display 24px/600 or 40px/600 feature statement above it; media may crop beyond the card edge.
 
 ### Carousel Playback Control
+
 **Role:** Highlights media control
 
 Use a translucent control track based on rgba(210,210,215,0.64), 36px radius, and subdued rgba(0,0,0,0.56) glyphs. Keep slide dots and pause control grouped in a small pill rather than adding visible card chrome.
 
 ### Editorial Feature Block
+
 **Role:** Long-form product story
 
 Place a small #1d1d1f SF Pro Display kicker above a large left-aligned display statement, followed by SF Pro Text 17px/400 body copy at approximately 21px line height and -0.374px tracking. The accompanying hardware image is oversized and allowed to enter from the opposite side.
 
 ### Rounded Search Input
+
 **Role:** Global navigation search
 
 Use #ffffff fill, #1d1d1f 13px Arial text, 24px left padding, 45px right padding, a 1px #86868b outline, and a 980px radius. Keep the default field visually absent until expanded from navigation.
 
 ### Launch Status Label
+
 **Role:** New-product annotation
 
 Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Leave it as plain text with no pill background or border.
@@ -478,6 +496,7 @@ Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Lea
 ## Do's and Don'ts
 
 ### Do
+
 - Use #ffffff as the default product-story canvas and reserve #f5f5f7 for full-width feature bands and footer regions.
 - Set display hero statements in SF Pro Display 80px/600, 84px line height, and -1.2px tracking.
 - Use SF Pro Text 17px/400 with -0.374px tracking for feature paragraphs and in-page navigation at 17px/500.
@@ -487,6 +506,7 @@ Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Lea
 - Space major storytelling sections by 90px and use 20px gaps between related interface elements.
 
 ### Don't
+
 - Do not add gradients; product imagery supplies the page’s color and visual depth.
 - Do not use shadows on feature cards, editorial blocks, or floating pricing capsules.
 - Do not replace the 28px feature-card radius with 8px, 12px, or square corners.
@@ -497,12 +517,12 @@ Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Lea
 
 ## Surfaces
 
-| Level | Name | Value | Purpose |
-|-------|------|-------|---------|
-| 0 | Gallery White | `#ffffff` | Primary hero, editorial canvas, local navigation, and feature-card surface. |
-| 1 | Studio Mist | `#f5f5f7` | Alternate section band, carousel backdrop, muted content area, and footer. |
-| 2 | Paper Frost | `#fafafc` | Opened global-navigation layer. |
-| 3 | Control Gray | `#e6e6e8` | Disabled or subdued utility-control fill and thin navigation edge. |
+| Level | Name          | Value     | Purpose                                                                     |
+| ----- | ------------- | --------- | --------------------------------------------------------------------------- |
+| 0     | Gallery White | `#ffffff` | Primary hero, editorial canvas, local navigation, and feature-card surface. |
+| 1     | Studio Mist   | `#f5f5f7` | Alternate section band, carousel backdrop, muted content area, and footer.  |
+| 2     | Paper Frost   | `#fafafc` | Opened global-navigation layer.                                             |
+| 3     | Control Gray  | `#e6e6e8` | Disabled or subdued utility-control fill and thin navigation edge.          |
 
 ## Elevation
 
@@ -519,6 +539,7 @@ The page begins with a compact global store navigation above a product-local nav
 ## Agent Prompt Guide
 
 Quick Color Reference:
+
 - Gallery White: #ffffff — Primary page canvas, hero background, product story sections, and feature-card surfaces
 - Studio Mist: #f5f5f7 — Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks
 - Paper Frost: #fafafc — Opened global-navigation surface and secondary pale fill
@@ -564,9 +585,15 @@ Create a floating #ffffff 28px-radius pricing callout over a product render usin
   --color-launch-orange: #b64400;
 
   /* Typography — Font Families */
-  --font-sf-pro-display: 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sf-pro-text: 'SF Pro Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-display:
+    "SF Pro Display", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-text:
+    "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --font-arial:
+    "Arial", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
   --text-global-nav: 12px;
@@ -679,9 +706,15 @@ Create a floating #ffffff 28px-radius pricing callout over a product render usin
   --color-launch-orange: #b64400;
 
   /* Typography */
-  --font-sf-pro-display: 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sf-pro-text: 'SF Pro Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-display:
+    "SF Pro Display", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-text:
+    "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --font-arial:
+    "Arial", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
   --text-global-nav: 12px;

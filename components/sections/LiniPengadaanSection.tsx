@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
+import Reveal from "@/components/ui/Reveal";
 
 export default function LiniPengadaanSection() {
-  const [activeSlide, setActiveSlide] = useState(0);
-
   const cards = [
     {
       badge: "PUSAT DATA & SERVER",
@@ -33,16 +32,20 @@ export default function LiniPengadaanSection() {
   ];
 
   return (
-    <section id="lini-utama" className="relative w-full py-16 sm:py-24 bg-white text-[#1d1d1f]">
+    <section
+      id="lini-utama"
+      className="relative w-full py-16 sm:py-24 bg-wash text-ink"
+    >
       <div className="shell flex flex-col gap-10 sm:gap-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex flex-col gap-1 max-w-2xl">
-            <h2 className="font-heading text-2xl sm:text-4xl md:text-[42px] font-bold leading-tight tracking-tight text-[#1d1d1f]">
+            <h2 className="font-heading text-2xl sm:text-4xl md:text-[42px] font-bold leading-tight tracking-tight text-ink">
               Kenali lini pengadaan utama.
             </h2>
-            <p className="text-[#707070] text-sm sm:text-base leading-relaxed">
-              Dukungan komprehensif mulai dari pusat data, komputasi meja, hingga display modern.
+            <p className="text-muted text-sm sm:text-base leading-relaxed">
+              Dukungan komprehensif mulai dari pusat data, komputasi meja,
+              hingga display modern.
             </p>
           </div>
 
@@ -50,36 +53,37 @@ export default function LiniPengadaanSection() {
             href={SITE_CONTENT.company.inaprocUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[13px] sm:text-[14px] font-normal text-[#0066cc] hover:underline shrink-0"
+            className="inline-flex min-h-11 items-center gap-1 text-[13px] sm:text-[14px] font-normal text-accent-strong hover:underline shrink-0"
           >
-            <span>Unduh Katalog PDF</span>
+            <span>Lihat profil INAPROC</span>
             <ChevronRight className="h-4 w-4" />
           </a>
-        </div>
+        </Reveal>
 
         {/* 3 Large White Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {cards.map((card, idx) => (
-            <div
+            <Reveal
               key={idx}
-              className="flex flex-col justify-between p-6 sm:p-7 rounded-[28px] bg-white border border-[#d6d6d6] transition-all hover:border-[#86868b] shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+              delay={idx * 0.08}
+              className="flex flex-col justify-between p-6 sm:p-7 rounded-[28px] bg-canvas border-0 shadow-none transition-transform hover:-translate-y-1 duration-300"
             >
               <div className="flex flex-col gap-3">
-                <span className="text-[11px] font-semibold tracking-wider text-[#b64400] uppercase">
+                <span className="text-[11px] font-semibold tracking-wider text-launch-orange uppercase">
                   {card.badge}
                 </span>
 
-                <h3 className="font-heading text-lg sm:text-[20px] font-semibold leading-snug text-[#1d1d1f]">
+                <h3 className="font-heading text-lg sm:text-[20px] font-semibold leading-snug text-ink">
                   {card.title}
                 </h3>
 
-                <p className="text-[#707070] text-xs sm:text-[13px] leading-relaxed">
+                <p className="text-muted text-xs sm:text-[13px] leading-relaxed">
                   {card.desc}
                 </p>
               </div>
 
               {/* Contained Media Frame */}
-              <div className="relative w-full aspect-[16/10] mt-6 rounded-[20px] overflow-hidden bg-[#f5f5f7] border border-[#e6e6e8]">
+              <div className="relative w-full aspect-[16/10] mt-6 rounded-[20px] overflow-hidden bg-wash">
                 <Image
                   src={card.image}
                   alt={card.alt}
@@ -88,23 +92,7 @@ export default function LiniPengadaanSection() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Carousel Pagination Indicator */}
-        <div className="flex items-center justify-center gap-2 pt-2">
-          {cards.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveSlide(idx)}
-              aria-label={`Slide ${idx + 1}`}
-              className={`transition-all duration-300 ${
-                activeSlide === idx
-                  ? "h-1.5 w-6 rounded-full bg-[#1d1d1f]"
-                  : "h-1.5 w-1.5 rounded-full bg-[#d6d6d6] hover:bg-[#86868b]"
-              }`}
-            />
+            </Reveal>
           ))}
         </div>
       </div>

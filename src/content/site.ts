@@ -16,6 +16,22 @@ export interface PillarItem {
   capabilities: string[];
 }
 
+/**
+ * Satu unit yang ditampilkan di Panggung Sorotan Produk
+ * (satu panggung besar bergantian, ala Apple Highlights).
+ * Urutan array = urutan tampil. Nama tetap generik tanpa merek.
+ */
+export interface SpotlightItem {
+  id: string;
+  tag: string;
+  title: string;
+  headline: string;
+  specs: string;
+  target: string;
+  image: string;
+  imageAlt: string;
+}
+
 export interface SiteContent {
   company: {
     name: string;
@@ -28,7 +44,9 @@ export interface SiteContent {
     inaprocStatus: string;
     /**
      * Jumlah produk tayang di INAPROC Katalog Elektronik per 15 Oktober 2026.
-     * CATATAN: Verifikasi ulang sebelum rilis resmi ke produksi.
+     * CATATAN: Saat ini disembunyikan dari tampilan atas permintaan pemilik
+     * (badge & angka tidak dirender). Tampilkan lagi setelah verifikasi ulang
+     * sebelum rilis resmi ke produksi.
      */
     activeProductsCount: number;
     activeProductsDate: string;
@@ -45,6 +63,8 @@ export interface SiteContent {
     };
   };
   pillars: PillarItem[];
+  /** Urutan = urutan tampil di Panggung Sorotan Produk. */
+  spotlights: SpotlightItem[];
   softwareHighlight: {
     title: string;
     subtitle: string;
@@ -95,6 +115,56 @@ export const SITE_CONTENT: SiteContent = {
     },
   },
 
+  /**
+   * Panggung Sorotan Produk — 4 unit hardware andalan.
+   * Visual generik (render/ilustrasi), bukan foto produk bermerek.
+   */
+  spotlights: [
+    {
+      id: "server-rack-2u",
+      tag: "Rack server",
+      title: "Server Rack 2U Dual Prosesor",
+      headline: "Tenaga komputasi redundan untuk operasional tanpa henti.",
+      specs:
+        "Dual prosesor kelas server, 128GB ECC DDR5, redundant PSU titanium, 8-bay hot-swap.",
+      target: "Kantor korporat, private cloud, ruang server instansi",
+      image: "/images/card-server-storage.jpg",
+      imageAlt: "Ilustrasi unit server rack untuk pusat data",
+    },
+    {
+      id: "laptop-bisnis-14",
+      tag: "Mobile workstation",
+      title: "Laptop Bisnis 14 inci",
+      headline: "Mobilitas kerja dengan keamanan kelas bisnis.",
+      specs:
+        'Prosesor vPro, 32GB RAM, 1TB NVMe, layar 14" IPS FHD, garansi 3 tahun on-site.',
+      target: "Divisi keuangan, engineering, manajemen",
+      image: "/images/card-workstation-pc.jpg",
+      imageAlt: "Ilustrasi laptop dan workstation bisnis",
+    },
+    {
+      id: "ups-online-3kva",
+      tag: "Power protection",
+      title: "UPS Online 3kVA",
+      headline: "Daya bersih dan cadangan untuk infrastruktur kritis.",
+      specs:
+        "Online double-conversion, pure sine wave, kartu jaringan SNMP, dukungan baterai eksternal.",
+      target: "Ruang server, ruang operasional, lini otomasi",
+      image: "/images/ups-smart-online.jpg",
+      imageAlt: "Ilustrasi unit UPS online untuk proteksi daya",
+    },
+    {
+      id: "display-4k-55",
+      tag: "Display komersial",
+      title: "Display Komersial 4K 55 inci",
+      headline: "Visual presisi untuk ruang rapat dan signage.",
+      specs:
+        "Panel IPS 4K UHD 400 nits, operasional 16/7, bezel tipis, anti-glare.",
+      target: "Ruang rapat, digital signage, lobi",
+      image: "/images/card-commercial-display.jpg",
+      imageAlt: "Ilustrasi display komersial untuk ruang modern",
+    },
+  ],
   /**
    * Empat Pilar Pengadaan (urutan bobot dapat diubah di sini tanpa merombak komponen visual).
    */
