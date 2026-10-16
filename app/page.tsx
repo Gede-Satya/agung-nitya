@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import HeroShowcase from "@/components/sections/HeroShowcase";
 import LiniPengadaanSection from "@/components/sections/LiniPengadaanSection";
+import KatalogSection from "@/components/sections/KatalogSection";
 import PemeliharaanHardwareSection from "@/components/sections/PemeliharaanHardwareSection";
 import EkosistemPengadaanSection from "@/components/sections/EkosistemPengadaanSection";
 import UnitSiapPengadaanSection from "@/components/sections/UnitSiapPengadaanSection";
@@ -18,6 +19,9 @@ export default function Home() {
 
       {/* Lini Pengadaan Utama: 3 High-Impact Cards */}
       <LiniPengadaanSection />
+
+      {/* Galeri Interaktif: e-Katalog INAPROC */}
+      <KatalogSection />
 
       {/* Scroll-Driven Hardware Maintenance & Exploded View Architecture */}
       <PemeliharaanHardwareSection />

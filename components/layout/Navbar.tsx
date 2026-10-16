@@ -49,6 +49,18 @@ export default function Navbar() {
       }
 
       let currentActive: string | null = null;
+
+      // Keep "Produk" (#lini-utama) active when #katalog is in view
+      const katalogEl = document.getElementById("katalog");
+      if (katalogEl) {
+        const kTop = katalogEl.offsetTop;
+        const kBottom = kTop + katalogEl.offsetHeight;
+        if (scrollPosition >= kTop && scrollPosition < kBottom) {
+          setActiveId("lini-utama");
+          return;
+        }
+      }
+
       for (const item of elements) {
         const top = item.el.offsetTop;
         const bottom = top + item.el.offsetHeight;
