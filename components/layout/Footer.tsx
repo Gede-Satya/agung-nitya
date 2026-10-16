@@ -85,7 +85,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#lini-utama" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">
+                <a href="/katalog" className="inline-flex min-h-11 items-center hover:text-accent transition-colors font-medium text-ink">
+                  Katalog Produk & Solusi
+                </a>
+              </li>
+              <li>
+                <a href="/#lini-utama" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">
                   Lini pengadaan utama
                 </a>
               </li>
