@@ -2,7 +2,7 @@
  * formation-poses.ts
  *
  * Layout engine and mathematical helpers for Formation 3D gallery.
- * Custom implementation derived from formation.tsx contract.
+ * Custom implementation supporting Datar (Flat), Melingkar (Ring 3D), and Miring (Cover Flow Tilt).
  */
 
 export interface Work {
@@ -81,7 +81,6 @@ export const lerpPose = (out: Pose, a: Pose, b: Pose, t: number): void => {
 };
 
 export const focusScore = (p: Pose): number => {
-  // Lower score indicates closer to center and foreground
   const distFromCenter = Math.hypot(p.x, p.y);
   return distFromCenter - p.z * 0.4;
 };
@@ -109,7 +108,6 @@ export const getLayout = (w: number, h: number, count: number): FmLayout => {
     cardH = clamp(Math.round(cardW * 1.25), 330, 420);
   }
 
-  // Ensure card does not exceed viewport container height minus padding
   const maxH = Math.max(180, h - 80);
   if (cardH > maxH) {
     const scale = maxH / cardH;
@@ -139,24 +137,25 @@ export const poseFor = (
   const spacing = L.cardW + L.gap;
   const trackW = n * spacing;
 
+  // 1. RING MODE (Melingkar): Obvious 3D cylindrical carousel
   if (mode === "ring") {
-    // 3D Ring around center
-    const radius = Math.max(L.cardW * 1.3, L.W * 0.38);
-    // Angular step per card
+    const radius = Math.max(L.cardW * 1.5, L.W * 0.4);
     const step = (2 * Math.PI) / n;
-    // Rotation angle driven by browse
-    const angle = index * step + browse / (L.cardW * 1.6);
+    // Angle driven by position + browsing offset
+    const angle = index * step + browse / (L.cardW * 1.4);
     const cosA = Math.cos(angle);
     const sinA = Math.sin(angle);
 
     const x = sinA * radius;
-    const z = (cosA - 1) * radius * 0.85; // front is z=0, back is negative z
+    // Front card is at z = 40, back cards recede into 3D depth
+    const z = (cosA - 1) * radius * 0.95 + 40;
+    // Rotate card around Y to align with the tangent of the cylinder
     const ry = (angle * 180) / Math.PI;
 
-    // Normalizing depth factor (0 back, 1 front)
+    // Normalizing depth factor (0 at back, 1 at front)
     const depth = (cosA + 1) / 2;
-    const s = 0.72 + 0.28 * depth;
-    const o = clamp(0.25 + 0.75 * depth, 0.2, 1);
+    const s = 0.7 + 0.35 * depth;
+    const o = clamp(0.2 + 0.8 * depth, 0.15, 1);
 
     return {
       o,
@@ -170,9 +169,9 @@ export const poseFor = (
     };
   }
 
+  // 2. TILT MODE (Miring): High-Impact 3D Cover Flow with distinct inward rotation
   if (mode === "tilt") {
-    // Coverflow with tilt angle
-    const stepX = L.cardW * 0.65;
+    const stepX = L.cardW * 0.52;
     const trackWidthTilt = n * stepX;
     const rawX = index * stepX + browse;
     const wrappedX =
@@ -180,13 +179,34 @@ export const poseFor = (
         trackWidthTilt) -
       trackWidthTilt / 2;
 
-    const norm = wrappedX / (L.cardW * 1.1);
-    const absNorm = Math.abs(norm);
+    const threshold = L.cardW * 0.32;
+    let ry = 0;
+    let z = 0;
+    let s = 1;
+    let o = 1;
 
-    const ry = clamp(-norm * 32, -45, 45);
-    const z = -absNorm * 90;
-    const s = clamp(1 - absNorm * 0.08, 0.72, 1);
-    const o = clamp(1 - absNorm * 0.16, 0.25, 1);
+    if (Math.abs(wrappedX) < threshold) {
+      // Center focused card: flat, elevated, prominent
+      const norm = wrappedX / threshold;
+      ry = -norm * 22;
+      z = 60;
+      s = 1.08;
+      o = 1;
+    } else if (wrappedX > 0) {
+      // Right wing: tilted sharply inward at 55 degrees
+      const dist = (wrappedX - threshold) / (L.cardW * 0.55);
+      ry = -55;
+      z = -40 - dist * 90;
+      s = clamp(0.92 - dist * 0.05, 0.7, 0.95);
+      o = clamp(0.95 - dist * 0.12, 0.3, 1);
+    } else {
+      // Left wing: tilted sharply inward at 55 degrees
+      const dist = (Math.abs(wrappedX) - threshold) / (L.cardW * 0.55);
+      ry = 55;
+      z = -40 - dist * 90;
+      s = clamp(0.92 - dist * 0.05, 0.7, 0.95);
+      o = clamp(0.95 - dist * 0.12, 0.3, 1);
+    }
 
     return {
       o,
@@ -200,15 +220,15 @@ export const poseFor = (
     };
   }
 
-  // Flat mode (linear conveyor with subtle curve)
+  // 3. FLAT MODE (Datar): Flat horizontal conveyor
   const rawX = index * spacing + browse;
   const wrappedX =
     ((((rawX + trackW / 2) % trackW) + trackW) % trackW) - trackW / 2;
   const distNorm = Math.abs(wrappedX) / (trackW / 2);
 
-  const z = -distNorm * 120;
-  const s = clamp(1 - distNorm * 0.15, 0.75, 1);
-  const o = clamp(1 - distNorm * 0.4, 0.3, 1);
+  const z = -distNorm * 80;
+  const s = clamp(1 - distNorm * 0.12, 0.8, 1);
+  const o = clamp(1 - distNorm * 0.35, 0.35, 1);
 
   return {
     o,

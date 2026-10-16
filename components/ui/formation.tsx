@@ -8,7 +8,7 @@ import type {
 } from "react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
-import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight, Layers } from "lucide-react";
 
 import type {
   FmLayout,
@@ -158,7 +158,22 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
   const layoutRef = useRef<FmLayout | null>(null);
   const boxRef = useRef({ h: 0, left: 0, top: 0, w: 0 });
   const modeRef = useRef<FormationMode>("flat");
-  const firstMode = useRef(true);
+
+  // Immediate mode change handler
+  const handleModeChange = useCallback(
+    (newMode: FormationMode) => {
+      setMode(newMode);
+      modeRef.current = newMode;
+      for (const card of cards) {
+        copyPose(card.from, card.cur);
+      }
+      S.browse = 0;
+      S.vel = 0;
+      S.morphing = true;
+      S.morphMs = 0;
+    },
+    [cards, S]
+  );
 
   // Check prefers-reduced-motion on mount
   useEffect(() => {
@@ -277,7 +292,6 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
     S.hoverCard = null;
   };
 
-  // Step navigation helpers (Previous / Next)
   const stepBrowse = useCallback(
     (direction: "prev" | "next") => {
       const L = layoutRef.current;
@@ -299,7 +313,7 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
     }
   };
 
-  // Main 3D loop
+  // Main animation loop
   useEffect(() => {
     const root = rootRef.current;
     if (!root || isReducedMotion) return;
@@ -535,7 +549,6 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
       window.removeEventListener("resize", relayout);
       root.removeEventListener("wheel", onWheel);
       st.seeded = false;
-      firstMode.current = true;
       box.w = 0;
       box.h = 0;
     };
@@ -579,23 +592,6 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
     };
   }, [cards, isReducedMotion]);
 
-  // Mode change
-  useEffect(() => {
-    modeRef.current = mode;
-    if (firstMode.current) {
-      firstMode.current = false;
-      return;
-    }
-    for (const card of cards) {
-      copyPose(card.from, card.cur);
-    }
-    S.browse = 0;
-    S.vel = 0;
-    S.morphing = true;
-    S.morphMs = 0;
-  }, [mode, cards, S]);
-
-  // Current active product
   const currentWork = works[focusedIndex] || works[0];
 
   // Reduced motion alternative: clean static responsive grid
@@ -651,7 +647,49 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-3 w-full">
+      {/* Top Gallery Toolbar: Hints on left, Mode Switcher on right (always clear of sticky navbar) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-1">
+        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
+          <Layers className="w-3.5 h-3.5 text-accent" />
+          <span>Tampilan 3D Interaktif</span>
+          <span className="text-zinc-300 hidden sm:inline">•</span>
+          <span className="text-zinc-400 hidden sm:inline">Geser atau gunakan tombol panah</span>
+        </div>
+
+        {/* Mode Switcher: Datar, Melingkar, Miring */}
+        <div
+          role="tablist"
+          data-fm-ui
+          aria-label="Mode tampilan katalog"
+          className="flex items-center gap-1 rounded-full p-1 bg-white border border-zinc-200 shadow-xs"
+        >
+          {MODES.map((m) => {
+            const active = mode === m.id;
+            return (
+              <button
+                key={m.id}
+                role="tab"
+                type="button"
+                data-fm-ui
+                aria-selected={active}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleModeChange(m.id);
+                }}
+                className={`cursor-pointer rounded-full transition-all duration-200 text-xs sm:text-sm font-medium px-4 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-accent/40 ${
+                  active
+                    ? "bg-accent text-white shadow-xs font-semibold"
+                    : "text-zinc-600 hover:text-ink hover:bg-zinc-100"
+                }`}
+              >
+                {m.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 3D Formation Stage with crisp White Canvas & Subtle Border */}
       <section
         ref={rootRef}
@@ -659,7 +697,7 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
         role="region"
         aria-label="Galeri Produk Interaktif"
         onKeyDown={onKeyDown}
-        className="relative w-full h-[520px] sm:h-[560px] select-none overflow-hidden rounded-2xl border border-zinc-200/90 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-accent/40"
+        className="relative w-full h-[500px] sm:h-[560px] select-none overflow-hidden rounded-2xl border border-zinc-200/90 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-accent/40"
         style={stageStyle}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -688,7 +726,12 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
                 role="img"
                 aria-label={`${card.work.title} - ${card.work.category || "Produk INAPROC"}`}
                 className="absolute left-1/2 top-1/2"
-                style={{ opacity: 0, transformStyle: "preserve-3d" }}
+                style={{
+                  opacity: 0,
+                  transformStyle: "preserve-3d",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
               >
                 {/* Clean White Card with soft natural shadow */}
                 <div
@@ -715,7 +758,7 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
                     />
                   </div>
 
-                  {/* Card Label on Hover / Bottom */}
+                  {/* Card Label on Bottom */}
                   <div className="w-full pt-3 border-t border-zinc-100 flex flex-col gap-0.5 text-center">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-accent truncate">
                       {card.work.category || "e-Katalog INAPROC"}
@@ -728,41 +771,6 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Formation dock (Mode switcher pills: White background with Accent active state) */}
-        <div className="pointer-events-none absolute right-4 top-4 z-40 flex justify-end">
-          <div
-            role="tablist"
-            data-fm-ui
-            aria-label="Mode tampilan katalog"
-            className="pointer-events-auto flex gap-1 rounded-full p-1 bg-white/95 backdrop-blur-md border border-zinc-200 shadow-xs"
-          >
-            {MODES.map((m) => {
-              const active = mode === m.id;
-              return (
-                <button
-                  key={m.id}
-                  role="tab"
-                  type="button"
-                  aria-selected={active}
-                  onClick={() => setMode(m.id)}
-                  className={`rounded-full transition-all duration-150 text-xs sm:text-sm font-medium px-3.5 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-accent/40 ${
-                    active
-                      ? "bg-accent text-white shadow-xs"
-                      : "text-zinc-600 hover:text-ink hover:bg-zinc-100/80"
-                  }`}
-                >
-                  {m.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Stage interactive browse hint overlay for touch/mouse */}
-        <div className="pointer-events-none absolute left-4 top-4 z-30 text-xs font-medium text-zinc-500 bg-white/80 backdrop-blur-xs px-2.5 py-1 rounded-md border border-zinc-200/60 hidden sm:block">
-          Geser atau drag untuk melihat produk
         </div>
       </section>
 
@@ -798,7 +806,7 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
               type="button"
               onClick={() => stepBrowse("prev")}
               aria-label="Produk sebelumnya"
-              className="p-2 sm:p-2.5 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-100 hover:text-ink transition-colors focus:outline-hidden focus:ring-2 focus:ring-accent/40"
+              className="p-2 sm:p-2.5 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-100 hover:text-ink transition-colors focus:outline-hidden focus:ring-2 focus:ring-accent/40 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -806,7 +814,7 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
               type="button"
               onClick={() => stepBrowse("next")}
               aria-label="Produk berikutnya"
-              className="p-2 sm:p-2.5 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-100 hover:text-ink transition-colors focus:outline-hidden focus:ring-2 focus:ring-accent/40"
+              className="p-2 sm:p-2.5 rounded-full border border-zinc-200 text-zinc-700 hover:bg-zinc-100 hover:text-ink transition-colors focus:outline-hidden focus:ring-2 focus:ring-accent/40 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

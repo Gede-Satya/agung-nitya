@@ -17,7 +17,7 @@ export default function KatalogSection() {
   return (
     <section
       id="katalog"
-      className="relative w-full py-16 sm:py-24 bg-[#F5F5F7] text-ink"
+      className="relative w-full py-16 sm:py-24 bg-[#F5F5F7] text-ink scroll-mt-28"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
         {/* Section Header */}
