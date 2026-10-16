@@ -2,7 +2,7 @@ import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { exec } from 'child_process';
 
 const ffmpegPath = ffmpegInstaller.path;
-const videoPath = 'public/videos/gemini_generated_video_ac174090.mp4';
+const videoPath = 'public/videos/gemini_generated_video_ff72cbb5.mp4';
 const outputPattern = 'public/frames/laptop/%04d.webp';
 
 // Extract at 30 fps, scale=1600:-1, quality 78

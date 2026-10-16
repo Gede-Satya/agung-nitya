@@ -1,15 +1,20 @@
+export interface MaintenanceHotspot {
+  label: string;
+  x: number; // percentage (0 - 100)
+  y: number; // percentage (0 - 100)
+}
+
 export interface MaintenanceStage {
   id: string;
-  number: string;
-  kicker: string;
+  number: number;
+  stepLabel: string;
   title: string;
-  body: string;
+  shortTitle: string;
+  description: string;
   chips: string[];
-  scrollStart: number; // 0 to 1
-  marker: {
-    x: number; // 0 to 1 relative to frame width
-    y: number; // 0 to 1 relative to frame height
-  };
+  deliverable: string;
+  scrollStart: number;
+  hotspot: MaintenanceHotspot;
 }
 
 export interface MaintenanceLaptopConfig {
@@ -18,7 +23,6 @@ export interface MaintenanceLaptopConfig {
   fileExtension: string;
   sectionBadge: string;
   sectionTitle: string;
-  caption: string;
   stages: MaintenanceStage[];
 }
 
@@ -26,49 +30,60 @@ export const MAINTENANCE_CONFIG: MaintenanceLaptopConfig = {
   frameFolder: "/frames/laptop",
   frameCount: 300,
   fileExtension: "webp",
-  sectionBadge: "Pemeliharaan & Purnajual",
+  sectionBadge: "Pemeliharaan & purnajual",
   sectionTitle: "Dirancang untuk dirawat, bukan diganti.",
-  caption: "Ilustrasi layanan pemeliharaan",
   stages: [
     {
       id: "inspeksi",
-      number: "01",
-      kicker: "INSPEKSI",
-      title: "Inspeksi & Pembersihan",
-      body: "Pembukaan panel, pembersihan debu dan kipas, serta pengecekan fisik perangkat.",
+      number: 1,
+      stepLabel: "Tahap 1 dari 4",
+      title: "Inspeksi & pembersihan",
+      shortTitle: "Inspeksi",
+      description:
+        "Pembukaan panel, pembersihan debu dan kipas, serta pengecekan kondisi fisik perangkat secara menyeluruh.",
       chips: ["Pembersihan kipas", "Cek fisik"],
+      deliverable: "Catatan kondisi awal perangkat.",
       scrollStart: 0,
-      marker: { x: 0.52, y: 0.68 },
+      hotspot: { label: "Kipas & cover bawah", x: 48, y: 72 },
     },
     {
       id: "pendingin",
-      number: "02",
-      kicker: "PERAWATAN PENDINGIN",
-      title: "Pasta Termal & Suhu",
-      body: "Penggantian pasta termal dan pengecekan suhu kerja setelah perawatan.",
-      chips: ["Pasta termal", "Uji suhu"],
+      number: 2,
+      stepLabel: "Tahap 2 dari 4",
+      title: "Pasta termal & suhu",
+      shortTitle: "Pendingin",
+      description:
+        "Penggantian pasta termal berkualitas tinggi dan evaluasi stabilitas suhu kerja di bawah beban operasional.",
+      chips: ["Ganti pasta termal", "Uji suhu beban"],
+      deliverable: "Grafik suhu sebelum dan sesudah.",
       scrollStart: 0.25,
-      marker: { x: 0.50, y: 0.38 },
+      hotspot: { label: "Pasta termal & heatsink", x: 50, y: 40 },
     },
     {
       id: "komponen",
-      number: "03",
-      kicker: "KOMPONEN",
-      title: "Upgrade & Penggantian",
-      body: "Penambahan RAM, penggantian SSD, baterai, dan suku cadang lain.",
-      chips: ["RAM", "SSD", "Baterai"],
+      number: 3,
+      stepLabel: "Tahap 3 dari 4",
+      title: "Upgrade & penggantian",
+      shortTitle: "Upgrade",
+      description:
+        "Peningkatan memori kerja, pergantian modul penyimpanan berkecepatan tinggi, serta pembaruan unit baterai.",
+      chips: ["RAM & SSD", "Baterai"],
+      deliverable: "Daftar komponen terpasang.",
       scrollStart: 0.5,
-      marker: { x: 0.48, y: 0.55 },
+      hotspot: { label: "RAM, SSD & baterai", x: 52, y: 56 },
     },
     {
       id: "pengujian",
-      number: "04",
-      kicker: "PENGUJIAN",
-      title: "Uji Fungsi & Laporan",
-      body: "Uji fungsi menyeluruh dan berita acara servis untuk arsip instansi.",
-      chips: ["Berita acara", "Uji fungsi"],
+      number: 4,
+      stepLabel: "Tahap 4 dari 4",
+      title: "Uji fungsi & laporan",
+      shortTitle: "Pengujian",
+      description:
+        "Pemeriksaan fungsi menyeluruh seluruh komponen dan penerbitan berita acara servis resmi untuk instansi.",
+      chips: ["Uji fungsi", "Laporan servis"],
+      deliverable: "Laporan servis (PDF).",
       scrollStart: 0.75,
-      marker: { x: 0.52, y: 0.22 },
+      hotspot: { label: "Layar & uji fungsional", x: 54, y: 24 },
     },
   ],
 };
