@@ -120,12 +120,59 @@ export default function HeroShowcase() {
                 sizes="(max-width: 768px) 270px, 365px"
               />
 
-              {/* Layar Monitor: Warna Brand Aksen Tenang */}
+              {/* Layar Monitor: Dashboard Preview Interaktif & Realistis */}
               <div
                 style={{ ...SCREEN_BOX }}
-                className="absolute z-30 overflow-hidden rounded-[2px] bg-accent/90 select-none shadow-inner"
+                className="absolute z-30 overflow-hidden rounded-[2px] bg-[#0E1726] text-white select-none shadow-inner flex flex-col p-1.5 sm:p-2.5 font-sans"
               >
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10 pointer-events-none" />
+                {/* Window Header */}
+                <div className="flex items-center justify-between pb-1 sm:pb-1.5 border-b border-white/10 shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-400/80" />
+                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-400/80" />
+                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400/80" />
+                    <span className="ml-1 text-[8px] sm:text-[10px] font-semibold text-white/90 tracking-tight hidden xs:inline">
+                      INAPROC LKPP Portal
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="px-1.5 py-0.5 rounded-full bg-accent/30 text-accent-hover text-[7px] sm:text-[9px] font-medium border border-accent/40 text-blue-300">
+                      742 Produk
+                    </span>
+                  </div>
+                </div>
+
+                {/* Dashboard Body */}
+                <div className="flex-1 flex flex-col justify-between pt-1 sm:pt-2 min-h-0">
+                  {/* Top Stats Cards */}
+                  <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
+                    <div className="p-1 sm:p-1.5 rounded bg-white/5 border border-white/10">
+                      <div className="text-[6px] sm:text-[8px] text-white/60">Server Rack</div>
+                      <div className="text-[8px] sm:text-[11px] font-bold text-white leading-tight">Ready BoQ</div>
+                    </div>
+                    <div className="p-1 sm:p-1.5 rounded bg-white/5 border border-white/10">
+                      <div className="text-[6px] sm:text-[8px] text-white/60">Workstation</div>
+                      <div className="text-[8px] sm:text-[11px] font-bold text-blue-400 leading-tight">E-Katalog</div>
+                    </div>
+                    <div className="p-1 sm:p-1.5 rounded bg-white/5 border border-white/10">
+                      <div className="text-[6px] sm:text-[8px] text-white/60">Status UMKK</div>
+                      <div className="text-[8px] sm:text-[11px] font-bold text-emerald-400 leading-tight">Aktif Bali</div>
+                    </div>
+                  </div>
+
+                  {/* Mini Visual Bar / Flow */}
+                  <div className="p-1 sm:p-1.5 rounded bg-white/5 border border-white/10 flex items-end justify-between gap-1 h-6 sm:h-10 mt-1">
+                    <div className="w-1/6 bg-blue-500/40 rounded-t h-[40%]" />
+                    <div className="w-1/6 bg-blue-500/60 rounded-t h-[65%]" />
+                    <div className="w-1/6 bg-blue-500/80 rounded-t h-[90%]" />
+                    <div className="w-1/6 bg-blue-400 rounded-t h-[75%]" />
+                    <div className="w-1/6 bg-accent rounded-t h-[100%]" />
+                    <div className="w-1/6 bg-emerald-400/90 rounded-t h-[85%]" />
+                  </div>
+                </div>
+
+                {/* Glass Reflection Highlight */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/15 pointer-events-none" />
               </div>
             </div>
 

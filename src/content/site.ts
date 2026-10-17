@@ -223,7 +223,7 @@ export const SITE_CONTENT: SiteContent = {
         badge: "Fasilitas & Display Komersial",
         title: "Smart display, monitor komersial, dan perlengkapan ruang modern.",
         desc: "Panel display beresolusi tinggi untuk ruang rapat, ruang pertemuan, signage informasi, serta perlengkapan pendukung fasilitas instansi.",
-        image: "/images/card-commercial-display.jpg",
+        image: "/images/card-commercial-display-render.jpg",
         alt: "Ilustrasi monitor dan display komersial untuk ruang instansi",
       },
     ],
@@ -314,7 +314,7 @@ export const SITE_CONTENT: SiteContent = {
         description:
           "Panel layar besar dan monitor profesional untuk kebutuhan ruang rapat, aula serbaguna, pemaparan data dinas, dan visualisasi informasi publik.",
         target: "Ruang rapat pimpinan, aula instansi, media informasi publik",
-        image: "/images/card-commercial-display.jpg",
+        image: "/images/card-commercial-display-render.jpg",
         imageAlt: "Ilustrasi monitor dan display visual ruangan",
         catalogUrl: "https://katalog.inaproc.id/agung-wijaya-nitya",
       },

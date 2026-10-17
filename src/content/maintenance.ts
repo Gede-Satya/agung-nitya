@@ -11,6 +11,7 @@ export type MaintenanceItem = {
   y: number; // leader point, % of image height
   side: "left" | "right";
   services: string[]; // service claims
+  summary: string; // neutral component description (not a service claim)
   duration?: string; // omit until confirmed
   confirmed: boolean; // false = draft, not yet approved by owner
 };
@@ -50,6 +51,7 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
         "Pemeriksaan dead pixel dan backlight bleeding",
         "Penggantian panel LCD/IPS",
       ],
+      summary: "Panel, backlight, dan kabel fleksibel layar.",
       confirmed: false,
     },
     {
@@ -63,6 +65,7 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
         "Pembersihan sirip radiator dan blower",
         "Penggantian thermal paste",
       ],
+      summary: "Kipas, heat pipe, dan jalur pendinginan prosesor.",
       confirmed: false,
     },
     {
@@ -77,6 +80,7 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
         "Penambahan atau penggantian SSD",
         "Diagnosa sirkuit daya",
       ],
+      summary: "Papan utama, memori, dan media penyimpanan.",
       confirmed: false,
     },
     {
@@ -90,6 +94,7 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
         "Pengecekan kesehatan baterai",
         "Penggantian modul baterai",
       ],
+      summary: "Sel baterai, konektor, dan modul pengisian daya.",
       confirmed: false,
     },
     {
@@ -103,6 +108,7 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
         "Penggantian casing bawah",
         "Perbaikan engsel",
       ],
+      summary: "Casing bawah, engsel, dan rangka penopang.",
       confirmed: false,
     },
   ],

@@ -321,7 +321,7 @@ export default function MaintenanceExplodedView() {
       id={content.sectionId}
       ref={sectionContainerRef}
       aria-labelledby="heading-pemeliharaan"
-      className="relative w-full bg-wash text-ink"
+      className="relative w-full bg-canvas text-ink"
       style={{ height: shouldReduceMotion ? "auto" : "300svh" }}
     >
       {/* Sticky Full-Viewport Stage */}
@@ -403,18 +403,13 @@ export default function MaintenanceExplodedView() {
                         <span className="font-mono text-xs font-bold text-accent">
                           {String(item.order).padStart(2, "0")}
                         </span>
-                        {!item.confirmed && (
-                          <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
-                            Draft
-                          </span>
-                        )}
                       </div>
 
                       <h3 className="font-heading text-sm font-semibold text-ink leading-snug">
                         {item.label}
                       </h3>
 
-                      {/* Service Claims or Unconfirmed Notice */}
+                      {/* Service Claims (confirmed) or neutral component summary */}
                       {item.confirmed && displayedServices.length > 0 ? (
                         <ul className="mt-2 space-y-1 text-xs text-muted">
                           {displayedServices.map((srv, idx) => (
@@ -425,8 +420,8 @@ export default function MaintenanceExplodedView() {
                           ))}
                         </ul>
                       ) : (
-                        <p className="mt-1.5 text-xs text-muted italic">
-                          {content.unconfirmedNotice}
+                        <p className="mt-1.5 text-xs text-muted leading-relaxed">
+                          {item.summary}
                         </p>
                       )}
 
@@ -587,18 +582,13 @@ export default function MaintenanceExplodedView() {
                         <span className="font-mono text-xs font-bold text-accent">
                           {String(item.order).padStart(2, "0")}
                         </span>
-                        {!item.confirmed && (
-                          <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
-                            Draft
-                          </span>
-                        )}
                       </div>
 
                       <h3 className="font-heading text-sm font-semibold text-ink leading-snug">
                         {item.label}
                       </h3>
 
-                      {/* Service Claims or Unconfirmed Notice */}
+                      {/* Service Claims (confirmed) or neutral component summary */}
                       {item.confirmed && displayedServices.length > 0 ? (
                         <ul className="mt-2 space-y-1 text-xs text-muted">
                           {displayedServices.map((srv, idx) => (
@@ -609,8 +599,8 @@ export default function MaintenanceExplodedView() {
                           ))}
                         </ul>
                       ) : (
-                        <p className="mt-1.5 text-xs text-muted italic">
-                          {content.unconfirmedNotice}
+                        <p className="mt-1.5 text-xs text-muted leading-relaxed">
+                          {item.summary}
                         </p>
                       )}
 
@@ -642,13 +632,10 @@ export default function MaintenanceExplodedView() {
                           {currentScrollItem.label}
                         </h3>
                       </div>
-                      <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
-                        Draft
-                      </span>
                     </div>
 
-                    <p className="text-xs text-muted italic my-1.5">
-                      {content.unconfirmedNotice}
+                    <p className="text-xs text-muted my-1.5">
+                      {currentScrollItem.summary}
                     </p>
 
                     <div className="pt-2 border-t border-rule flex items-center justify-between">

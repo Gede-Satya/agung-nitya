@@ -12,7 +12,7 @@ export default function LiniPengadaanSection() {
   return (
     <section
       id="lini-utama"
-      className="relative w-full py-16 sm:py-24 bg-wash text-ink"
+      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50"
     >
       <div className="shell flex flex-col gap-10 sm:gap-12">
         {/* Section Header */}
@@ -46,7 +46,7 @@ export default function LiniPengadaanSection() {
             <Reveal
               key={idx}
               delay={idx * 0.08}
-              className="flex flex-col justify-between p-6 sm:p-7 rounded-card bg-canvas border border-rule/60 transition-transform hover:-translate-y-1 duration-300 shadow-2xs"
+              className="flex flex-col justify-between p-6 sm:p-7 rounded-card bg-wash border border-rule/70 transition-all hover:border-accent/40 hover:-translate-y-1 duration-300 shadow-2xs"
             >
               <div className="flex flex-col gap-3">
                 <span className="text-xs font-semibold tracking-wider text-accent uppercase">

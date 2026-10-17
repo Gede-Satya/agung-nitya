@@ -51,7 +51,7 @@ export default function UnitSiapPengadaanSection() {
   return (
     <section
       id="unit-pengadaan"
-      className="relative w-full py-16 sm:py-24 bg-wash text-ink"
+      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
         {/* Section Header */}

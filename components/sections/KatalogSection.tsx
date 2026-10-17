@@ -12,7 +12,7 @@ export default function KatalogSection() {
   return (
     <section
       id="katalog"
-      className="relative w-full py-16 sm:py-24 bg-wash text-ink scroll-mt-20"
+      className="relative w-full py-14 sm:py-20 bg-wash text-ink scroll-mt-20 border-b border-rule/50"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
         {/* Section Header */}
