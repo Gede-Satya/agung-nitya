@@ -53,6 +53,7 @@ export default function KatalogSection() {
                     src={item.image}
                     alt={item.title}
                     fill
+                    loading="eager"
                     className="object-contain p-4"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
