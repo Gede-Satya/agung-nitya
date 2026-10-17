@@ -51,7 +51,7 @@ export default function UnitSiapPengadaanSection() {
   return (
     <section
       id="unit-pengadaan"
-      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50"
+      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
         {/* Section Header */}
@@ -97,7 +97,7 @@ export default function UnitSiapPengadaanSection() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => select(i)}
-                    className={`relative min-h-11 shrink-0 px-3 text-sm transition-colors ${
+                    className={`relative min-h-11 shrink-0 px-3 text-sm transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-control ${
                       isActive
                         ? "text-accent font-semibold"
                         : "text-muted hover:text-ink"
@@ -146,13 +146,13 @@ export default function UnitSiapPengadaanSection() {
                   <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full sm:w-auto">
                     <a
                       href="#kontak"
-                      className="inline-flex min-h-11 items-center justify-center rounded-control bg-accent px-6 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover"
+                      className="inline-flex min-h-11 items-center justify-center rounded-control bg-accent px-6 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                     >
                       Minta Penawaran
                     </a>
                     <Link
                       href="/katalog"
-                      className="inline-flex min-h-11 items-center justify-center rounded-control border border-rule bg-canvas px-6 text-sm font-medium text-ink transition-colors hover:bg-wash gap-1.5"
+                      className="inline-flex min-h-11 items-center justify-center rounded-control border border-rule bg-canvas px-6 text-sm font-medium text-ink transition-colors hover:bg-wash gap-1.5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                     >
                       <span>Lihat Semua di Katalog</span>
                       <ExternalLink className="w-3.5 h-3.5 text-muted" />
@@ -189,7 +189,7 @@ export default function UnitSiapPengadaanSection() {
                     type="button"
                     onClick={() => go(-1)}
                     aria-label="Unit sebelumnya"
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <ChevronLeft aria-hidden="true" className="h-5 w-5" />
                   </button>
@@ -197,7 +197,7 @@ export default function UnitSiapPengadaanSection() {
                     type="button"
                     onClick={() => go(1)}
                     aria-label="Unit berikutnya"
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <ChevronRight aria-hidden="true" className="h-5 w-5" />
                   </button>

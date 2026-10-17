@@ -12,7 +12,7 @@ export default function LiniPengadaanSection() {
   return (
     <section
       id="lini-utama"
-      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50"
+      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
     >
       <div className="shell flex flex-col gap-10 sm:gap-12">
         {/* Section Header */}
@@ -83,7 +83,7 @@ export default function LiniPengadaanSection() {
                       ? "/katalog?kategori=Peralatan%20Kantor"
                       : "/katalog?kategori=Peralatan%20Elektronik"
                   }
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent-hover group"
+                  className="inline-flex min-h-9 items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
                 >
                   <span>Buka di katalog</span>
                   <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />

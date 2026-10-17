@@ -11,7 +11,7 @@ export default function EkosistemPengadaanSection() {
   return (
     <section
       id="ekosistem"
-      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50"
+      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
     >
       <div className="shell grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left Column: Narrative Copy */}

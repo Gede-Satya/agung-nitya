@@ -69,7 +69,7 @@ function ContactActions() {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[580px] mx-auto mb-8">
         <a
           href={mailHref}
-          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] gap-2 shadow-sm"
+          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] gap-2 shadow-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           <Mail className="w-4 h-4" />
           <span>{contact.directEmailLabel}</span>
@@ -78,7 +78,7 @@ function ContactActions() {
           href={company.inaprocUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control border border-white/20 bg-white/10 px-7 text-sm font-medium text-white transition-colors hover:bg-white/15 gap-2 backdrop-blur-xs"
+          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control border border-white/20 bg-white/10 px-7 text-sm font-medium text-white transition-colors hover:bg-white/15 gap-2 backdrop-blur-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           <span>{contact.catalogProfileLabel}</span>
           <ExternalLink className="w-4 h-4 text-white/70" />

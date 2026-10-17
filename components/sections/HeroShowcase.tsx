@@ -39,13 +39,14 @@ export default function HeroShowcase() {
             href={SITE_CONTENT.company.inaprocUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-pill bg-canvas border border-rule shadow-2xs mb-3 hover:border-accent transition-colors group cursor-pointer"
+            aria-label={`${hero.badge} di INAPROC LKPP (buka tab baru)`}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill bg-canvas border border-rule shadow-2xs mb-3 hover:border-accent transition-colors group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
           >
             <span className="h-2 w-2 rounded-pill bg-accent" />
             <span className="text-xs font-medium text-muted group-hover:text-ink transition-colors">
               {hero.badge}
             </span>
-            <span className="text-[10px] text-accent font-semibold tracking-wide">↗</span>
+            <span className="text-xs text-accent font-semibold tracking-wide">↗</span>
           </a>
 
           {/* 1. Headline */}
@@ -62,14 +63,14 @@ export default function HeroShowcase() {
           <div className="mt-5 flex flex-row items-center justify-center gap-3 sm:gap-4">
             <Link
               href={hero.ctaPrimary.href}
-              className="inline-flex min-h-11 items-center justify-center rounded-control bg-accent hover:bg-accent-hover px-6 sm:px-7 text-sm font-medium text-on-accent transition-all shadow-xs active:scale-[0.98] gap-2"
+              className="inline-flex min-h-11 items-center justify-center rounded-control bg-accent hover:bg-accent-hover px-6 sm:px-7 text-sm font-semibold text-on-accent transition-all shadow-xs active:scale-[0.98] gap-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               <span>{hero.ctaPrimary.label}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href={hero.ctaSecondary.href}
-              className="inline-flex min-h-11 items-center justify-center rounded-control border border-rule bg-canvas hover:bg-wash px-5 sm:px-6 text-sm font-medium text-ink transition-all active:scale-[0.98]"
+              className="inline-flex min-h-11 items-center justify-center rounded-control border border-rule bg-canvas hover:bg-wash px-5 sm:px-6 text-sm font-medium text-ink transition-all active:scale-[0.98] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               {hero.ctaSecondary.label}
             </a>

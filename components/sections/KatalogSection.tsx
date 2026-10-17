@@ -32,7 +32,7 @@ export default function KatalogSection() {
           <div className="shrink-0">
             <Link
               href="/katalog"
-              className="inline-flex min-h-11 items-center gap-2 px-5 py-2.5 rounded-control bg-accent text-on-accent text-sm font-semibold hover:bg-accent-hover transition-all shadow-xs group"
+              className="inline-flex min-h-11 items-center gap-2 px-5 py-2.5 rounded-control bg-accent text-on-accent text-sm font-semibold hover:bg-accent-hover transition-all shadow-xs group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               <span>Lihat semua produk</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -74,7 +74,8 @@ export default function KatalogSection() {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent-hover group"
+                  aria-label={`Buka etalase resmi ${item.title} di INAPROC LKPP (tab baru)`}
+                  className="inline-flex min-h-9 items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-hover group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
                 >
                   <span>Lihat di INAPROC</span>
                   <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
