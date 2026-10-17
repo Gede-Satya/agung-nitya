@@ -305,6 +305,14 @@ export default function MaintenanceExplodedView() {
     window.scrollTo({ top: targetScrollTop, behavior: "smooth" });
   };
 
+  const handleContactNavigation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const el = document.getElementById("kontak");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const leftItems = useMemo(() => items.filter((it) => it.side === "left"), [items]);
   const rightItems = useMemo(() => items.filter((it) => it.side === "right"), [items]);
 
@@ -425,7 +433,7 @@ export default function MaintenanceExplodedView() {
                       <div className="mt-2 pt-2 border-t border-rule/60 flex items-center justify-between">
                         <Link
                           href={`/?layanan=${item.id}#kontak`}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={handleContactNavigation}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
                         >
                           <span>{content.inquireActionLabel}</span>
@@ -609,7 +617,7 @@ export default function MaintenanceExplodedView() {
                       <div className="mt-2 pt-2 border-t border-rule/60 flex items-center justify-between">
                         <Link
                           href={`/?layanan=${item.id}#kontak`}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={handleContactNavigation}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
                         >
                           <span>{content.inquireActionLabel}</span>
@@ -646,6 +654,7 @@ export default function MaintenanceExplodedView() {
                     <div className="pt-2 border-t border-rule flex items-center justify-between">
                       <Link
                         href={`/?layanan=${currentScrollItem.id}#kontak`}
+                        onClick={handleContactNavigation}
                         className="inline-flex items-center gap-1 text-xs font-semibold text-accent"
                       >
                         <span>{content.inquireActionLabel}</span>
@@ -678,6 +687,7 @@ export default function MaintenanceExplodedView() {
               </span>
               <Link
                 href={content.closingCta.href}
+                onClick={handleContactNavigation}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-control bg-accent px-6 text-xs font-semibold text-on-accent transition-colors hover:bg-accent-hover shadow-xs"
               >
                 <span>{content.closingCta.label}</span>

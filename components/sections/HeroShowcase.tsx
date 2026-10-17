@@ -22,7 +22,10 @@ export default function HeroShowcase() {
   const hero = SITE_CONTENT.hero;
 
   return (
-    <section className="relative w-full min-h-[calc(100svh-3.5rem)] lg:h-[calc(100svh-3.5rem)] max-h-[1080px] bg-wash text-ink flex flex-col justify-between pt-16 sm:pt-20 pb-4 overflow-hidden select-none">
+    <section
+      id="hero"
+      className="relative w-full min-h-[calc(100svh-3.5rem)] bg-wash text-ink flex flex-col justify-between pt-20 sm:pt-24 pb-4 overflow-hidden select-none"
+    >
       <div className="shell flex flex-col items-center text-center flex-1 justify-center my-auto w-full">
         {/* Header Block: Headline, Subtitle, CTAs, Chips */}
         <motion.div

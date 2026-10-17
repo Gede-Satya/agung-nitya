@@ -15,6 +15,27 @@ function ContactActions() {
   const contact = SITE_CONTENT.contact;
   const company = SITE_CONTENT.company;
 
+  // Ensure landing on #kontak scrolls section into view if arriving with hash or query params
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    const isContactTarget =
+      hash === "#kontak" ||
+      hash === "#cta-pengadaan" ||
+      layananParam !== null ||
+      tujuanParam !== null;
+
+    if (isContactTarget) {
+      const el = document.getElementById("kontak");
+      if (el) {
+        const timer = setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [layananParam, tujuanParam]);
+
   // Check if a specific maintenance component was requested
   const matchedItem = layananParam
     ? MAINTENANCE_CONTENT.items.find((it) => it.id === layananParam)
@@ -74,7 +95,7 @@ export default function CtaPengadaanSection() {
   return (
     <section
       id="kontak"
-      className="w-full bg-canvas py-16 sm:py-24 border-t border-rule"
+      className="w-full bg-canvas py-16 sm:py-24 border-t border-rule scroll-mt-16 sm:scroll-mt-20"
     >
       <div id="cta-pengadaan" className="sr-only" aria-hidden="true" />
       <Reveal className="shell max-w-[820px] mx-auto text-center px-4">
