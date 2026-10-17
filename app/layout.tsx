@@ -3,10 +3,9 @@ import { fontVariables } from "@/lib/fonts";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import "./globals.css";
 
-const title =
-  "PT Agung Wijaya Nitya - Solusi Sistem Informasi & Perangkat TI untuk Instansi";
+const title = "PT Agung Wijaya Nitya | Katalog dan Solusi Pengadaan";
 const description =
-  "Mitra pengadaan solusi sistem informasi, implementasi sistem terpadu, dan perangkat teknologi informasi untuk instansi pemerintah. Terdaftar aktif di INAPROC Katalog Elektronik.";
+  "Penyedia aktif UMKK pada INAPROC Katalog Elektronik untuk kebutuhan perangkat komputasi, infrastruktur TI, dan perlengkapan instansi pemerintah.";
 
 export const metadata: Metadata = {
   title,
@@ -15,13 +14,11 @@ export const metadata: Metadata = {
   keywords: [
     "PT Agung Wijaya Nitya",
     "INAPROC Katalog Elektronik",
-    "pengadaan solusi sistem informasi",
-    "perangkat TI instansi",
-    "pembuatan sistem kustom",
-    "implementasi sistem TI",
-    "reverse-engineering sistem",
-    "SIMDINKES",
-    "pengadaan pemerintah Badung Bali",
+    "katalog LKPP",
+    "pengadaan perangkat TI",
+    "perangkat komputasi instansi",
+    "penyedia UMKK Badung Bali",
+    "pengadaan pemerintah",
   ],
   openGraph: {
     title,
@@ -49,7 +46,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id" className={`${fontVariables}`}>
-      <body className="bg-canvas text-primary antialiased selection:bg-accent/30 selection:text-primary">
+      <body className="bg-canvas text-ink antialiased selection:bg-accent/20 selection:text-ink">
         <a href="#konten-utama" className="skip-link">
           Lewati ke konten utama
         </a>

@@ -114,8 +114,8 @@ function createProceduralUITexture(): THREE.Texture {
     ctx.fillStyle = "#6E6E73";
     ctx.font = "13px sans-serif";
     ctx.fillText("Layanan Manajemen & SDM Kesehatan", 285, 185);
-    ctx.fillStyle = "#16A34A";
-    ctx.fillText("● Status: Terverifikasi Aktif", 285, 212);
+    ctx.fillStyle = "#216E4E";
+    ctx.fillText("● Status: Penyedia Aktif", 285, 212);
 
     // Metric Card 2 (Katalog Produk)
     ctx.fillStyle = "#FFFFFF";

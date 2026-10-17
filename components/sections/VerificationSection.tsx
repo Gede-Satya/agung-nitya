@@ -79,7 +79,7 @@ export default function VerificationSection() {
               {SITE_CONTENT.company.activeProductsCount}
             </span>
             <span className="text-xs text-slate text-left lg:text-right">
-              Produk terverifikasi tayang per {SITE_CONTENT.company.activeProductsDate}
+              Total produk tercatat per {SITE_CONTENT.company.activeProductsDate}
             </span>
             <span className="text-[11px] text-slate/80 italic mt-2">
               (Verifikasi ulang berkala di etalase resmi)
