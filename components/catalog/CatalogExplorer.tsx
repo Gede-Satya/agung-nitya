@@ -24,17 +24,64 @@ import {
   Boxes,
   AlertTriangle,
   SlidersHorizontal,
+  Package,
 } from "lucide-react";
 import {
   ALL_INAPROC_PRODUCTS,
   POPULAR_CATEGORIES,
   CATALOG_METADATA,
+  type InaprocProduct,
 } from "@/src/data/inaprocCatalog";
 import { SITE_CONTENT } from "@/src/content/site";
 import { Badge } from "@/components/ui/Badge";
 import { Drawer } from "@/components/ui/Drawer";
 
 const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
+
+function ProductCardMedia({ product }: { product: InaprocProduct }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!product.image || hasError) {
+    return (
+      <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-b from-wash to-canvas select-none">
+        {/* Technical blueprint radial grid */}
+        <div
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(circle at center, #126EAE 1.5px, transparent 1.5px)`,
+            backgroundSize: "16px 16px",
+          }}
+        />
+        <div className="relative z-0 flex flex-col items-center mt-4">
+          <div className="w-11 h-11 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-1.5 transition-transform duration-300 group-hover:scale-110 shadow-2xs">
+            <Package className="w-5 h-5 text-accent" />
+          </div>
+          <span className="text-[10px] font-mono font-medium text-muted tracking-wide">
+            ID: {product.id.slice(-6)}
+          </span>
+          <span className="text-[11px] font-medium text-ink/75 line-clamp-1 mt-0.5 px-2 max-w-[160px]">
+            {product.category}
+          </span>
+          <span className="inline-flex items-center text-[10px] font-semibold text-accent mt-2 px-2 py-0.5 rounded-full bg-accent/5 border border-accent/15">
+            Katalog INAPROC
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={product.image}
+      alt={product.name}
+      fill
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+      className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+      loading="lazy"
+      onError={() => setHasError(true)}
+    />
+  );
+}
 
 export default function CatalogExplorer() {
   const searchInputId = useId();
@@ -467,12 +514,13 @@ export default function CatalogExplorer() {
       </div>
 
       {/* =========================================================================
-          DESKTOP SEARCH & FILTER TOOLBAR (>= 1024px) (DESIGN.md §5)
+          DESKTOP TWO-TIER COMMAND BAR (>= 1024px) (DESIGN.md §5)
          ========================================================================= */}
-      <div className="hidden lg:flex flex-col gap-4">
-        <div className="grid grid-cols-12 gap-3">
+      <div className="hidden lg:flex flex-col gap-3.5 bg-wash/50 p-4 rounded-card border border-rule/70 shadow-2xs">
+        {/* Tier 1: Search, Origin Segment & Sort */}
+        <div className="flex items-center gap-3 w-full">
           {/* Search Box */}
-          <div className="col-span-5 relative">
+          <div className="flex-1 relative">
             <label htmlFor={searchInputId} className="sr-only">
               Cari nama produk, brand, atau kategori
             </label>
@@ -483,14 +531,14 @@ export default function CatalogExplorer() {
                 type="text"
                 value={searchInputValue}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder="Cari dari 742 produk (cth: Sony, Epson, SIMDINKES, Server)..."
-                className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-canvas border border-rule rounded-control focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink placeholder:text-muted transition-all shadow-2xs"
+                placeholder="Cari dari 742 produk resmi (cth: Sony, Epson, SIMDINKES, Server)..."
+                className="w-full pl-10 pr-9 h-11 text-xs sm:text-sm bg-canvas border border-rule rounded-control focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink placeholder:text-muted transition-all shadow-2xs"
               />
               {searchInputValue && (
                 <button
                   type="button"
                   onClick={() => handleSearchChange("")}
-                  className="absolute right-3 text-muted hover:text-ink transition-colors p-0.5 cursor-pointer"
+                  className="absolute right-3 text-muted hover:text-ink transition-colors p-1 cursor-pointer"
                   aria-label="Hapus kata kunci pencarian"
                 >
                   <X className="w-4 h-4" />
@@ -499,70 +547,45 @@ export default function CatalogExplorer() {
             </div>
           </div>
 
-          {/* Type Filter */}
-          <div className="col-span-2">
-            <label htmlFor={typeSelectId} className="sr-only">
-              Filter Tipe Produk
-            </label>
-            <div className="relative">
-              <select
-                id={typeSelectId}
-                value={selectedType}
-                onChange={(e) =>
-                  handleTypeSelect(e.target.value as "all" | "Barang" | "Jasa" | "Digital")
-                }
-                className="w-full py-2.5 pl-3 pr-8 text-xs bg-canvas border border-rule rounded-control appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer"
-              >
-                <option value="all">Semua Tipe</option>
-                <option value="Barang">Tipe: Barang</option>
-                <option value="Jasa">Tipe: Jasa Layanan</option>
-                <option value="Digital">Tipe: Digital / Software</option>
-              </select>
-              <Boxes className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Origin Filter (PDN / Impor) */}
-          <div className="col-span-2">
-            <div className="flex p-0.5 bg-wash rounded-control border border-rule h-full items-center">
-              <button
-                type="button"
-                onClick={() => handleOriginSelect("all")}
-                className={`flex-1 py-1.5 text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
-                  selectedOrigin === "all"
-                    ? "bg-canvas text-ink shadow-2xs font-semibold"
-                    : "text-muted hover:text-ink"
-                }`}
-              >
-                Semua Asal
-              </button>
-              <button
-                type="button"
-                onClick={() => handleOriginSelect("PDN")}
-                className={`flex-1 py-1.5 text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
-                  selectedOrigin === "PDN"
-                    ? "bg-canvas text-emerald-800 shadow-2xs font-semibold"
-                    : "text-muted hover:text-ink"
-                }`}
-              >
-                PDN
-              </button>
-              <button
-                type="button"
-                onClick={() => handleOriginSelect("Impor")}
-                className={`flex-1 py-1.5 text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
-                  selectedOrigin === "Impor"
-                    ? "bg-canvas text-accent shadow-2xs font-semibold"
-                    : "text-muted hover:text-ink"
-                }`}
-              >
-                Impor
-              </button>
-            </div>
+          {/* Origin Filter (PDN / Impor Segmented Control) */}
+          <div className="flex p-1 bg-canvas rounded-control border border-rule h-11 items-center shrink-0 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => handleOriginSelect("all")}
+              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+                selectedOrigin === "all"
+                  ? "bg-wash text-ink shadow-2xs font-semibold"
+                  : "text-muted hover:text-ink"
+              }`}
+            >
+              Semua Asal
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOriginSelect("PDN")}
+              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+                selectedOrigin === "PDN"
+                  ? "bg-emerald-50 text-emerald-800 shadow-2xs font-semibold"
+                  : "text-muted hover:text-ink"
+              }`}
+            >
+              PDN
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOriginSelect("Impor")}
+              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+                selectedOrigin === "Impor"
+                  ? "bg-blue-50 text-accent shadow-2xs font-semibold"
+                  : "text-muted hover:text-ink"
+              }`}
+            >
+              Impor
+            </button>
           </div>
 
           {/* Sorting Control */}
-          <div className="col-span-3">
+          <div className="w-60 shrink-0">
             <label htmlFor={sortSelectId} className="sr-only">
               Urutkan berdasarkan
             </label>
@@ -575,7 +598,7 @@ export default function CatalogExplorer() {
                     e.target.value as "default" | "price-asc" | "price-desc" | "name" | "name-desc"
                   )
                 }
-                className="w-full py-2.5 pl-3 pr-8 text-xs bg-canvas border border-rule rounded-control appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer"
+                className="w-full h-11 pl-3.5 pr-8 text-xs bg-canvas border border-rule rounded-control appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer font-medium"
               >
                 <option value="default">Urutkan: Default INAPROC</option>
                 <option value="name">Nama: A → Z</option>
@@ -583,41 +606,67 @@ export default function CatalogExplorer() {
                 <option value="price-asc">Harga: Terendah → Tertinggi</option>
                 <option value="price-desc">Harga: Tertinggi → Terendah</option>
               </select>
-              <ArrowUpDown className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-muted absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
         </div>
 
-        {/* Category Filter Pills with Badges */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {POPULAR_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            const count = categoryCounts[cat] || 0;
+        {/* Tier 2: Category Filter Pills + Type Filter */}
+        <div className="flex items-center justify-between gap-4 pt-0.5">
+          {/* Category Filter Pills with Badges */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none flex-1">
+            {POPULAR_CATEGORIES.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              const count = categoryCounts[cat] || 0;
 
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => handleCategorySelect(cat)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-medium whitespace-nowrap transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent ${
-                  isSelected
-                    ? "bg-ink text-on-accent shadow-2xs font-semibold"
-                    : "bg-canvas text-muted border border-rule hover:bg-wash hover:text-ink"
-                }`}
-              >
-                <span>{cat}</span>
-                <span
-                  className={`text-[11px] px-1.5 py-0.5 rounded-pill font-semibold ${
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium whitespace-nowrap transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent ${
                     isSelected
-                      ? "bg-white/20 text-on-accent"
-                      : "bg-wash text-muted border border-rule"
+                      ? "bg-ink text-on-accent shadow-2xs font-semibold"
+                      : "bg-canvas text-muted border border-rule hover:bg-wash hover:text-ink"
                   }`}
                 >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+                  <span>{cat}</span>
+                  <span
+                    className={`text-[11px] px-1.5 py-0.5 rounded-pill font-semibold ${
+                      isSelected
+                        ? "bg-white/20 text-on-accent"
+                        : "bg-wash text-muted border border-rule"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Type Filter */}
+          <div className="w-44 shrink-0">
+            <label htmlFor={typeSelectId} className="sr-only">
+              Filter Tipe Produk
+            </label>
+            <div className="relative">
+              <select
+                id={typeSelectId}
+                value={selectedType}
+                onChange={(e) =>
+                  handleTypeSelect(e.target.value as "all" | "Barang" | "Jasa" | "Digital")
+                }
+                className="w-full h-8 pl-3 pr-8 text-xs bg-canvas border border-rule rounded-pill appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer font-medium"
+              >
+                <option value="all">Semua Tipe</option>
+                <option value="Barang">Tipe: Barang</option>
+                <option value="Jasa">Tipe: Jasa Layanan</option>
+                <option value="Digital">Tipe: Digital / Software</option>
+              </select>
+              <Boxes className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -627,7 +676,7 @@ export default function CatalogExplorer() {
       <div
         id="catalog-results"
         aria-live="polite"
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-muted pt-2 border-t border-rule"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-muted pt-3.5 border-t border-rule mt-1"
       >
         <div className="flex items-center gap-2 flex-wrap">
           {!isLoading && (
@@ -761,18 +810,7 @@ export default function CatalogExplorer() {
               <div className="flex flex-col gap-3">
                 {/* Image Container */}
                 <div className="relative w-full aspect-square rounded-control overflow-hidden bg-wash border border-rule/60 flex items-center justify-center">
-                  {product.image ? (
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <ShoppingBag className="w-12 h-12 text-muted/40" />
-                  )}
+                  <ProductCardMedia product={product} />
 
                   {/* Badges Overlay */}
                   <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">

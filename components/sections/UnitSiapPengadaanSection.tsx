@@ -51,7 +51,7 @@ export default function UnitSiapPengadaanSection() {
   return (
     <section
       id="unit-pengadaan"
-      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
+      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
         {/* Section Header */}
@@ -77,7 +77,7 @@ export default function UnitSiapPengadaanSection() {
             aria-roledescription="carousel"
             aria-label="Sorotan unit siap pengadaan"
             onKeyDown={handleStageKeyDown}
-            className="rounded-card bg-canvas border border-rule/60 p-6 sm:p-10 shadow-2xs"
+            className="rounded-card bg-wash border border-rule/70 p-6 sm:p-10 shadow-xs"
           >
             <p aria-live="polite" className="sr-only">
               Menampilkan {active.title} ({index + 1} dari {total})

@@ -99,26 +99,26 @@ export default function HeroShowcase() {
           {/* Baseline Row */}
           <div className="relative w-full flex items-end justify-center gap-3 sm:gap-6 md:gap-8 z-10 px-4">
             {/* Kiri: Server Rack */}
-            <div className="relative w-[90px] sm:w-[125px] md:w-[145px] lg:w-[165px] aspect-[1/1] shrink-0 transition-transform duration-300 hover:scale-[1.02]">
+            <div className="relative w-[100px] sm:w-[140px] md:w-[165px] lg:w-[195px] aspect-[1/1] shrink-0 transition-transform duration-300 hover:scale-[1.02]">
               <Image
                 src="/images/hero-trio-rack-hd.png"
                 alt="Ilustrasi rak server dan pusat data"
                 fill
                 priority
                 className="object-contain object-bottom pointer-events-none select-none drop-shadow-sm"
-                sizes="(max-width: 768px) 125px, 165px"
+                sizes="(max-width: 768px) 140px, 195px"
               />
             </div>
 
             {/* Tengah: Monitor Komersial */}
-            <div className="relative w-[190px] sm:w-[270px] md:w-[325px] lg:w-[365px] aspect-[507/386] shrink-0 z-20 transition-transform duration-300 hover:scale-[1.01]">
+            <div className="relative w-[210px] sm:w-[300px] md:w-[370px] lg:w-[425px] aspect-[507/386] shrink-0 z-20 transition-transform duration-300 hover:scale-[1.01]">
               <Image
                 src="/images/hero-monitor-flawless.png"
                 alt="Ilustrasi monitor komersial dan stasiun kerja"
                 fill
                 priority
                 className="object-contain object-bottom pointer-events-none select-none z-10"
-                sizes="(max-width: 768px) 270px, 365px"
+                sizes="(max-width: 768px) 300px, 425px"
               />
 
               {/* Layar Monitor: Dashboard Preview Interaktif & Realistis */}
@@ -178,35 +178,38 @@ export default function HeroShowcase() {
             </div>
 
             {/* Kanan: Unit UPS */}
-            <div className="relative w-[90px] sm:w-[125px] md:w-[145px] lg:w-[165px] aspect-[4/3] shrink-0 transition-transform duration-300 hover:scale-[1.02]">
+            <div className="relative w-[100px] sm:w-[140px] md:w-[165px] lg:w-[195px] aspect-[4/3] shrink-0 transition-transform duration-300 hover:scale-[1.02]">
               <Image
                 src="/images/hero-trio-ups-hd.png"
                 alt="Ilustrasi unit catu daya cadangan UPS"
                 fill
                 priority
                 className="object-contain object-bottom pointer-events-none select-none drop-shadow-sm"
-                sizes="(max-width: 768px) 125px, 165px"
+                sizes="(max-width: 768px) 140px, 195px"
               />
             </div>
           </div>
 
-          {/* Bayangan Lantai Lembut */}
-          <div
-            aria-hidden="true"
-            className="w-[88%] max-w-[720px] h-3.5 sm:h-4 mx-auto bg-ink/10 blur-[10px] sm:blur-[12px] rounded-pill pointer-events-none -mt-1.5 sm:-mt-2 z-0"
-          />
+          {/* Hardware Studio Pedestal & Reflection Stage */}
+          <div className="w-full max-w-[860px] mx-auto -mt-2 sm:-mt-2.5 z-0 flex flex-col items-center">
+            {/* Ambient contact shadow & rim reflection */}
+            <div className="w-[86%] h-4 sm:h-5 bg-gradient-to-r from-transparent via-accent/20 to-transparent blur-md rounded-full pointer-events-none" />
+            <div className="w-[92%] h-[1px] bg-gradient-to-r from-transparent via-rule to-transparent" />
+          </div>
         </motion.div>
       </div>
 
-      {/* 6. Trust Strip */}
-      <div className="w-full mt-3 pt-3 pb-1 border-t border-rule/60">
-        <div className="shell flex items-center justify-center flex-wrap gap-x-6 sm:gap-x-8 gap-y-2 text-xs text-muted">
-          {hero.trustPoints.map((point) => (
-            <div key={point} className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
-              <span className="font-medium text-ink">{point}</span>
-            </div>
-          ))}
+      {/* 6. Docked Enterprise Trust Shelf */}
+      <div className="w-full mt-4 pb-2 z-10">
+        <div className="shell max-w-4xl mx-auto px-4">
+          <div className="rounded-card bg-canvas border border-rule/70 py-3 px-6 shadow-2xs flex items-center justify-center flex-wrap gap-x-6 sm:gap-x-8 gap-y-2 text-xs text-muted">
+            {hero.trustPoints.map((point) => (
+              <div key={point} className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                <span className="font-semibold text-ink">{point}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

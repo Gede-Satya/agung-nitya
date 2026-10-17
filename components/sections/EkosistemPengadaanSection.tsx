@@ -11,7 +11,7 @@ export default function EkosistemPengadaanSection() {
   return (
     <section
       id="ekosistem"
-      className="relative w-full py-14 sm:py-20 bg-canvas text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
+      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
     >
       <div className="shell grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left Column: Narrative Copy */}
@@ -46,7 +46,7 @@ export default function EkosistemPengadaanSection() {
         {/* Right Column: Workflow Card */}
         <Reveal
           delay={0.1}
-          className="lg:col-span-7 p-6 sm:p-8 rounded-card bg-wash border border-rule/60 shadow-2xs"
+          className="lg:col-span-7 p-6 sm:p-8 rounded-card bg-canvas border border-rule/70 shadow-xs"
         >
           <h3 className="font-heading type-h3 text-ink mb-5">
             {content.cardTitle}
@@ -56,7 +56,7 @@ export default function EkosistemPengadaanSection() {
             {content.workflowItems.map((item, idx) => (
               <li
                 key={idx}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 p-3.5 sm:p-4 rounded-control bg-canvas border border-rule/50"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 p-3.5 sm:p-4 rounded-control bg-wash border border-rule/50"
               >
                 <span className="font-heading text-sm font-semibold text-ink shrink-0">
                   {item.title}

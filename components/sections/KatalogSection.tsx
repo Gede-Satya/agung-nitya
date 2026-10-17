@@ -48,13 +48,13 @@ export default function KatalogSection() {
               className="flex flex-col justify-between rounded-card bg-canvas border border-rule/70 p-5 shadow-2xs hover:shadow-xs transition-shadow"
             >
               <div className="flex flex-col gap-3">
-                <div className="relative aspect-square w-full rounded-control bg-wash overflow-hidden border border-rule/50 flex items-center justify-center">
+                <div className="relative aspect-square w-full rounded-control bg-wash overflow-hidden border border-rule/50 flex items-center justify-center p-2">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     loading="eager"
-                    className="object-contain p-4"
+                    className="object-contain p-2 transition-transform duration-300 hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
