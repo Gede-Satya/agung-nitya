@@ -1,783 +1,614 @@
-<!-- # DESIGN.md — PT Agung Wijaya Nitya Landing Page
+# DESIGN.md — PT Agung Wijaya Nitya
 
-> Single source of truth. Every implementation decision must trace back to this file.
-> If this file and the code disagree, this file wins (or this file gets updated first).
->
-> **This file replaces the former SIMRS / "Unified Hospital Data System" version, and the former dark theme.**
-> Those concepts are dropped. Do not reintroduce hospital-system content, modules, copy, or dark-theme tokens.
+> Single source of truth for the website’s visual design, content presentation, and interaction behavior. If implementation and this document disagree, update the implementation or revise this document deliberately. This specification is original to PT Agung Wijaya Nitya. It uses broad product-page principles—clarity, restraint, and generous space—without copying another brand’s layouts, assets, fonts, wording, or interface.
 
-**Theme: light.** White, airy, product-page feel (in the spirit of Apple's product pages: large type, generous whitespace, one hero object). Emulate the principles only. Do not copy Apple's layouts, assets, fonts, or wording.
+## 1. Product and experience goals
 
----
+### Company context
 
-## 0. Priority order (conflict resolution)
+- **Company:** PT Agung Wijaya Nitya, a limited liability company in Kabupaten Badung, Bali.
 
-1. Product clarity
-2. Brand credibility
-3. Spatial storytelling
-4. Typography
-5. Composition
-6. Motion
-7. Decorative effects
+- **Public role:** an active UMKK provider on the INAPROC Electronic Catalog.
 
-If an effect reduces readability, trust, or performance, the effect loses.
+- **Audience:** government procurement officers, institutional buyers, and other organizations evaluating listed products or asking for a quotation.
 
----
+- **Primary user journey:** understand the provider and its offer → browse relevant catalog items → verify details on INAPROC → contact the company if needed.
 
-## 1. Company & audience
+- **Primary conversion:** a qualified inquiry or a click-through to the relevant INAPROC listing.
 
-- **Company:** PT Agung Wijaya Nitya, a limited liability company (Perseroan Terbatas) in Kab. Badung, Bali.
-- **Positioning:** procurement partner for information-system solutions and IT equipment for institutions.
-- **Audience:** government procurement officers (PPK, pejabat pengadaan) and institution admins who find providers through INAPROC.
-- **Primary goal:** confirm the provider is real and active → understand what they offer → make contact.
-- **Language:** Indonesian copy; professional, calm, factual. No hype, no jargon walls, no unverifiable claims.
+- **Language:** Indonesian by default. Use clear, professional, factual language. Explain necessary procurement or technical terms in context.
 
-### 1.1 Verified facts (the only facts that may appear as claims)
+### Verified facts and content boundaries
 
-| Fact                                                                                                                                                                                                              | Source / note                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Active provider on INAPROC Katalog Elektronik, provider type UMKK, Kab. Badung                                                                                                                                    | https://katalog.inaproc.id/agung-wijaya-nitya                                          |
-| 742 products listed in the catalog (as of 15 Oct 2026)                                                                                                                                                            | Keep as a constant in `src/content/site.ts` with a comment: "re-verify before release". NOTE (Oct 2026, per owner): badge & count are currently hidden from the UI; only a small text link to the INAPROC profile remains |
-| Services stated on the company's own site: system building, system implementation, system reverse-engineering                                                                                                     | Company site                                                                           |
-| One listed software product: "SIMDINKES Layanan Manajemen dan SDM Kesehatan"                                                                                                                                      | Mention only as one listed product, never as a general capability claim                |
-| Registered business fields (KBLI): software and IT services; computer and electronics trade; repair; general wholesale (including laboratory and medical equipment); equipment rental; consulting and advertising | INAPROC "Daftar KBLI" tab. KBLI shows registered scope, not proof of activity          |
-| Email: info@agungwijayanitya.com. Phone number: placeholder (TODO)                                                                                                                                                | Company site                                                                           |
+Treat the following as the only approved factual claims unless the company provides updated evidence:
 
-### 1.2 Forbidden claims and assets
+- The INAPROC profile lists **AGUNG WIJAYA NITYA** as an active provider, type UMKK, located in Kabupaten Badung, Bali: [https://katalog.inaproc.id/agung-wijaya-nitya](https://katalog.inaproc.id/agung-wijaya-nitya)
 
-- No "verified on PaDi UMKM", "registered on LPSE", "BUMN vendor", or tender wins. No proof exists yet. Only INAPROC may be named.
-- No invented client counts, client names, testimonials, institutions served, sales figures, awards, or certifications.
-- No brand names or logos (Sony, HID, Krisbow, Behringer, etc.) and no product photos copied from INAPROC.
-- No INAPROC logo; use the plain text "INAPROC Katalog Elektronik" (TODO: check brand rules before using the logo).
-- No hospital or doctor imagery. Do not use the word "SIMRS" in titles, headings, or metadata.
+- The company’s catalog lists **742 products as observed on 17 October 2026**. Treat this number as time-sensitive. Read it from the current catalog source where feasible; otherwise label it with a last-verified date and recheck before release.
 
----
+- Catalog entries span goods, services, and digital/software listings. Registered KBLI classifications indicate registered business scope; they are not proof that every registered activity is currently offered.
 
-## 2. Stack
+- A listed product includes “SIMDINKES Layanan Manajemen dan SDM Kesehatan.” Mention it only as a specific catalog listing, not as proof of broad healthcare-sector expertise.
 
-| Concern                               | Choice                                                    |
-| ------------------------------------- | --------------------------------------------------------- |
-| Framework                             | Next.js 16 (App Router), strict TypeScript                |
-| 3D                                    | React Three Fiber + drei + three                          |
-| Scroll story / camera / 3D transforms | GSAP + ScrollTrigger                                      |
-| UI micro-interactions only            | Framer Motion                                             |
-| Smooth scrolling                      | Lenis, driven by `gsap.ticker`, synced to ScrollTrigger   |
-| Styling                               | Tailwind CSS v4 (tokens in `@theme`)                      |
-| Form                                  | React Server Action + `useActionState` (works without JS) |
+- Public company-site search results describe system building, system implementation, and reverse-engineering services. Reconfirm these statements on a working company-controlled page before featuring them as claims.
 
-**Architecture rules:** one component per file. Separate folders for `scene/`, `sections/`, `hooks/`, `data/`. All copy, pillar order, links, and constants live in `src/content/site.ts` so emphasis can change without redesign.
+- Public contact email: `info@agungwijayanitya.com`.
 
----
+- The phone number currently available in prior site material is unverified/placeholder. Do not make it a primary contact method until the owner confirms it.
 
-## 3. Color tokens (light)
+Never invent product availability, stock, prices, specifications, delivery coverage, warranty terms, certifications, customers, project outcomes, testimonials, or response times. Product facts and prices must link to or be synchronized with the corresponding official INAPROC listing.
 
-Token names below are the Tailwind v4 utility names defined in `app/globals.css` (e.g. `bg-canvas`, `text-ink`, `border-rule`). **These replace all former dark tokens** (`graphite`, `blue`, `#0B0B0D`, etc.). Search the codebase and remove them.
+### Brand and asset boundaries
 
-| Token           | Name               | Hex       | Use                                                                                                                                                            |
-| --------------- | ------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `canvas`        | Canvas             | `#FFFFFF` | Page background                                                                                                                                                |
-| `wash`          | Wash               | `#F5F5F7` | Alternating section background, cards                                                                                                                          |
-| `surface`       | Surface            | `#E8E8ED` | Input fills, hover surfaces, skeletons                                                                                                                         |
-| `rule`          | Hairline           | `#D2D2D7` | Dividers, outlines                                                                                                                                             |
-| `muted`         | Muted Text         | `#6E6E73` | Secondary text (≈ 5:1 on `canvas`, ≈ 4.6:1 on `wash`, AA)                                                                                                      |
-| `ink`           | Primary Text       | `#1D1D1F` | Primary text (≈ 16:1 on `canvas`, AA)                                                                                                                          |
-| `accent`        | Brand Blue         | `#0B6BAE` | Primary brand color, sampled from the company logo (approximate). Buttons, links, active states, focus rings, 3D accent LED (≈ 5.6:1 on `canvas`, AA for text) |
-| `accent-strong` | Brand Blue (hover) | `#095A94` | Hover and pressed state of `accent`                                                                                                                            |
-| `on-accent`     | On Accent          | `#FFFFFF` | Text on `accent` fills (≈ 5.6:1, AA)                                                                                                                           |
-| `error`         | Error              | `#C9272D` | Form error text and borders only (≈ 5.5:1 on `canvas`)                                                                                                         |
+- Do not claim PaDi UMKM registration, LPSE registration, BUMN-vendor status, tender wins, or customer relationships without evidence.
+
+- Do not use hospital/doctor imagery as generic brand imagery. A healthcare-software catalog item may be described factually without positioning the whole company as a healthcare provider.
+
+- Do not copy manufacturer logos, product photos, or INAPROC branding assets unless the owner has confirmed permission and usage rules. Prefer original diagrams, simple category icons, and neutral illustration. Link to INAPROC for official product images and details.
+
+- Use the company logo as supplied; do not recolor, stretch, or upscale a low-resolution asset. The interface accent must follow the blue in the current logo. Request a vector/high-resolution version if needed, but do not block the design on it.
+
+- Do not reuse a third-party visual identity as the company’s design system. In particular, avoid Apple-specific typography, product UI, exact layouts, and wording.
+
+## 2. Design direction
+
+### Brand essence
+
+A dependable, clear procurement partner that helps institutional buyers understand the offer and reach the official product source.
+
+**Personality:** composed, capable, transparent.
+
+### Design movement
+
+**Contemporary procurement editorial:** a light, spacious product-story presentation combined with the clarity and utility of a well-organized B2B catalog.
+
+### Core principles
+
+1. **Make the next step obvious.** Prioritize catalog exploration and quotation requests.
+
+1. **Earn trust through verifiable information.** Distinguish company information from official listing data.
+
+1. **Make a large inventory navigable.** Search and filters should be useful without overwhelming the page.
+
+1. **Use motion as feedback, not decoration.** Never let animation delay, obscure, or carry essential content.
+
+### Visual signature
+
+- A clean white canvas with restrained cool-neutral section bands.
+
+- The logo’s blue as the primary interface accent, used for links, focus indicators, and important actions; keep the rest of the palette quiet so the brand mark remains recognizable.
+
+- A simple “procurement pathway” motif—small connected steps or rules—may illustrate how a buyer moves from need to listing to inquiry. Keep it subtle and do not imply official endorsement by INAPROC.
+
+## 3. Information architecture
+
+### Global navigation
+
+Use a compact, consistent header with a visible company mark and these destinations:
+
+- **Beranda**
+
+- **Kategori** or **Lini Produk**
+
+- **Katalog**
+
+- **Layanan** (only when the service content is confirmed). It contains the Pemeliharaan section (`#pemeliharaan`, see 4.1). Until the owner confirms the services, the nav item may point to the section, but every service claim inside it stays flagged as draft.
+
+- **Tentang / Ekosistem**
+
+- **Kontak**
+
+- Primary action: **Minta Penawaran**
+
+On smaller screens, place navigation links in an accessible menu. Keep the quotation action available without forcing the full desktop navigation into a narrow row. Show a clear active state for the current route.
+
+### Required pages and sections
+
+1. **Home (****`/`****)**
+  - Positioning headline and short factual description.
+  - Primary actions: **Lihat Katalog** and **Minta Penawaran**.
+  - A concise overview of the company’s offer, based on verified catalog categories.
+  - A small set of featured items or categories, with a clear link to the full catalog.
+  - Maintenance section (Pemeliharaan, see 4.1).
+  - Verifiable provider information and contact details.
+
+1. **Catalog (****`/katalog`****)**
+  - Dedicated discovery page for the available product and service listings.
+  - Search, category/type filters, origin filter if present in source data, sorting, results count, pagination, and official listing links.
+  - Clear loading, empty, and error states.
+
+1. **Contact / quotation (****`/#kontak`**** or ****`/kontak`****)**
+  - Explain what information helps prepare an inquiry.
+  - Offer verified contact options. A form is optional and must not imply submission succeeded unless it did.
+
+1. **About / provider information** (optional)
+  - Keep factual company details distinct from marketing positioning and registered KBLI scope.
+
+Keep the home page concise. It is an introduction and routing page, not a duplicate of every catalog listing.
+
+## 4. Home-page experience
+
+### Hero
+
+- One Indonesian `<h1>` that states what the provider offers to institutional buyers without unsupported claims.
+
+- Keep the lead paragraph short, concrete, and readable at a glance.
+
+- Primary CTA: **Lihat Katalog** → `/katalog`.
+
+- Secondary CTA: **Minta Penawaran** → quotation/contact section.
+
+- A link to the official provider profile may appear as a supporting trust action.
+
+- Use a single clear visual focus: an original abstract equipment composition, a simple category illustration, or a carefully composed image whose rights are confirmed.
+
+- Do not crowd the hero with rotating slides, excessive badges, multiple competing primary buttons, or a headline that promises every listed capability.
+
+### Category overview
+
+Show a small number of category entry points based on the live catalog taxonomy. Each category card should have:
+
+- A recognizable label.
+
+- A one-sentence plain-language explanation based on the actual catalog.
+
+- A count only when it can be kept accurate and the count’s scope is clear.
+
+- A link that opens the catalog with the category filter applied.
+
+Do not imply that registered KBLI categories are equivalent to currently listed catalog products.
+
+### Featured products
+
+- Keep the home-page slider, if retained, as a **featured-products showcase**, not the primary catalog interface.
+
+- Limit it to 3–5 verified selections. Prefer a static horizontal scroll/carousel with explicit previous/next controls; automatic rotation is off by default.
+
+- Include a clear **Lihat semua produk** link to `/katalog`.
+
+- Each slide needs a factual name, category, short description, and link to the exact INAPROC item when that URL is known.
+
+- The carousel must work with keyboard and touch, announce changes accessibly, and respect reduced-motion settings.
+
+- If accurate content or rights-cleared imagery is unavailable, use category highlights instead of fabricated product cards.
+
+### 4.1 Maintenance section (Pemeliharaan)
+
+**Purpose:** show that the company can maintain and repair IT equipment, component by component, without implying anything beyond what the owner has confirmed.
+
+**Position:** after the category overview and featured products, before trust and contact. Section id: `pemeliharaan`.
+
+**Copy (Indonesian):**
+
+- Eyebrow: “Pemeliharaan & purnajual”
+- h2: “Dirancang untuk dirawat, bukan diganti.”
+- Closing CTA: “Jadwalkan pemeliharaan” → `/?tujuan=pemeliharaan#kontak`
+
+**Visual:** one generic, unbranded exploded-view laptop (a 2D layered image or the section’s own lightweight animation). It is not part of the hero 3D scene and must not conflict with it. Use an original or rights-cleared image. Do not use a manufacturer’s product photo.
+
+**Components and numbering.** Fixed order, top to bottom, matching the physical layers in the image:
+
+| No. | id | Label | Leader point lands on |
+| --- | --- | --- | --- |
+| 01 | `layar` | Layar & panel display | Screen |
+| 02 | `cooling` | Cooling fan & heat pipe | Fan / heat pipe |
+| 03 | `motherboard` | Motherboard (RAM & SSD) | Board |
+| 04 | `baterai` | Baterai & modul daya | Battery block |
+| 05 | `sasis` | Bottom cover & rangka sasis | Lower casing |
 
 Rules:
 
-- Contrast figures are approximate; confirm with a contrast checker. If the company supplies official brand values, replace `accent` and re-check every ratio.
-- One brand hue only (the blue). No second accent color.
-- Accent stays small: buttons, links, focus, one LED. Never a large fill, gradient, or glow, except the primary button fill itself.
-- Alternate `canvas` and `wash` between sections to create rhythm instead of borders or heavy shadows.
-- `error` is a functional status color, always paired with an icon and copy, never decorative.
+- Each component appears **exactly once**. No duplicated labels and no leader line that ends in empty space.
+- Every leader point must land on the component it names. The battery is the dark block above the bottom cover. Re-check after any image change.
+- Numbers always read in the same direction (01 at the top). Never reorder per breakpoint.
 
-### 3.1 Logo
+**Data (single source, `src/content/maintenance.ts`):**
 
-- The logo is a circular emblem: blue and white, with the company name on the upper arc, the tagline "Unlocking Innovation, Empowering Possibilities" on the lower arc, and an abstract wing/wave mark in the center.
-- Its white background matches `canvas`, so it sits directly on the page. On `wash` sections, crop it to a circle (`border-radius: 50%`) so no white square shows.
-- The supplied file is a 204 × 204 px PNG, so use it only at small sizes (navbar, footer, favicon source) until a vector or high-resolution version arrives. Do not upscale it.
-- Do not recolor, stretch, or add effects to the logo. The tagline may appear in the footer as written (English).
-- The wing/wave mark may inspire UI curves, but never trace or copy it into the 3D device.
+~~~ts
+type MaintenanceItem = {
+  id: "layar" | "cooling" | "motherboard" | "baterai" | "sasis";
+  order: 1 | 2 | 3 | 4 | 5;
+  label: string;
+  x: number;            // leader point, % of image width
+  y: number;            // leader point, % of image height
+  side: "left" | "right";
+  services: string[];   // service claims
+  duration?: string;    // omit until confirmed
+  confirmed: boolean;   // false = draft, not yet approved by owner
+};
+~~~
 
----
+Initial draft content (all `confirmed: false` until the owner approves):
 
-## 4. Typography
+- `layar`: pemeriksaan dead pixel dan backlight bleeding; penggantian panel LCD/IPS
+- `cooling`: pembersihan sirip radiator dan blower; penggantian thermal paste
+- `motherboard`: upgrade RAM; penambahan atau penggantian SSD; diagnosa
+- `baterai`: pengecekan kesehatan baterai; penggantian modul baterai
+- `sasis`: penggantian casing bawah; perbaikan engsel
 
-- **Headings and body:** Inter, self-hosted via `next/font`. Headings weight 600, body 400/500. The family is defined only in `lib/fonts.ts`, so swapping to a licensed display face later is a one-file change. (Inter is used instead of Space Grotesk because its neutral, system-like letterforms suit the clean product-page look.)
-- **Minimum content size:** 14px. Labels/eyebrows may be 12px only when uppercase, tracked, and non-essential.
-- Scale (fluid `clamp`): display 48→96px, h2 32→60px, h3 20→28px, body 17→19px, small 14px.
-- Headings: tight leading (1.03–1.1) and negative tracking (-0.03em). Body leading 1.5–1.6, max line length ~64ch.
-- Section headings may be centered, with generous space above and below. Body copy stays left-aligned when longer than two lines.
-- One `<h1>` (hero). Each section has one `<h2>`; sub-items use `<h3>`.
+**Claim rules (these override any copy in code):**
 
----
+- Show service text only for items with `confirmed: true`. For unconfirmed items, show the component name only, with the neutral line “Layanan dikonfirmasi saat penawaran.”
+- Do not show a duration unless it is confirmed. If absent, omit the field entirely, with no placeholder.
+- Do not state specific technologies (DDR4/DDR5, NVMe PCIe 4.0, IPS) unless confirmed.
+- Do not state warranty on parts or service here (see Section 12).
 
-## 5. Visual reference & tone
+**Interaction:**
 
-Layout and typography feel: a minimal product page (Apple-style principles) with generous negative space, one idea per viewport, confident large type. Object quality bar: **Oryzo (oryzo.ai)**: tangible, textured 3D objects, cinematic but soft lighting, smooth camera. Emulate the quality and principles, never copy the design or assets.
+- Desktop: labels left and right of the image with leader lines, no overlap at 1024px and above. Hover or focus on a hotspot opens a small card with the component name, confirmed services, and “Tanya layanan ini”.
+- Mobile (below 768px): image on top, components as a vertical list of cards below. Tapping a card highlights its hotspot on the image. No side labels.
+- Every behavior works by keyboard and touch. Hotspots are buttons with an `aria-label`, `Esc` closes the card, and focus returns to the hotspot.
+- “Tanya layanan ini” → `/?layanan=<id>#kontak`. The query string goes **before** the hash. The contact section reads `layanan` and pre-fills the “Kebutuhan” field. If there is no contact form yet, the link must still land on the contact section with the component name visible.
+- The entrance animation is optional: layers separate once on first view, at most 500ms per reveal, and off under `prefers-reduced-motion` (show the static exploded view). No pinned scroll.
 
-**Forbidden:** cyberpunk, neon, holograms, Web3/gaming vibes, heavy glassmorphism, excessive particles or bloom, stock photos of people or hospitals, dark-mode or dark-hero treatments.
+**Fallbacks:** if the image fails to load, the component list remains fully usable as plain text. The section must not need JavaScript to show the five components and the CTA.
 
-Composition:
+### Trust and contact
 
-- The hero headline sits at the top (centered is fine), and the device sits below or beside it. Text never overlaps busy geometry.
-- Cards: `wash` fill, large radius (20–28px), no border and no heavy shadow. Hairline `rule` only where separation is needed.
-- Buttons: pill-shaped. Primary = `accent` fill with `on-accent` text. Secondary = text link in `accent` with a chevron.
-- Sections alternate `canvas` and `wash`.
+- Describe the provider’s active INAPROC status using plain text and a direct link. Do not imitate the INAPROC logo or suggest government endorsement.
 
----
+- Present email consistently and only use a confirmed phone/WhatsApp number.
 
-## 6. 3D concept — "The device, taken apart"
+- A contact form should request only information needed to respond. Show clear validation, submission, success, and failure feedback.
 
-One persistent R3F scene, fixed behind the content, with a **transparent canvas** (`alpha: true`) so the page background shows through and the object blends into the white page. No video, no portal/canvas masks. A single generic IT device comes apart as the user scrolls: hardware → software → service.
+## 5. Catalog-page experience
 
-### 6.1 Objects
+### Catalog source and integrity
 
-Build procedurally with drei `RoundedBox` (no external model by default). One `<group>` per layer so each can be animated independently.
+- INAPROC is the source of truth for official product names, prices, descriptions, status, and product URLs.
 
-| Layer               | Form                                                                              | Notes                                                                                                                                                                  |
-| ------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Lower casing     | Flat mini-PC style body, rounded corners, bevelled edges, **dark graphite satin** | Dark against the white page gives strong, premium contrast. Vents, ports, and one small accent-blue LED                                                                |
-| 2. Component board  | Thin slabs and fine lines inside the casing, lighter gray                         | Simple geometry only, no literal circuit-board textures                                                                                                                |
-| 3. Upper casing     | Lid that lifts during the hardware stage                                          | Same material family as the lower casing                                                                                                                               |
-| 4. Interface panel  | Floating panel above the device                                                   | Use a generic **light** UI mockup image as texture (white surface, `accent` details), not HTML inside 3D. No real data and no real product screenshots unless provided |
-| 5. Connection lines | Thin `ink`/gray lines drawn progressively to a few small nodes                    | Nodes symbolize institutions. Lines draw in during the service stage                                                                                                   |
+- Prefer an authorized, maintainable data feed or server-side synchronization. Respect platform terms, rate limits, and robots/access restrictions. Do not silently scrape in a way that violates platform rules.
 
-The device carries **no brand logo** and no real manufacturer's design. If graphite proves too heavy in review, a silver/aluminum variant is the allowed alternative.
+- If live synchronization is not available, use a clearly maintained snapshot with `lastVerifiedAt`, a source URL, and a refresh procedure. Do not describe a snapshot as live or real-time.
 
-### 6.2 Materials & light
+- Never invent a total count, category mapping, specification, product status, image, price, or direct listing URL.
 
-- `MeshPhysicalMaterial` / `MeshStandardMaterial` only. Light clearcoat; roughness differs per part (casing satin, panel slightly glossy), metalness 0–0.6. No unlit or flat materials.
-- Subtle procedural micro-roughness texture (small generated texture, no download) to avoid uniform plastic.
-- Environment: drei `<Environment>` built from large in-scene `<Lightformer>` softboxes (or a **local** HDR stored in the repo). Never load presets from an external CDN. Think product photography: big soft key, soft fill, gentle rim to separate the dark casing from the white page.
-- **Grounding is critical on white.** Use drei `ContactShadows` (low opacity, around 0.15–0.25, wide blur) so the device sits on the page. Without a soft shadow the object will look like it is floating.
-- Tone mapping: `NeutralToneMapping` (Khronos PBR Neutral, designed for product rendering), sRGB output. Verify that whites and the page background stay clean. **No bloom.**
-- Camera: narrow FOV (about 30–35) for a product-photo feel.
+- When a listing cannot be matched to a direct INAPROC detail page, provide the official provider profile link rather than fabricating a product URL.
 
-### 6.3 Motion rules
+### Catalog layout
 
-- Camera easing: `power3.inOut` / `expo.inOut`; values damped every frame (no snapping).
-- Idle: ±0.04 units float, ≤ 2° rotation, rotation speed about 0.1 rad/s, periods 6–10s.
-- Pointer response on the whole device (desktop only): max rotateX ±1.5°, rotateY ±2°, heavily damped. Never chases the cursor.
-- Every stage transition must read as cause → effect, not objects relocating.
-- Camera vocabulary: slow dolly, subtle orbit, controlled zoom. Never: spinning, shake, extreme FOV changes.
+1. Page title and concise explanation.
 
-### 6.4 Motion tokens
+1. Provider profile link and data freshness note, if data is synchronized or cached.
 
-| Token     | Duration           | Use                         |
-| --------- | ------------------ | --------------------------- |
-| instant   | 0.15s              | Icon / micro feedback       |
-| fast      | 0.25–0.35s         | Buttons, hover              |
-| normal    | 0.6s               | UI reveal                   |
-| slow      | 0.9s               | Section content             |
-| cinematic | 1.2–1.8s           | Major visual movement       |
-| spatial   | 2–4s (or scrubbed) | 3D camera / object movement |
+1. Search and filters.
 
-- UI easing: `cubic-bezier(0.22, 1, 0.36, 1)` ≈ GSAP `power3.out`. No bounce, elastic, or back easing anywhere.
-- Reveals: opacity 0→1 + translateY 24–32px, trigger at ~18% into the viewport, 0.6–0.8s, stagger 0.06–0.1s, play once. One reveal per visual group, not per element.
-- Hero text sequence: eyebrow → headline → body → CTAs, 80–120ms apart. The h1 is visible in SSR HTML (reveal is an enhancement only, never `visibility: hidden` before JS).
-- Buttons: hover → `accent-strong`, scale ≤ 1.02, active 0.98, 0.25–0.3s. No glow, no magnetic effect.
-- Cards: hover y −4px (scale ≤ 1.02), 0.3s.
-- Navigation: transparent at top; after ~80px it gains a `canvas` fill at ~80% opacity with a light backdrop blur and a hairline `rule` border, 0.4–0.6s. This light blur on the nav is the only allowed blur.
-- Pinned scenes use `scrub: 1`; pins release promptly, never trap scrolling.
+1. Result count and selected-filter summary.
 
-### 6.5 Library ownership
+1. Responsive product/service listing.
 
-| Library              | Owns                                                                  |
-| -------------------- | --------------------------------------------------------------------- |
-| R3F / three          | Rendering, materials, lighting, idle motion                           |
-| GSAP + ScrollTrigger | Scroll storytelling, pins, camera and 3D stage progress, text reveals |
-| Framer Motion        | UI micro-interactions only (hover, menu, accordion, form states)      |
+1. Pagination or a deliberate “load more” interaction.
 
-Rule: GSAP and Framer Motion never animate the same property of the same element.
+1. Empty/error state and a persistent link to the official INAPROC profile.
 
-### 6.6 Responsive & reduced motion
+### Search and filters
 
-- Tablet/mobile: shorter camera paths, shorter pins, same device (the concept must survive simplification).
-- Reduced motion: no camera travel, no pins, no smooth scroll, no idle rotation; opacity-only transitions ≤ 250ms. Show a static poster image of the device.
+- Search by product name, brand where present in source data, and category.
 
----
+- Filters should follow actual source fields, such as listing type, category, and domestic/import origin if those attributes are available.
 
-## 7. Scroll stages (choreography)
+- Show selected filters as removable chips and provide **Reset filter**.
 
-Total scroll length: **6–7 viewports.** Keep it short; the previous page was too long.
+- On desktop, filters may appear as a compact sidebar or a single well-organized toolbar. On mobile, place them in a filter drawer/sheet with a clearly labelled apply and reset action.
 
-| #   | Section                  | Stage         | What happens in 3D                                    | Meaning                                                                      |
-| --- | ------------------------ | ------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
-| 1   | Hero                     | **Assembled** | Device whole, very slow idle rotation, camera ¾ angle | "A complete solution"                                                        |
-| 2   | Perangkat TI             | **Hardware**  | Upper casing lifts, component board visible           | IT equipment pillar                                                          |
-| 3   | Software & Jasa TI       | **Software**  | Interface panel floats in above the device            | Software and IT services pillar (SIMDINKES as one listed example)            |
-| 4   | Implementasi & Dukungan  | **Service**   | Connection lines draw to small nodes                  | Implementation and support                                                   |
-| 5   | Bukti                    | **Proof**     | Camera pulls back, device reassembles quietly         | Static proof section follows (INAPROC status, product count, business scope) |
-| 6   | Pilar pendukung → Kontak | **Closing**   | Calm composition, slow idle, camera at rest           | Ready for contact                                                            |
+- Do not make a dense row of tiny filter chips the only control. Allow wrapping or horizontal scrolling only when its behavior is clear.
 
----
+- Sorting labels must explain the result order, e.g. **Harga terendah** or **Nama A–Z**. Do not offer price sorting if prices are incomplete or incomparable.
 
-## 8. Sections (content)
+- Keep the search term and filters in the URL query string where practical so a filtered catalog can be shared and browser back/forward works.
 
-Required, in order: Hero · Software & Jasa TI · Perangkat TI · Layanan (implementasi dan dukungan) · Bukti · Peralatan & Perlengkapan · Servis & Sewa · Kontak · Footer.
+### Product cards
 
-### 8.1 The four pillars (data, in `src/content/site.ts`)
+Each card should show, when available from the verified source:
 
-Order = emphasis. Change the order there, not in components.
+- Product/service name.
 
-1. **Software & Jasa TI** — headline pillar: system building, implementation, reverse-engineering; SIMDINKES as one listed product.
-2. **Perangkat TI** — computers, electronic devices, scanners (as seen in the catalog).
-3. **Peralatan & Perlengkapan** — racks, cabinets, laboratory and healthcare equipment.
-4. **Servis & Sewa** — repair and equipment rental.
+- Listing type and category.
 
-Pillars 1–2 are told through the 3D device. Pillars 3–4 are **static cards** (icon or simple illustration, no 3D, no supplier photos).
+- A factual short description.
 
-### 8.2 Hero
+- Official price and tax context, if present and current.
 
-- h1: short statement of positioning, e.g. "Solusi sistem informasi dan perangkat TI untuk instansi".
-- One primary CTA: "Lihat profil di INAPROC" → https://katalog.inaproc.id/agung-wijaya-nitya. Secondary: "Hubungi kami".
+- Origin or brand only if supplied by the source.
 
-### 8.3 Proof section
+- A clear **Lihat di INAPROC** action that opens the exact official listing.
 
-Show only: active provider status on INAPROC, the listed-product count (with the constant above), and a plain summary of registered business fields. Link out to the INAPROC profile so buyers can check for themselves. No sales numbers.
+Do not overemphasize badges. Keep cards consistent even when some data fields are absent; omit unavailable values instead of filling placeholders that look factual.
 
-### 8.4 Contact form
+### Catalog states
 
-- Fields: Nama, Instansi, Jabatan, Email atau WhatsApp, Kebutuhan. Client + server validation, inline errors, success and error states. Not a `mailto:` link.
-- Server Action validates, then POSTs to `CONTACT_WEBHOOK_URL` (console log in development). Honeypot field + simple rate limit.
-- Replaces the former "Jadwalkan Demo" button, which only opened an email.
+- **Loading:** stable skeletons and concise text such as “Memuat katalog…”. Do not show stale totals as current.
 
-### 8.5 Rules
+- **No matches:** explain that no items match and provide a one-step clear-filter action.
 
-- All content is server-rendered HTML; the 3D scene is an enhancement, never the only carrier of information.
-- Metadata title: "PT Agung Wijaya Nitya - Solusi Sistem Informasi & Perangkat TI untuk Instansi". Description is short, contains no "SIMRS" and none of the forbidden claims.
-- All site text is Indonesian.
+- **Empty source:** explain that there are currently no listings to show and link to the official profile.
 
----
+- **Error:** state that catalog data could not be loaded, offer a retry control, and retain the official INAPROC link.
 
-## 9. Performance budget
+- **Stale data:** show the last verification date and avoid real-time claims.
 
-- LCP < 2.5s (LCP element is the hero `<h1>`, never the canvas).
-- 60fps mid-range laptop; stable 30fps mid-range phone.
-- 3D scene lazy-loaded after first paint; DPR cap 1.5 on mobile (2 desktop). No heavy shadows on mobile; use a pre-baked or simplified contact shadow there.
-- Render loop paused when the canvas is off-screen or the tab is hidden.
-- Default is procedural geometry with zero 3D downloads. If an external model is ever used: Draco/Meshopt geometry, KTX2 textures, under 1–2 MB, license documented.
-- Loader never blocks the page > 1s; without JS the page is fully readable.
-- Page length stays compact (see section 7).
+## 6. Visual system
 
----
+### Color tokens
 
-## 10. Accessibility & robustness
+Use CSS custom properties as the source of truth. Keep all text/background combinations WCAG AA compliant and verify actual combinations with a contrast checker.
 
-- `prefers-reduced-motion`: no camera travel, no smooth scroll; static poster of the device with simple fades. All content readable.
-- Static fallback image when WebGL is unavailable or the device is weak.
-- Full keyboard navigation, visible focus rings (2px `accent`, 2px offset). Closed mobile menu is `inert`.
-- Decorative elements `aria-hidden` and not focusable. Touch targets ≥ 44px. Minimum text 12px (see section 4).
-- One `h1`, correct heading hierarchy, WCAG AA contrast.
-- Resizing desktop ↔ mobile must not crash (no `removeChild` error): ScrollTrigger, GSAP contexts, R3F, Lenis, and listeners are all cleaned up.
+| Token | Hex | Role |
+| --- | --- | --- |
+| `--color-canvas` | `#FFFFFF` | Main page background |
+| `--color-wash` | `#F5F7FA` | Alternating page bands and quiet panels |
+| `--color-surface` | `#FFFFFF` | Cards, menus, and form surfaces |
+| `--color-rule` | `#D9E0E8` | Dividers and control outlines |
+| `--color-ink` | `#17212B` | Primary text and headings |
+| `--color-muted` | `#536273` | Secondary text; verify contrast on each surface |
+| `--color-accent` | `#126EAE` | Primary blue sampled from the company logo; links, active states, focus, and primary actions |
+| `--color-accent-hover` | `#0B5F99` | Darker accessible hover and pressed state derived from the logo blue |
+| `--color-on-accent` | `#FFFFFF` | Text on the accent fill |
+| `--color-success` | `#216E4E` | Confirmed success state only |
+| `--color-error` | `#B42318` | Error state only |
 
----
+The current company logo is the source of truth for the brand accent: its dominant blue is `#126EAE`, paired with white. This value is sampled from the logo asset currently published on the company website; if an official vector or brand guide is later supplied, refine the token to match it and recheck contrast. White text on `#126EAE` has approximately 5.4:1 contrast; keep `#0B5F99` for hover/pressed states. Neutral backgrounds and text colors support the logo rather than introducing competing brand hues. Avoid gradients, neon, large saturated color fields, and decorative status colors.
 
-## 11. Open items (do not block Phase 1)
+### Typography (decided)
 
-- Logo received as a 204 × 204 px PNG on white. Still needed: an SVG or high-resolution PNG, and official brand color values if they exist. Until then `accent` is the sampled approximation.
-- Real phone number and `CONTACT_WEBHOOK_URL`.
-- PaDi UMKM / LPSE profile links. Do not mention either platform until proof is provided.
-- Confirmation from the company of which pillar to emphasise (order lives in `site.ts`).
-- Re-verify the 742 product count before release.
-- Verify INAPROC's buyer ordering flow against the official guide before adding any "how to order" section.
+- **Font:** Inter, self-hosted via `next/font`, defined in one place (`lib/fonts.ts`). Fallback: system sans-serif stack. All text on the site, including image labels and hotspot cards, uses this family. No second family. Do not depend on proprietary Apple fonts.
 
-### Fallback concept
+- **Weights:** headings 600, body 400, labels and buttons 500.
 
-If the hero frame is not approved after 2–3 revision rounds, switch to a **showroom walkthrough**: a minimal bright room where the camera visits one station per pillar. Do not build this unless explicitly instructed. -->
+| Token | Value |
+| --- | --- |
+| `--text-hero` | `clamp(2.25rem, 1.2rem + 4vw, 4.5rem)`, line-height 1.1, tracking -0.02em |
+| `--text-h2` | `clamp(1.875rem, 1.2rem + 2vw, 2.75rem)`, line-height 1.15 |
+| `--text-h3` | `clamp(1.125rem, 1rem + 0.5vw, 1.5rem)`, line-height 1.3 |
+| `--text-body` | `clamp(1rem, 0.95rem + 0.2vw, 1.125rem)`, line-height 1.6 |
+| `--text-small` | `0.875rem` (14px, the minimum for any content text) |
 
-# Apple — Style Reference
+- Keep paragraph line length around 60–70 characters. Long descriptions should be left-aligned.
 
-> foldable device in a white gallery. Center product renders as the visual event, with typography and blue controls kept deliberately quiet around it.
+- Use font weight and spacing to establish hierarchy. Do not rely on uppercase, color, or tiny labels alone to communicate meaning.
 
-**Theme:** light
+- Use one `<h1>` per page and a logical heading order.
 
-Source measurements are normalized; roles and recommendations are interpreted. Font summary lists are independent, not paired by position. HTML examples are reconstructions, not source components.
+### Layout and surfaces (decided)
 
-Apple treats the product page as a white gallery: enormous product photography occupies the center while compact black typography gives each claim a controlled, almost editorial weight. The page alternates seamless white storytelling sections with #f5f5f7 feature bands containing oversized #ffffff cards, using one saturated blue only for links and compact conversion controls. Rounded 28px media frames soften the hardware-led composition without turning the page into a card dashboard; nearly every surface stays flat and shadowless.
+| Token | Value |
+| --- | --- |
+| Spacing scale | 4, 8, 12, 16, 24, 32, 48, 64, 96px (4px base unit) |
+| `--space-section` | 96px desktop, 56px mobile |
+| `--space-gutter` | 40px desktop, 16px mobile |
+| `--container-max` | 1200px |
+| `--radius-card` | 20px |
+| `--radius-control` | 12px (buttons, inputs) |
+| `--radius-pill` | 9999px (filter chips and hotspot markers only) |
+| Shadows | none on cards; a hairline `--color-rule` only where separation is needed |
 
-## Tokens — Colors
+- Separate sections mainly with whitespace and subtle neutral backgrounds. Use thin rules when they aid grouping.
 
-| Name            | Value     | Token                     | Role                                                                                                                     |
-| --------------- | --------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Gallery White   | `#ffffff` | `--color-gallery-white`   | Primary page canvas, hero background, product story sections, and feature-card surfaces                                  |
-| Studio Mist     | `#f5f5f7` | `--color-studio-mist`     | Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks                |
-| Paper Frost     | `#fafafc` | `--color-paper-frost`     | Opened global-navigation surface and secondary pale fill                                                                 |
-| Hairline Silver | `#d6d6d6` | `--color-hairline-silver` | 1px dividers, restrained control outlines, and subtle separators                                                         |
-| Control Gray    | `#e6e6e8` | `--color-control-gray`    | Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment                             |
-| Ink             | `#1d1d1f` | `--color-ink`             | Headlines, primary body copy, navigation labels, and dark utility icons                                                  |
-| Slate           | `#707070` | `--color-slate`           | Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs                                          |
-| Steel           | `#86868b` | `--color-steel`           | Input outlines, inactive indicators, and fine outlined-control edges                                                     |
-| Apple Blue      | `#0066cc` | `--color-apple-blue`      | Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling |
-| Pricing Blue    | `#0071e3` | `--color-pricing-blue`    | Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments        |
-| Launch Orange   | `#b64400` | `--color-launch-orange`   | Small launch-status labels such as new-product markers                                                                   |
+- Avoid an oversized amount of blank space that hides the next useful action. Keep the catalog information-dense enough for procurement comparison while preserving readable breathing room.
 
-## Tokens — Typography
+- Do not place text over a busy product image. Ensure every section remains understandable if imagery fails to load.
 
-### SF Pro Display — Product names, display headlines, large feature statements, and section-level product claims. The 80px/600 hero treatment tightens to -1.2px, making the largest type feel compact rather than promotional. · `--font-sf-pro-display`
+### Buttons and links
 
-- **Substitute:** Inter, Helvetica Neue, Arial
-- **Weights:** 400, 500, 600
-- **Sizes:** 19px, 21px, 24px, 28px, 40px, 48px, 80px
-- **Line height:** 1.00, 1.05, 1.08, 1.14, 1.17, 1.21, 1.33, 1.38
-- **Letter spacing:** -1.2px at 80px; normal at 40px; +0.23px at 19-21px; profile range -0.015em to 0.012em
-- **OpenType features:** `"numr"`
-- **Role:** Product names, display headlines, large feature statements, and section-level product claims. The 80px/600 hero treatment tightens to -1.2px, making the largest type feel compact rather than promotional.
+- Primary action: solid accent blue, white label, strong contrast, clear verb-first Indonesian text.
 
-### SF Pro Text — Navigation, body copy, links, compact buttons, pricing details, labels, and footnotes. The consistently negative tracking lets small interface text remain dense and Apple-specific instead of looking like generic system UI. · `--font-sf-pro-text`
+- Secondary action: outlined or text-link style with an obvious focus/hover state.
 
-- **Substitute:** Inter, Helvetica Neue, Arial
-- **Weights:** 400, 500, 600
-- **Sizes:** 10px, 12px, 14px, 17px, 20px, 26px, 44px
-- **Line height:** 1.00, 1.18, 1.24, 1.29, 1.33, 1.43, 1.47
-- **Letter spacing:** -0.37px at 10px, -0.12px at 12px, -0.22px at 14px, -0.37px at 17px; profile range -0.037em to -0.003em
-- **OpenType features:** `"numr"`
-- **Role:** Navigation, body copy, links, compact buttons, pricing details, labels, and footnotes. The consistently negative tracking lets small interface text remain dense and Apple-specific instead of looking like generic system UI.
+- Links should describe the destination. Avoid ambiguous labels such as “Klik di sini”.
 
-### Arial — Fallback text inside the observed search/input control only. · `--font-arial`
+- Minimum touch target: 44 × 44px.
 
-- **Substitute:** Arial
-- **Weights:** 400
-- **Sizes:** 13px
-- **Line height:** 1.20
-- **Role:** Fallback text inside the observed search/input control only.
+- External links should be identifiable; use a new tab only when it helps users keep their place, and announce that behavior accessibly.
 
-### Type Scale
+- Links that carry a query string place it **before** the hash (`/?layanan=layar#kontak`), never after it.
 
-| Role              | Family         | Weight | Size | Line Height | Letter Spacing | Token                      |
-| ----------------- | -------------- | ------ | ---- | ----------- | -------------- | -------------------------- |
-| global-nav        | SF Pro Text    | 400    | 12px | 1           | -0.12px        | `--text-global-nav`        |
-| compact-control   | SF Pro Text    | 400    | 12px | 1.33        | -0.12px        | `--text-compact-control`   |
-| body-small        | SF Pro Text    | 400    | 14px | 1.29        | -0.224px       | `--text-body-small`        |
-| body              | SF Pro Text    | 400    | 17px | 1.47        | -0.374px       | `--text-body`              |
-| feature-copy      | SF Pro Text    | 400    | 17px | 1.24        | -0.374px       | `--text-feature-copy`      |
-| product-nav-title | SF Pro Display | 600    | 19px | 1.21        | 0.228px        | `--text-product-nav-title` |
-| product-kicker    | SF Pro Display | 600    | 21px | 1           | 0.231px        | `--text-product-kicker`    |
-| feature-heading   | SF Pro Display | 600    | 40px | 1           | 0px            | `--text-feature-heading`   |
-| hero-display      | SF Pro Display | 600    | 80px | 1.05        | -1.2px         | `--text-hero-display`      |
+## 7. Video, imagery, and 3D storytelling
 
-## Tokens — Spacing & Shapes
+Use product storytelling as a deliberate part of the home-page experience: a concise video and a restrained 3D scene can make the company’s offer easier to understand. They must support—not replace—the catalog, written explanation, trust information, or contact path. Keep the catalog route focused on finding and comparing listings; do not add video or 3D to every product card.
 
-**Base unit:** 4px
+### Video
 
-**Density:** comfortable
+- Reserve one clearly labelled video feature on the home page for a real company introduction, product/service demonstration, or procurement-process explanation. Choose a subject that the company can substantiate and that helps institutional buyers understand the offer.
 
-### Spacing Scale
+- Use owner-provided or rights-cleared footage. Do not invent client footage, product capabilities, testimonials, tender outcomes, logos, or claims. If suitable footage is not yet available, design the video section with an approved poster and a clearly marked content placeholder for the owner—never ship fabricated footage as real company evidence.
 
-| Name | Value | Token           |
-| ---- | ----- | --------------- |
-| 4    | 4px   | `--spacing-4`   |
-| 8    | 8px   | `--spacing-8`   |
-| 12   | 12px  | `--spacing-12`  |
-| 16   | 16px  | `--spacing-16`  |
-| 20   | 20px  | `--spacing-20`  |
-| 24   | 24px  | `--spacing-24`  |
-| 28   | 28px  | `--spacing-28`  |
-| 32   | 32px  | `--spacing-32`  |
-| 40   | 40px  | `--spacing-40`  |
-| 48   | 48px  | `--spacing-48`  |
-| 52   | 52px  | `--spacing-52`  |
-| 64   | 64px  | `--spacing-64`  |
-| 76   | 76px  | `--spacing-76`  |
-| 80   | 80px  | `--spacing-80`  |
-| 128  | 128px | `--spacing-128` |
-| 144  | 144px | `--spacing-144` |
+- Give the video a concise title, a poster image, visible play/pause and volume controls, and captions/transcript when spoken information matters. Do not autoplay with sound. If a muted preview is used, it must be short, silent, pausable, and respect reduced-motion preferences.
 
-### Border Radius
+- Load the video only when needed or near the viewport. Use a responsive player, reserve its aspect ratio to prevent layout shifts, and provide a stable fallback if playback is unavailable.
 
-| Element    | Value  |
-| ---------- | ------ |
-| cards      | 28px   |
-| links      | 10px   |
-| pills      | 36px   |
-| badges     | 0px    |
-| images     | 28px   |
-| inputs     | 980px  |
-| buttons    | 9999px |
-| navigation | 20px   |
+- Do not place text or the primary CTA over moving footage. Keep the section’s meaning and key information available as ordinary HTML text.
 
-### Shadows
+### 3D scene
 
-| Name     | Value                                | Token               |
-| -------- | ------------------------------------ | ------------------- |
-| subtle   | `rgb(230, 230, 232) 0px 0px 0px 1px` | `--shadow-subtle`   |
-| subtle-2 | `rgb(134, 134, 139) 0px 0px 0px 1px` | `--shadow-subtle-2` |
+- Include one focused 3D storytelling scene on the home page, not throughout the site. Its purpose is to make the relationship between equipment, software, and service understandable—not to simulate a specific product or imply an unverified capability.
 
-### Layout
+- Concept: a clean, generic, unbranded IT device shown assembled, then gently separated into a few understandable layers. A neutral interface panel may represent software, and simple connection lines may represent implementation/support. Avoid healthcare-specific visuals unless a specific verified software listing is being described.
 
-- **Section gap:** 90px
-- **Card padding:** 28px
-- **Element gap:** 20px
+- Use original procedural geometry or a rights-cleared model. Do not copy a manufacturer’s design or present the generic model as an exact item sold by the company.
 
-## Components
+- Keep the camera calm: a slow orbit or controlled dolly, subtle idle motion, and clear cause-and-effect transitions. No spinning, shake, continuous scroll trapping, bloom, particles, cyberpunk/neon effects, or heavy glassmorphism.
 
-### Global Store Navigation
+- Load the scene after the core page content, pause it off-screen or when the tab is hidden, cap device pixel ratio on mobile, and provide a static poster/illustration fallback. The visitor must not need WebGL to understand the offer or reach the catalog/contact CTA.
 
-**Role:** Persistent utility navigation
+- On mobile, shorten or simplify the animation rather than forcing a long pinned scroll sequence. With `prefers-reduced-motion`, show the static scene and remove camera travel and idle movement.
 
-A 44px-tall white navigation bar with Apple glyph, compact SF Pro Text 12px/400 links, and rgba(0,0,0,0.8) labels. Keep controls unboxed; opened navigation uses #fafafc with a 1px #e6e6e8 edge and blur(20px).
+- The 3D scene and the Pemeliharaan visual (4.1) are separate. The 3D scene explains the offer at a high level; Pemeliharaan lists component-level services. Do not reuse one as the other.
 
-### Product Local Navigation
+### Asset and visual rules
 
-**Role:** Product-page header and conversion controls
+- Prefer original, lightweight illustrations or rights-cleared assets. Do not copy product images from INAPROC or manufacturers without approval.
 
-A white local bar carries the product name in SF Pro Display 19px/600 and compact right-aligned pill controls. Use a 20px container radius where the local bar is floated over the page, with #d6d6d6 as the hairline boundary.
+- Do not use hospitals, doctors, or medical-device scenes as generic company imagery. Use a neutral software/interface illustration for a specific software catalog category, when useful.
 
-### Outlined Explore Pill
+- Keep the bright editorial look: white and cool-neutral surfaces, product imagery with breathing room, and restrained company-blue accents. The object or footage is the visual focus; avoid dense overlays and decorative chrome.
 
-**Role:** Secondary product-navigation control
+## 8. Motion and interaction
 
-Use transparent fill, #1d1d1f text, a 1px #86868b outline, and a 9999px radius. Set compact SF Pro Text 12px/400 type with 16px line height; do not give this secondary control a colored fill.
+- Motion should clarify the story or confirm an action; it must never delay content, hide a control, or trap scrolling. Use a restrained easing curve such as `cubic-bezier(0.22, 1, 0.36, 1)`.
 
-### Pricing Blue Pill
+- Typical durations: 150ms for micro-feedback, 200–300ms for controls, and up to 500ms for simple reveals. The home-page 3D story may progress with scroll, but keep each stage short and release scroll naturally. The catalog remains a conventional, fast, non-pinned page.
 
-**Role:** Filled conversion control
+- Do not smooth-scroll by default. Native scrolling is more predictable and accessible.
 
-Use #0071e3 fill with #ffffff SF Pro Text 12px/400 at 16px line height and -0.12px tracking. Set a 9999px radius; this blue treatment stays compact inside the product bar and floating pricing callout.
+- Respect `prefers-reduced-motion`: remove nonessential transitions, parallax, carousel auto-rotation, video previews, and 3D camera movement; show static alternatives.
 
-### Hero Product Stage
+- Do not rely on hover-only discovery. Every interactive behavior must also work by keyboard and touch.
 
-**Role:** Launch introduction
+- Focus indicators must be visible, consistent, and not obscured by sticky navigation.
 
-Set a #ffffff full-bleed visual stage with centered product name in SF Pro Display 21px/600, then an 80px/600 display statement at 84px line height and -1.2px tracking. Place the foldable-device render directly beneath the text without a containing card.
+- If the home page has a featured-product slider, keep it to 3–5 verified items. Provide visible previous/next controls, slide position, keyboard/touch support, and a direct **Lihat semua produk** link. Auto-rotation is off by default; if specifically enabled, provide a pause control and stop it on user interaction.
 
-### Floating Pricing Callout
+- Video controls must remain visible and usable with keyboard and touch. Never start audio automatically.
 
-**Role:** Purchase context over product imagery
+## 9. Responsive behavior
 
-Float a #ffffff rounded 28px capsule near the lower product render with 14px/600 #1d1d1f pricing text and compact secondary copy. Keep the blue Pricing Blue pill inside the callout; do not use drop shadows.
+- Design and validate at approximately 360px, 390px, 768px, 1024px, and 1440px widths.
 
-### Section Anchor Navigation
+- The page must not have horizontal overflow at common mobile sizes.
 
-**Role:** In-page feature navigation
+- Header controls should collapse intentionally. Keep the catalog search easy to reach; present advanced filters in a mobile sheet or drawer.
 
-Render a horizontal list of SF Pro Text 17px/500 labels at 25px line height and -0.374px tracking in #1d1d1f. Use transparent backgrounds, 28px vertical padding, and no card or underline treatment.
+- Product cards should use a single-column layout on narrow screens, then progressively denser layouts on larger screens without making card content too small.
 
-### Highlights Stage
+- Keep buttons full-width only when that improves mobile usability. Preserve clear spacing between actions.
 
-**Role:** Feature-carousel section
+- Crop imagery responsively without removing essential content.
 
-Use #f5f5f7 as the full section background, with a large #1d1d1f section heading and an Apple Blue text link aligned opposite it. Feature slides are #ffffff 28px-radius cards with no shadow.
+- Test both portrait and landscape where the 3D scene or carousel is present.
 
-### Feature Media Card
+- The Pemeliharaan section switches layout at 768px (see 4.1): side labels with leader lines above, image plus vertical component list below.
 
-**Role:** Product-detail showcase
+## 10. Accessibility and robustness
 
-Use a #ffffff surface, 28px radius, no border, and no shadow. Center the device render with an SF Pro Display 24px/600 or 40px/600 feature statement above it; media may crop beyond the card edge.
+- Target WCAG 2.2 AA for text contrast, keyboard access, focus visibility, and form error communication.
 
-### Carousel Playback Control
+- Use semantic landmarks, buttons for actions, links for navigation, labels for inputs, and accessible names for icon-only controls.
 
-**Role:** Highlights media control
+- Provide text alternatives for informative images; hide decorative assets from assistive technology. An exploded-view image needs a descriptive alt text that names the five components.
 
-Use a translucent control track based on rgba(210,210,215,0.64), 36px radius, and subdued rgba(0,0,0,0.56) glyphs. Keep slide dots and pause control grouped in a small pill rather than adding visible card chrome.
+- Carousel controls must expose slide position and pause state. Auto-play is off by default.
 
-### Editorial Feature Block
+- Announce catalog result-count changes and asynchronous status updates without moving focus unexpectedly.
 
-**Role:** Long-form product story
+- Keep focus trapped and returned appropriately when a mobile filter drawer or menu is opened and closed.
 
-Place a small #1d1d1f SF Pro Display kicker above a large left-aligned display statement, followed by SF Pro Text 17px/400 body copy at approximately 21px line height and -0.374px tracking. The accompanying hardware image is oversized and allowed to enter from the opposite side.
+- A closed menu/drawer must not leave hidden controls keyboard-focusable.
 
-### Rounded Search Input
+- Forms must work with keyboard, have field-level error text, retain safe entered values after validation errors, and announce submission outcome.
 
-**Role:** Global navigation search
+- Ensure the core page content remains available if JavaScript, WebGL, imagery, or the catalog data request fails.
 
-Use #ffffff fill, #1d1d1f 13px Arial text, 24px left padding, 45px right padding, a 1px #86868b outline, and a 980px radius. Keep the default field visually absent until expanded from navigation.
+## 11. Performance and technical guardrails
 
-### Launch Status Label
+- Prioritize readable server-rendered page content, the hero heading, and primary links. Neither video nor the 3D canvas may be the only carrier of essential information or block the initial page render.
 
-**Role:** New-product annotation
+- Target LCP under 2.5 seconds on a representative mobile connection; keep scripts and media proportionate to the page’s purpose.
 
-Use #b64400 SF Pro Text 12px/600 with 16px line height and -0.12px tracking. Leave it as plain text with no pill background or border.
+- Defer the 3D bundle and video player until needed. Use a poster/fallback, reserve media dimensions to prevent layout shifts, and avoid downloading full video data before playback.
 
-## Do's and Don'ts
+- Pause 3D and any preview animation when off-screen or when the browser tab is hidden. Keep the catalog route free of heavy 3D/video libraries unless essential to the catalog itself.
 
-### Do
+- Avoid loading heavy libraries on the catalog route unless they provide essential catalog functionality.
 
-- Use #ffffff as the default product-story canvas and reserve #f5f5f7 for full-width feature bands and footer regions.
-- Set display hero statements in SF Pro Display 80px/600, 84px line height, and -1.2px tracking.
-- Use SF Pro Text 17px/400 with -0.374px tracking for feature paragraphs and in-page navigation at 17px/500.
-- Use 28px radius for feature cards and contained media; keep those cards shadowless.
-- Use #0071e3 only for compact filled conversion pills with #ffffff 12px SF Pro Text.
-- Use #0066cc for inline links and textual section links rather than turning every navigation item blue.
-- Space major storytelling sections by 90px and use 20px gaps between related interface elements.
+- Catalog loading must be bounded and resilient. Use caching only with a visible freshness policy; handle timeouts and provider errors.
 
-### Don't
+- Avoid exposing private credentials or webhook secrets in client code. A contact form must not claim delivery unless the server confirms it.
 
-- Do not add gradients; product imagery supplies the page’s color and visual depth.
-- Do not use shadows on feature cards, editorial blocks, or floating pricing capsules.
-- Do not replace the 28px feature-card radius with 8px, 12px, or square corners.
-- Do not use #0071e3 as a large hero background or a universal filled button color.
-- Do not set hero headlines in bold 700 or wider tracking than -1.2px at 80px.
-- Do not introduce colored status pills for launch labels; use bare #b64400 12px text.
-- Do not place dense boxed UI panels over the product renders; keep #ffffff space around hardware imagery.
+- Keep route metadata and page copy accurate. Example home title: `PT Agung Wijaya Nitya | Katalog dan Solusi Pengadaan`. Adjust if the owner confirms a more precise positioning.
 
-## Surfaces
+### 11.1 Stack reference
 
-| Level | Name          | Value     | Purpose                                                                     |
-| ----- | ------------- | --------- | --------------------------------------------------------------------------- |
-| 0     | Gallery White | `#ffffff` | Primary hero, editorial canvas, local navigation, and feature-card surface. |
-| 1     | Studio Mist   | `#f5f5f7` | Alternate section band, carousel backdrop, muted content area, and footer.  |
-| 2     | Paper Frost   | `#fafafc` | Opened global-navigation layer.                                             |
-| 3     | Control Gray  | `#e6e6e8` | Disabled or subdued utility-control fill and thin navigation edge.          |
+- Next.js (App Router), strict TypeScript, Tailwind CSS with the tokens above defined once in the global stylesheet. No hardcoded hex values in components.
 
-## Elevation
+- All copy, links, constants, and maintenance data live in `src/content/` (e.g. `site.ts`, `maintenance.ts`). Components never hardcode copy.
 
-Surfaces gain separation through #ffffff against #f5f5f7, 28px media corners, and sparse 1px #d6d6d6 edges rather than cast shadows. The only elevation-like marks are 0 0 0 1px outlines on navigation and selected controls.
+- One component per file. Folders: `components/`, `sections/`, `hooks/`, `content/`.
 
-## Imagery
+- Animation: keep the library count small. Do not add a smooth-scroll library (Section 8 forbids smooth-scroll by default).
 
-The page is dominated by high-resolution product photography and device renders rather than illustration. Hardware is isolated against pure white or warm neutral image backdrops, often cropped at an oversized scale so the fold and thin profile become the composition; hands appear in the hero to demonstrate physical scale. Images are either edge-free on the white hero canvas or contained in large 28px-radius white cards against #f5f5f7. Product UI appears inside device screens as explanatory evidence, while icons remain small, monochrome global-navigation glyphs.
+- Images go through `next/image` with an explicit `sizes` attribute and reserved dimensions. Never default to the largest generated width for small elements such as the logo.
 
-## Layout
+## 12. Content style
 
-The page begins with a compact global store navigation above a product-local navigation bar, then opens into a centered white hero with stacked product label, oversized headline, preorder copy, a dominant foldable-phone render, and a floating pricing capsule. Storytelling proceeds through a light-gray #f5f5f7 highlights band with a horizontally advancing set of large white 28px-radius media cards, followed by wide white editorial sections that pair left-aligned text blocks with oversized product imagery entering from the right or below. Section headers introduce each chapter, while an in-page horizontal anchor navigation supports long-form scrolling; the page is spacious, image-led, and does not rely on visible grid lines or conventional card stacks.
+- Write in natural, concise Indonesian.
 
-## Agent Prompt Guide
+- Prefer concrete descriptions over slogans. Explain what a visitor can do next.
 
-Quick Color Reference:
+- Separate **official catalog facts**, **company statements**, and **design copy** so they are not mistaken for each other.
 
-- Gallery White: #ffffff — Primary page canvas, hero background, product story sections, and feature-card surfaces
-- Studio Mist: #f5f5f7 — Alternate full-width section background, feature-stage backdrop, footer surface, and muted content blocks
-- Paper Frost: #fafafc — Opened global-navigation surface and secondary pale fill
-- Hairline Silver: #d6d6d6 — 1px dividers, restrained control outlines, and subtle separators
-- Control Gray: #e6e6e8 — Disabled control fills, subdued utility surfaces, and single-pixel navigation edge treatment
-- Ink: #1d1d1f — Headlines, primary body copy, navigation labels, and dark utility icons
-- Slate: #707070 — Secondary copy, legal text, subdued navigation content, and low-emphasis glyphs
-- Steel: #86868b — Input outlines, inactive indicators, and fine outlined-control edges
-- Apple Blue: #0066cc — Inline links, section links, and blue text controls — a precise blue punctuation against monochrome product storytelling
-- Pricing Blue: #0071e3 — Filled pricing and learn-more controls — the brighter blue reserves visual urgency for compact conversion moments
-- Launch Orange: #b64400 — Small launch-status labels such as new-product markers
+- Use sentence case for headings and action labels. Use acronyms such as INAPROC, UMKK, KBLI, PPK, and BoQ only when relevant; explain less familiar terms on first use.
 
-Create a #ffffff launch hero with centered SF Pro Display 21px/600 product label and a centered 80px/600, 84px-line-height headline in Ink (#1d1d1f); place an oversized foldable-device render directly below with no enclosing card.
-Create a Product Local Navigation bar with an SF Pro Display 19px/600 Ink product title, an outlined Explore Pill, and a Pricing Blue (#0071e3) 9999px-radius pricing pill using #ffffff SF Pro Text 12px/400.
-Create a Studio Mist (#f5f5f7) highlights section with an Ink heading and Apple Blue (#0066cc) text link; use a #ffffff 28px-radius feature media card with no shadow and an SF Pro Display 40px/600 feature statement.
-Create a white editorial product section with a left-aligned Ink feature statement and SF Pro Text 17px/400 body copy at 21px line height and -0.374px tracking; crop a large product photograph into the right side.
-Create a floating #ffffff 28px-radius pricing callout over a product render using Ink 14px/600 pricing copy and a compact Pricing Blue 9999px-radius pill.
+- Use “TI” consistently in Indonesian copy (not a mix of “IT” and “TI”), except inside names such as “INAPROC”.
 
-## Similar Brands
+- Do not call a listing “unggulan”, “terlaris”, “terverifikasi”, “ready stock”, or “resmi bergaransi” unless the source supports that exact statement.
 
-- **Google Pixel** — Product-led landing pages pair isolated hardware renders with generous white space and compact blue conversion controls.
-- **Sony** — Large hardware photography and restrained editorial feature chapters make the product, rather than decorative interface chrome, carry the page.
-- **Nothing** — Uses oversized device imagery and sparse product storytelling, though Apple’s palette is more monochrome and its controls are smaller.
-- **Tesla** — Full-width product visual stages and minimal surrounding UI create a similarly showroom-like conversion flow.
+- Ensure metadata, social previews, navigation labels, and on-page headings describe the same business accurately.
 
-## Quick Start
+## 13. Open items requiring owner confirmation
 
-### CSS Custom Properties
+- Official logo vector/high-resolution asset (the current blue/white logo already defines the interface accent).
 
-```css
-:root {
-  /* Colors */
-  --color-gallery-white: #ffffff;
-  --color-studio-mist: #f5f5f7;
-  --color-paper-frost: #fafafc;
-  --color-hairline-silver: #d6d6d6;
-  --color-control-gray: #e6e6e8;
-  --color-ink: #1d1d1f;
-  --color-slate: #707070;
-  --color-steel: #86868b;
-  --color-apple-blue: #0066cc;
-  --color-pricing-blue: #0071e3;
-  --color-launch-orange: #b64400;
+- Confirmed phone/WhatsApp number.
 
-  /* Typography — Font Families */
-  --font-sf-pro-display:
-    "SF Pro Display", ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sf-pro-text:
-    "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-  --font-arial:
-    "Arial", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
+- Whether the 742 listing count is still current at the next release.
 
-  /* Typography — Scale */
-  --text-global-nav: 12px;
-  --leading-global-nav: 1;
-  --tracking-global-nav: -0.12px;
-  --text-compact-control: 12px;
-  --leading-compact-control: 1.33;
-  --tracking-compact-control: -0.12px;
-  --text-body-small: 14px;
-  --leading-body-small: 1.29;
-  --tracking-body-small: -0.224px;
-  --text-body: 17px;
-  --leading-body: 1.47;
-  --tracking-body: -0.374px;
-  --text-feature-copy: 17px;
-  --leading-feature-copy: 1.24;
-  --tracking-feature-copy: -0.374px;
-  --text-product-nav-title: 19px;
-  --leading-product-nav-title: 1.21;
-  --tracking-product-nav-title: 0.228px;
-  --text-product-kicker: 21px;
-  --leading-product-kicker: 1;
-  --tracking-product-kicker: 0.231px;
-  --text-feature-heading: 40px;
-  --leading-feature-heading: 1;
-  --tracking-feature-heading: 0px;
-  --text-hero-display: 80px;
-  --leading-hero-display: 1.05;
-  --tracking-hero-display: -1.2px;
+- Company-approved description and emphasis across software/system services, IT equipment, other goods, maintenance, and rental.
 
-  /* Typography — Weights */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
+- Rights to use supplier/product imagery or logos.
 
-  /* Spacing */
-  --spacing-unit: 4px;
-  --spacing-4: 4px;
-  --spacing-8: 8px;
-  --spacing-12: 12px;
-  --spacing-16: 16px;
-  --spacing-20: 20px;
-  --spacing-24: 24px;
-  --spacing-28: 28px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-52: 52px;
-  --spacing-64: 64px;
-  --spacing-76: 76px;
-  --spacing-80: 80px;
-  --spacing-128: 128px;
-  --spacing-144: 144px;
-
-  /* Layout */
-  --section-gap: 90px;
-  --card-padding: 28px;
-  --element-gap: 20px;
-
-  /* Border Radius */
-  --radius-md: 4px;
-  --radius-lg: 10px;
-  --radius-2xl: 20px;
-  --radius-3xl: 28px;
-  --radius-3xl-2: 32px;
-  --radius-3xl-3: 36px;
-  --radius-full: 120px;
-  --radius-full-2: 170px;
-  --radius-full-3: 980px;
-  --radius-full-4: 999px;
-  --radius-full-5: 9999px;
-
-  /* Named Radii */
-  --radius-cards: 28px;
-  --radius-links: 10px;
-  --radius-pills: 36px;
-  --radius-badges: 0px;
-  --radius-images: 28px;
-  --radius-inputs: 980px;
-  --radius-buttons: 9999px;
-  --radius-navigation: 20px;
-
-  /* Shadows */
-  --shadow-subtle: rgb(230, 230, 232) 0px 0px 0px 1px;
-  --shadow-subtle-2: rgb(134, 134, 139) 0px 0px 0px 1px;
-
-  /* Surfaces */
-  --surface-gallery-white: #ffffff;
-  --surface-studio-mist: #f5f5f7;
-  --surface-paper-frost: #fafafc;
-  --surface-control-gray: #e6e6e8;
-}
-```
-
-### Tailwind v4
-
-```css
-@theme {
-  /* Colors */
-  --color-gallery-white: #ffffff;
-  --color-studio-mist: #f5f5f7;
-  --color-paper-frost: #fafafc;
-  --color-hairline-silver: #d6d6d6;
-  --color-control-gray: #e6e6e8;
-  --color-ink: #1d1d1f;
-  --color-slate: #707070;
-  --color-steel: #86868b;
-  --color-apple-blue: #0066cc;
-  --color-pricing-blue: #0071e3;
-  --color-launch-orange: #b64400;
-
-  /* Typography */
-  --font-sf-pro-display:
-    "SF Pro Display", ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sf-pro-text:
-    "SF Pro Text", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-  --font-arial:
-    "Arial", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-
-  /* Typography — Scale */
-  --text-global-nav: 12px;
-  --leading-global-nav: 1;
-  --tracking-global-nav: -0.12px;
-  --text-compact-control: 12px;
-  --leading-compact-control: 1.33;
-  --tracking-compact-control: -0.12px;
-  --text-body-small: 14px;
-  --leading-body-small: 1.29;
-  --tracking-body-small: -0.224px;
-  --text-body: 17px;
-  --leading-body: 1.47;
-  --tracking-body: -0.374px;
-  --text-feature-copy: 17px;
-  --leading-feature-copy: 1.24;
-  --tracking-feature-copy: -0.374px;
-  --text-product-nav-title: 19px;
-  --leading-product-nav-title: 1.21;
-  --tracking-product-nav-title: 0.228px;
-  --text-product-kicker: 21px;
-  --leading-product-kicker: 1;
-  --tracking-product-kicker: 0.231px;
-  --text-feature-heading: 40px;
-  --leading-feature-heading: 1;
-  --tracking-feature-heading: 0px;
-  --text-hero-display: 80px;
-  --leading-hero-display: 1.05;
-  --tracking-hero-display: -1.2px;
-
-  /* Spacing */
-  --spacing-4: 4px;
-  --spacing-8: 8px;
-  --spacing-12: 12px;
-  --spacing-16: 16px;
-  --spacing-20: 20px;
-  --spacing-24: 24px;
-  --spacing-28: 28px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-52: 52px;
-  --spacing-64: 64px;
-  --spacing-76: 76px;
-  --spacing-80: 80px;
-  --spacing-128: 128px;
-  --spacing-144: 144px;
-
-  /* Border Radius */
-  --radius-md: 4px;
-  --radius-lg: 10px;
-  --radius-2xl: 20px;
-  --radius-3xl: 28px;
-  --radius-3xl-2: 32px;
-  --radius-3xl-3: 36px;
-  --radius-full: 120px;
-  --radius-full-2: 170px;
-  --radius-full-3: 980px;
-  --radius-full-4: 999px;
-  --radius-full-5: 9999px;
-
-  /* Shadows */
-  --shadow-subtle: rgb(230, 230, 232) 0px 0px 0px 1px;
-  --shadow-subtle-2: rgb(134, 134, 139) 0px 0px 0px 1px;
-}
-```
+- Whether a contact form is desired and the authorized destination/retention policy for submitted data.
+
+- Whether catalog data can be synchronized through an authorized source/API and how often it should refresh.
+
+- Confirmation of any warranty, delivery, support, or service-level statements before they appear as factual claims.
+
+- Which maintenance services are actually offered for each of the five components, for which device types, and the real durations (until then every `MaintenanceItem` stays `confirmed: false`).
+
+- Whether the “Unit siap pengadaan” highlights can link to real INAPROC listings. Without a matching listing, use category highlights instead of specific unit specifications (see Featured products).
+
+## 14. Acceptance checklist (per section)
+
+A section is done only when every applicable item is true.
+
+**Content and claims**
+
+- [ ] Every factual claim traces to Section 1, or is flagged as unconfirmed and hidden or neutralized.
+- [ ] No placeholder data is used as a primary contact (phone, WhatsApp) or presented as real.
+- [ ] No product specification, stock, price, warranty, client, or duration appears without a source or confirmation.
+- [ ] Forbidden words in Section 12 do not appear without source support.
+- [ ] Title, meta description, social preview, navigation, and headings describe the same business.
+
+**Design tokens**
+
+- [ ] Font is Inter via `next/font`, and image labels and hotspot cards use the same family.
+- [ ] Colors, spacing, radius, and type sizes come from the tokens in Section 6, with no hardcoded values.
+- [ ] Text is at least 14px, and touch targets are at least 44 × 44px.
+- [ ] Contrast is checked with a contrast checker for each text/background pair actually used.
+
+**Behavior**
+
+- [ ] All interactive elements work by keyboard and touch, with a visible focus indicator not hidden by the sticky header.
+- [ ] Links with query parameters place the query before the hash and land on the right section.
+- [ ] Cards, menus, and drawers close with `Esc` and return focus to their trigger.
+- [ ] `prefers-reduced-motion` shows static alternatives, with no camera travel and no auto-rotation.
+
+**Robustness and performance**
+
+- [ ] The section stays readable without JavaScript, WebGL, or images.
+- [ ] Verified at 360, 390, 768, 1024, and 1440px, with no horizontal overflow.
+- [ ] Images use `next/image` with `sizes`, reserved dimensions, and meaningful alt text (or empty alt if decorative).
+- [ ] No new heavy library is loaded on the catalog route, and LCP stays under 2.5s on a mobile connection.
+
+**Catalog (`/katalog`)**
+
+- [ ] Loading, no-match, empty, error, and stale states are implemented, with a persistent INAPROC link.
+- [ ] Search and filters live in the URL query string, and back/forward works.
+- [ ] Cards omit unavailable fields instead of showing look-alike placeholders.
+
+**Pemeliharaan (`#pemeliharaan`)**
+
+- [ ] Exactly five components, each shown once, numbered 01–05 in the same direction at every breakpoint.
+- [ ] Each leader point lands on the component it names (battery is not labelled bottom cover).
+- [ ] Services and durations appear only for items with `confirmed: true`.
+- [ ] “Tanya layanan ini” and “Jadwalkan pemeliharaan” reach the contact section, with the component name pre-filled or visible.
+- [ ] Hotspots are keyboard-focusable buttons with an `aria-label`, and the mobile list layout works below 768px.

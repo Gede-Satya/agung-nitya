@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -10,20 +11,15 @@ import {
 import {
   ChevronLeft,
   ChevronRight,
-  Pause,
-  Play,
+  ExternalLink,
 } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 import Reveal, { EASE_OUT } from "@/components/ui/Reveal";
 
-const AUTOPLAY_MS = 6000;
-
 export default function UnitSiapPengadaanSection() {
-  const spotlights = SITE_CONTENT.spotlights;
+  const spotlights = SITE_CONTENT.unitPengadaan.spotlights;
   const total = spotlights.length;
   const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
   const reduceMotion = useReducedMotion();
   const active = spotlights[index];
 
@@ -38,15 +34,6 @@ export default function UnitSiapPengadaanSection() {
     setIndex(i);
   }, []);
 
-  // Rotasi otomatis — berhenti saat dijeda, di-hover/di-fokus, atau reduced-motion
-  useEffect(() => {
-    if (isPaused || isHovering || reduceMotion || total <= 1) return;
-    const t = setTimeout(() => {
-      setIndex((i) => (i + 1) % total);
-    }, AUTOPLAY_MS);
-    return () => clearTimeout(t);
-  }, [index, isPaused, isHovering, reduceMotion, total]);
-
   const handleStageKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -57,14 +44,9 @@ export default function UnitSiapPengadaanSection() {
     }
   };
 
-  const waHref = (title: string) =>
-    `${SITE_CONTENT.company.whatsappUrl}?text=${encodeURIComponent(
-      `Halo PT Agung Wijaya Nitya, saya ingin bertanya tentang unit ${title}.`
-    )}`;
-
   const slideTransition = reduceMotion
     ? { duration: 0 }
-    : { duration: 0.45, ease: EASE_OUT };
+    : { duration: 0.35, ease: EASE_OUT };
 
   return (
     <section
@@ -75,16 +57,16 @@ export default function UnitSiapPengadaanSection() {
         {/* Section Header */}
         <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="font-heading text-2xl sm:text-4xl md:text-[42px] font-bold leading-tight tracking-tight text-ink">
-              Unit siap pengadaan.
+            <h2 className="font-heading type-h2 text-ink">
+              {SITE_CONTENT.unitPengadaan.title}
             </h2>
-            <p className="text-muted text-sm sm:text-base leading-relaxed">
-              Sorotan perangkat andalan untuk pengadaan semester ini.
+            <p className="type-body text-muted">
+              {SITE_CONTENT.unitPengadaan.subtitle}
             </p>
           </div>
 
-          <span className="text-[12px] sm:text-[13px] text-muted font-normal">
-            Semua unit bergaransi resmi Indonesia
+          <span className="text-xs text-muted font-normal">
+            {SITE_CONTENT.unitPengadaan.notice}
           </span>
         </Reveal>
 
@@ -95,11 +77,7 @@ export default function UnitSiapPengadaanSection() {
             aria-roledescription="carousel"
             aria-label="Sorotan unit siap pengadaan"
             onKeyDown={handleStageKeyDown}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            onFocus={() => setIsHovering(true)}
-            onBlur={() => setIsHovering(false)}
-            className="rounded-[28px] bg-canvas p-6 sm:p-10"
+            className="rounded-card bg-canvas border border-rule/60 p-6 sm:p-10 shadow-2xs"
           >
             <p aria-live="polite" className="sr-only">
               Menampilkan {active.title} ({index + 1} dari {total})
@@ -109,7 +87,7 @@ export default function UnitSiapPengadaanSection() {
             <div
               role="tablist"
               aria-label="Pilih unit sorotan"
-              className="flex gap-1 overflow-x-auto pb-1 -mx-1 px-1"
+              className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 border-b border-rule/60"
             >
               {spotlights.map((s, i) => {
                 const isActive = i === index;
@@ -119,9 +97,9 @@ export default function UnitSiapPengadaanSection() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => select(i)}
-                    className={`relative min-h-11 shrink-0 px-3 text-[13px] sm:text-[14px] transition-colors ${
+                    className={`relative min-h-11 shrink-0 px-3 text-sm transition-colors ${
                       isActive
-                        ? "text-accent-strong font-medium"
+                        ? "text-accent font-semibold"
                         : "text-muted hover:text-ink"
                     }`}
                   >
@@ -130,8 +108,8 @@ export default function UnitSiapPengadaanSection() {
                       <motion.span
                         layoutId="spotlight-tab-indicator"
                         aria-hidden="true"
-                        transition={{ duration: 0.35, ease: EASE_OUT }}
-                        className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-accent"
+                        transition={{ duration: 0.25, ease: EASE_OUT }}
+                        className="absolute inset-x-2 -bottom-px h-0.5 rounded-pill bg-accent"
                       />
                     )}
                   </button>
@@ -144,55 +122,54 @@ export default function UnitSiapPengadaanSection() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active.id + "-copy"}
-                  initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                  initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
                   transition={slideTransition}
                   className="flex flex-col items-start gap-4"
                 >
-                  <h3 className="font-heading text-2xl sm:text-3xl lg:text-[36px] font-bold leading-[1.15] tracking-tight text-ink text-balance">
+                  <h3 className="font-heading type-h3 text-ink text-balance">
                     {active.headline}
                   </h3>
-                  <p className="text-[14px] font-medium text-ink">
+                  <p className="text-sm font-semibold text-accent">
                     {active.title}
                   </p>
-                  <p className="text-muted text-[13px] sm:text-[14px] leading-relaxed">
-                    {active.specs}
+                  <p className="type-body text-muted text-sm leading-relaxed">
+                    {active.description}
                   </p>
-                  <div className="rounded-[14px] bg-wash px-3.5 py-2.5 text-[12px] text-muted leading-snug">
+                  <div className="rounded-control bg-wash border border-rule/50 px-4 py-2.5 text-xs text-muted leading-snug">
                     <span className="font-semibold text-ink">
-                      Kebutuhan Pengadaan:{" "}
+                      Kebutuhan Instansi:{" "}
                     </span>
                     {active.target}
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2 w-full sm:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full sm:w-auto">
                     <a
-                      href="#cta-pengadaan"
-                      className="inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-6 text-[13px] font-medium text-on-accent transition-colors hover:bg-accent-strong"
+                      href="#kontak"
+                      className="inline-flex min-h-11 items-center justify-center rounded-control bg-accent px-6 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover"
                     >
-                      Minta Kuotasi
+                      Minta Penawaran
                     </a>
-                    <a
-                      href={waHref(active.title)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-rule px-6 text-[13px] font-medium text-ink transition-colors hover:border-ink"
+                    <Link
+                      href="/katalog"
+                      className="inline-flex min-h-11 items-center justify-center rounded-control border border-rule bg-canvas px-6 text-sm font-medium text-ink transition-colors hover:bg-wash gap-1.5"
                     >
-                      Tanya via WhatsApp
-                    </a>
+                      <span>Lihat Semua di Katalog</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-muted" />
+                    </Link>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Visual — crossfade berlapis */}
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[20px] bg-wash">
+              {/* Visual Frame */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-control bg-wash border border-rule/50">
                 {spotlights.map((s, i) => (
                   <motion.div
                     key={s.id}
                     aria-hidden={i === index ? undefined : true}
                     initial={false}
                     animate={{ opacity: i === index ? 1 : 0 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.5 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.4 }}
                     className="absolute inset-0"
                   >
                     <Image
@@ -206,13 +183,13 @@ export default function UnitSiapPengadaanSection() {
                   </motion.div>
                 ))}
 
-                {/* Prev / Next */}
+                {/* Prev / Next controls */}
                 <div className="absolute bottom-3 right-3 flex gap-2">
                   <button
                     type="button"
                     onClick={() => go(-1)}
                     aria-label="Unit sebelumnya"
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-sm backdrop-blur transition hover:bg-canvas"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas"
                   >
                     <ChevronLeft aria-hidden="true" className="h-5 w-5" />
                   </button>
@@ -220,7 +197,7 @@ export default function UnitSiapPengadaanSection() {
                     type="button"
                     onClick={() => go(1)}
                     aria-label="Unit berikutnya"
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-canvas/90 text-ink shadow-sm backdrop-blur transition hover:bg-canvas"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control bg-canvas/90 text-ink shadow-xs border border-rule/60 backdrop-blur-sm transition hover:bg-canvas"
                   >
                     <ChevronRight aria-hidden="true" className="h-5 w-5" />
                   </button>
@@ -228,31 +205,17 @@ export default function UnitSiapPengadaanSection() {
               </div>
             </div>
 
-            {/* Footer: counter + pause */}
-            <div className="flex items-center justify-between pt-6 mt-6 border-t border-rule/60">
-              <p className="text-[12px] text-muted tabular-nums">
-                {index + 1} / {total}
+            {/* Footer: counter */}
+            <div className="flex items-center justify-between pt-5 mt-6 border-t border-rule/60">
+              <p className="text-xs text-muted tabular-nums">
+                {index + 1} dari {total} unit sorotan
               </p>
-              {!reduceMotion && (
-                <button
-                  type="button"
-                  onClick={() => setIsPaused((v) => !v)}
-                  aria-pressed={isPaused}
-                  aria-label={
-                    isPaused
-                      ? "Putar rotasi otomatis"
-                      : "Jeda rotasi otomatis"
-                  }
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-4 text-[12px] font-medium text-ink transition-colors hover:border-ink"
-                >
-                  {isPaused ? (
-                    <Play aria-hidden="true" className="h-3.5 w-3.5" />
-                  ) : (
-                    <Pause aria-hidden="true" className="h-3.5 w-3.5" />
-                  )}
-                  {isPaused ? "Putar otomatis" : "Jeda"}
-                </button>
-              )}
+              <Link
+                href="/katalog"
+                className="text-xs font-medium text-accent hover:text-accent-hover hover:underline"
+              >
+                Jelajahi seluruh etalase katalog &rarr;
+              </Link>
             </div>
           </div>
         </Reveal>

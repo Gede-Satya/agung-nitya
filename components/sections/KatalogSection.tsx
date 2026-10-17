@@ -1,46 +1,38 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { formationProducts } from "@/lib/formation-products";
 
-const Formation = dynamic(() => import("@/components/ui/formation"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[560px] w-full flex items-center justify-center rounded-2xl bg-white border border-zinc-200 text-zinc-400 text-sm shadow-xs">
-      Memuat galeri produk unggulan...
-    </div>
-  ),
-});
-
 export default function KatalogSection() {
+  const featured = formationProducts.slice(0, 4);
+
   return (
     <section
       id="katalog"
-      className="relative w-full py-16 sm:py-24 bg-[#F5F5F7] text-ink scroll-mt-28"
+      className="relative w-full py-16 sm:py-24 bg-wash text-ink scroll-mt-20"
     >
       <div className="shell flex flex-col gap-8 sm:gap-10">
-        {/* Section Header with Featured Title & "Lihat semua produk" Button */}
+        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
-          <div className="flex flex-col gap-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase text-accent">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Produk Unggulan e-Katalog</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
+          <div className="flex flex-col gap-1 max-w-2xl">
+            <span className="text-xs font-semibold tracking-wider uppercase text-accent">
+              Katalog Elektronik
+            </span>
+            <h2 className="font-heading type-h2 text-ink">
               Kurasi produk pilihan.
             </h2>
-            <p className="text-muted text-base sm:text-lg">
-              Sebagian perangkat dan peralatan terverifikasi yang tersedia lewat etalase resmi INAPROC LKPP.
+            <p className="type-body text-muted">
+              Sebagian perangkat dan perlengkapan yang tersedia lewat etalase resmi INAPROC LKPP.
             </p>
           </div>
 
           <div className="shrink-0">
             <Link
               href="/katalog"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white text-xs sm:text-sm font-semibold hover:bg-accent-strong transition-all shadow-xs group"
+              className="inline-flex min-h-11 items-center gap-2 px-5 py-2.5 rounded-control bg-accent text-on-accent text-sm font-semibold hover:bg-accent-hover transition-all shadow-xs group"
             >
               <span>Lihat semua produk</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -48,9 +40,47 @@ export default function KatalogSection() {
           </div>
         </div>
 
-        {/* Formation Gallery Component showcasing Featured Items */}
-        <div className="relative w-full">
-          <Formation works={formationProducts} />
+        {/* 4 Featured Products Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featured.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex flex-col justify-between rounded-card bg-canvas border border-rule/70 p-5 shadow-2xs hover:shadow-xs transition-shadow"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="relative aspect-square w-full rounded-control bg-wash overflow-hidden border border-rule/50 flex items-center justify-center">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-contain p-4"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1 pt-1">
+                  <span className="text-xs font-medium text-muted">
+                    {item.category}
+                  </span>
+                  <h3 className="font-heading text-sm font-semibold text-ink leading-snug line-clamp-2">
+                    {item.title}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="pt-4 mt-2 border-t border-rule/50">
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent-hover group"
+                >
+                  <span>Lihat di INAPROC</span>
+                  <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -167,9 +167,9 @@ export default function CatalogExplorer() {
   return (
     <div className="w-full flex flex-col gap-8 sm:gap-10">
       {/* Official INAPROC Store Sync Status Header */}
-      <div className="w-full rounded-2xl bg-white border border-black/8 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="w-full rounded-card bg-canvas border border-rule p-5 sm:p-6 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 text-accent">
+          <div className="w-10 h-10 rounded-control bg-accent/10 flex items-center justify-center shrink-0 text-accent">
             <Building2 className="w-5 h-5" />
           </div>
           <div className="flex flex-col gap-1">
@@ -177,17 +177,17 @@ export default function CatalogExplorer() {
               <span className="text-sm font-semibold text-ink">
                 Etalase Resmi INAPROC LKPP — PT Agung Wijaya Nitya
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
                 <CheckCircle2 className="w-3 h-3" />
-                742 Produk Sinkron
+                Snapshot 742 Produk (Per {ALL_INAPROC_PRODUCTS.length > 0 ? "17 Oktober 2026" : "Katalog"})
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-wash text-accent border border-rule">
                 <ShieldCheck className="w-3 h-3" />
-                UMKK Terverifikasi
+                Penyedia UMKK Aktif
               </span>
             </div>
-            <p className="text-xs text-slate-500 max-w-2xl">
-              Memuat seluruh 742 barang, jasa pemeliharaan, dan sistem informasi yang terdaftar resmi pada etalase penyedia LKPP. Seluruh harga dan spesifikasi faktual langsung dari e-Katalog Republik Indonesia.
+            <p className="text-xs text-muted max-w-2xl">
+              Memuat data snapshot 742 barang, jasa pemeliharaan, dan sistem informasi dari etalase penyedia LKPP. Seluruh harga dan spesifikasi resmi dapat dikonfirmasi langsung di tautan INAPROC terkait.
             </p>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function CatalogExplorer() {
           <button
             onClick={handleSimulateRefresh}
             aria-label="Refresh data katalog"
-            className="p-2.5 rounded-xl border border-black/10 hover:bg-slate-50 text-slate-600 transition-colors"
+            className="p-2.5 rounded-control border border-rule hover:bg-wash text-muted transition-colors"
             title="Muat ulang data"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-accent" : ""}`} />
@@ -205,7 +205,7 @@ export default function CatalogExplorer() {
             href="https://katalog.inaproc.id/agung-wijaya-nitya"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-2xs group"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-all shadow-2xs group"
           >
             <span>Buka di INAPROC</span>
             <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

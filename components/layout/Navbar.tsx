@@ -5,23 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight } from "lucide-react";
-
-const NAV_LINKS = [
-  { label: "Produk", href: "/#lini-utama", id: "lini-utama" },
-  { label: "Katalog", href: "/katalog", id: "katalog" },
-  { label: "Pemeliharaan", href: "/#pemeliharaan-hardware", id: "pemeliharaan-hardware" },
-  { label: "Ekosistem", href: "/#ekosistem", id: "ekosistem" },
-  { label: "Ketersediaan", href: "/#unit-pengadaan", id: "unit-pengadaan" },
-  { label: "Kontak", href: "/#cta-pengadaan", id: "cta-pengadaan" },
-];
+import { SITE_CONTENT } from "@/src/content/site";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [scrollActiveId, setScrollActiveId] = useState<string | null>(null);
+  const activeId = pathname === "/katalog" ? "katalog" : scrollActiveId;
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
+
+  const navLinks = SITE_CONTENT.navigation.links;
+  const primaryAction = SITE_CONTENT.navigation.primaryAction;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,16 +28,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Update active link based on route & scrollspy
+  // Update active link based on scrollspy
   useEffect(() => {
-    if (pathname === "/katalog") {
-      setActiveId("katalog");
-      return;
-    }
+    if (pathname === "/katalog") return;
 
     const handleScrollspy = () => {
       const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-      const elements = NAV_LINKS.filter((l) => l.href.startsWith("/#") || l.href.startsWith("#"))
+      const elements = navLinks
+        .filter((l) => l.href.startsWith("/#") || l.href.startsWith("#"))
         .map((l) => ({
           id: l.id,
           el: document.getElementById(l.id),
@@ -55,23 +49,11 @@ export default function Navbar() {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 60
       ) {
-        setActiveId(elements[elements.length - 1].id);
+        setScrollActiveId(elements[elements.length - 1].id);
         return;
       }
 
       let currentActive: string | null = null;
-
-      // Keep "Produk" (#lini-utama) active when #katalog section is in view on homepage
-      const katalogEl = document.getElementById("katalog");
-      if (katalogEl) {
-        const kTop = katalogEl.offsetTop;
-        const kBottom = kTop + katalogEl.offsetHeight;
-        if (scrollPosition >= kTop && scrollPosition < kBottom) {
-          setActiveId("lini-utama");
-          return;
-        }
-      }
-
       for (const item of elements) {
         const top = item.el.offsetTop;
         const bottom = top + item.el.offsetHeight;
@@ -81,7 +63,7 @@ export default function Navbar() {
         }
       }
 
-      setActiveId(currentActive);
+      setScrollActiveId(currentActive);
     };
 
     window.addEventListener("scroll", handleScrollspy, { passive: true });
@@ -92,7 +74,7 @@ export default function Navbar() {
       window.removeEventListener("scroll", handleScrollspy);
       window.removeEventListener("resize", handleScrollspy);
     };
-  }, [pathname]);
+  }, [pathname, navLinks]);
 
   // Drawer: Esc menutup, kunci scroll badan, kelola fokus
   useEffect(() => {
@@ -126,9 +108,9 @@ export default function Navbar() {
       )}
 
       <div
-        className={`relative w-full bg-canvas/80 backdrop-blur-xl transition-all duration-300 ${
+        className={`relative w-full bg-canvas/90 backdrop-blur-md transition-all duration-300 ${
           isScrolled || menuOpen
-            ? "border-b border-rule shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+            ? "border-b border-rule shadow-xs"
             : "border-b border-rule/60"
         }`}
       >
@@ -138,7 +120,7 @@ export default function Navbar() {
             href="/"
             className="flex min-h-11 items-center gap-2.5 hover:opacity-85 transition-opacity"
           >
-            <span className="relative block h-7 w-7 shrink-0 overflow-hidden rounded-full">
+            <span className="relative block h-7 w-7 shrink-0 overflow-hidden rounded-full border border-rule">
               <Image
                 src="/images/logo-awn-transparent.png"
                 alt="Logo Resmi PT Agung Wijaya Nitya"
@@ -149,11 +131,11 @@ export default function Navbar() {
               />
             </span>
             <span className="leading-tight">
-              <span className="block font-heading text-[14px] sm:text-[15px] font-semibold text-ink tracking-tight">
+              <span className="block font-heading text-sm sm:text-base font-semibold text-ink tracking-tight">
                 Agung Wijaya Nitya
               </span>
-              <span className="block text-[12px] font-medium text-muted">
-                Perangkat TI & Display
+              <span className="block text-xs font-medium text-muted">
+                Katalog & Solusi Pengadaan
               </span>
             </span>
           </Link>
@@ -161,9 +143,9 @@ export default function Navbar() {
           {/* Central links (desktop) */}
           <nav
             aria-label="Navigasi utama"
-            className="hidden lg:flex items-center gap-1 text-[13px] font-normal text-ink/80"
+            className="hidden lg:flex items-center gap-1 text-sm font-medium text-ink/80"
           >
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const isActive = activeId === link.id;
               return (
                 <Link
@@ -171,13 +153,13 @@ export default function Navbar() {
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
                   className={`relative inline-flex min-h-11 items-center px-3 transition-colors hover:text-ink ${
-                    isActive ? "text-accent-strong font-medium" : ""
+                    isActive ? "text-accent font-semibold" : ""
                   }`}
                 >
                   {link.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-accent transition-opacity duration-200 ${
+                    className={`absolute inset-x-3 -bottom-px h-0.5 rounded-pill bg-accent transition-opacity duration-200 ${
                       isActive ? "opacity-100" : "opacity-0"
                     }`}
                   />
@@ -189,10 +171,10 @@ export default function Navbar() {
           {/* Right actions */}
           <div className="flex items-center gap-2">
             <Link
-              href="/#cta-pengadaan"
-              className="hidden min-h-11 items-center justify-center rounded-full bg-accent px-5 text-[13px] font-medium text-on-accent transition-all hover:bg-accent-strong active:scale-[0.98] sm:inline-flex"
+              href={primaryAction.href}
+              className="hidden min-h-11 items-center justify-center rounded-control bg-accent px-5 text-sm font-medium text-on-accent transition-all hover:bg-accent-hover active:scale-[0.98] sm:inline-flex"
             >
-              <span>Minta Penawaran</span>
+              <span>{primaryAction.label}</span>
             </Link>
 
             {/* Mobile menu toggle */}
@@ -205,7 +187,7 @@ export default function Navbar() {
               aria-label={
                 menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"
               }
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-black/[0.04] lg:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control text-ink transition-colors hover:bg-wash lg:hidden"
             >
               {menuOpen ? (
                 <X aria-hidden="true" className="h-5 w-5" />
@@ -229,7 +211,7 @@ export default function Navbar() {
             inert={!menuOpen}
           >
             <ul className="flex flex-col border-t border-rule px-5 py-2">
-              {NAV_LINKS.map((link, i) => {
+              {navLinks.map((link, i) => {
                 const isActive = activeId === link.id;
                 return (
                   <li key={link.id}>
@@ -239,8 +221,8 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       tabIndex={menuOpen ? 0 : -1}
                       aria-current={isActive ? "page" : undefined}
-                      className={`group flex min-h-12 items-center justify-between text-[15px] transition-colors ${
-                        isActive ? "text-accent-strong font-medium" : "text-ink"
+                      className={`group flex min-h-12 items-center justify-between text-base transition-colors ${
+                        isActive ? "text-accent font-semibold" : "text-ink"
                       }`}
                     >
                       {link.label}
@@ -248,7 +230,7 @@ export default function Navbar() {
                         aria-hidden="true"
                         className={`h-4 w-4 transition-all ${
                           isActive
-                            ? "text-accent-strong"
+                            ? "text-accent"
                             : "text-muted group-hover:translate-x-0.5 group-hover:text-ink"
                         }`}
                       />
@@ -258,12 +240,12 @@ export default function Navbar() {
               })}
               <li className="py-3">
                 <Link
-                  href="/#cta-pengadaan"
+                  href={primaryAction.href}
                   onClick={() => setMenuOpen(false)}
                   tabIndex={menuOpen ? 0 : -1}
-                  className="flex min-h-12 items-center justify-center rounded-full bg-accent text-[15px] font-medium text-on-accent transition-colors hover:bg-accent-strong"
+                  className="flex min-h-12 items-center justify-center rounded-control bg-accent text-base font-medium text-on-accent transition-colors hover:bg-accent-hover"
                 >
-                  Minta Penawaran
+                  {primaryAction.label}
                 </Link>
               </li>
             </ul>
