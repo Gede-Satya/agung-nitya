@@ -1,17 +1,75 @@
 "use client";
 
-import React from "react";
-import { Mail, ExternalLink } from "lucide-react";
+import React, { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { Mail, ExternalLink, Wrench } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
+import { MAINTENANCE_CONTENT } from "@/src/content/maintenance";
 import Reveal from "@/components/ui/Reveal";
+
+function ContactActions() {
+  const searchParams = useSearchParams();
+  const layananParam = searchParams.get("layanan");
+  const tujuanParam = searchParams.get("tujuan");
+
+  const contact = SITE_CONTENT.contact;
+  const company = SITE_CONTENT.company;
+
+  // Check if a specific maintenance component was requested
+  const matchedItem = layananParam
+    ? MAINTENANCE_CONTENT.items.find((it) => it.id === layananParam)
+    : null;
+
+  let subject = "Permintaan Penawaran Pengadaan Perangkat TI";
+  let activeNeedLabel: string | null = null;
+
+  if (matchedItem) {
+    activeNeedLabel = `Pemeliharaan ${matchedItem.label}`;
+    subject = `Tanya Layanan Pemeliharaan ${matchedItem.label}`;
+  } else if (tujuanParam === "pemeliharaan") {
+    activeNeedLabel = "Jadwal Pemeliharaan & Purnajual Perangkat TI";
+    subject = "Permintaan Jadwal Pemeliharaan Perangkat TI";
+  }
+
+  const mailHref = `mailto:${company.email}?subject=${encodeURIComponent(subject)}`;
+
+  return (
+    <>
+      {activeNeedLabel && (
+        <div className="mb-6 inline-flex items-center gap-2 rounded-card border border-accent/30 bg-accent/5 px-4 py-2.5 text-xs font-medium text-accent">
+          <Wrench className="w-4 h-4 shrink-0" />
+          <span>
+            Kebutuhan Terpilih: <strong>{activeNeedLabel}</strong>
+          </span>
+        </div>
+      )}
+
+      {/* Direct contact action: Primary Email */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[580px] mx-auto mb-8">
+        <a
+          href={mailHref}
+          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover gap-2 shadow-xs"
+        >
+          <Mail className="w-4 h-4" />
+          <span>{contact.directEmailLabel}</span>
+        </a>
+        <a
+          href={company.inaprocUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control border border-rule bg-canvas px-7 text-sm font-medium text-ink transition-colors hover:bg-wash gap-2"
+        >
+          <span>{contact.catalogProfileLabel}</span>
+          <ExternalLink className="w-4 h-4 text-muted" />
+        </a>
+      </div>
+    </>
+  );
+}
 
 export default function CtaPengadaanSection() {
   const contact = SITE_CONTENT.contact;
   const company = SITE_CONTENT.company;
-
-  const mailHref = `mailto:${company.email}?subject=${encodeURIComponent(
-    "Permintaan Penawaran Pengadaan Perangkat TI",
-  )}`;
 
   return (
     <section
@@ -35,25 +93,9 @@ export default function CtaPengadaanSection() {
           {contact.subtitle}
         </p>
 
-        {/* Direct contact action: Primary Email */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[580px] mx-auto mb-8">
-          <a
-            href={mailHref}
-            className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover gap-2 shadow-xs"
-          >
-            <Mail className="w-4 h-4" />
-            <span>{contact.directEmailLabel}</span>
-          </a>
-          <a
-            href={company.inaprocUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control border border-rule bg-canvas px-7 text-sm font-medium text-ink transition-colors hover:bg-wash gap-2"
-          >
-            <span>{contact.catalogProfileLabel}</span>
-            <ExternalLink className="w-4 h-4 text-muted" />
-          </a>
-        </div>
+        <Suspense fallback={null}>
+          <ContactActions />
+        </Suspense>
 
         {/* Verified contact note */}
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-2 text-xs text-muted">

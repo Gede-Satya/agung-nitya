@@ -107,3 +107,12 @@ export const MAINTENANCE_CONTENT: MaintenanceSectionContent = {
     },
   ],
 };
+
+/**
+ * Returns public service claims only if confirmed by owner.
+ * If unconfirmed, returns empty array as per DESIGN.md §4.1 claim rules.
+ */
+export function getDisplayedServices(item: MaintenanceItem): string[] {
+  return item.confirmed ? item.services : [];
+}
+
