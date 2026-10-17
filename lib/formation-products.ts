@@ -1,6 +1,14 @@
-import type { Work } from "@/components/ui/formation-utils/formation-poses";
+export interface FormationProduct {
+  image: string;
+  title: string;
+  category: string;
+  href: string;
+  isPlaceholder?: boolean;
+}
 
-export const formationProducts: Work[] = [
+export type Work = FormationProduct;
+
+export const formationProducts: FormationProduct[] = [
   {
     image: "/products/sony-pxw-z200.png",
     title: "Sony PXW-Z200 4K Camcorder",

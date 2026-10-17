@@ -648,11 +648,11 @@ export default function CatalogExplorer() {
 
                   {/* Badges */}
                   <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-canvas/90 backdrop-blur-xs text-ink shadow-2xs border border-rule">
+                    <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-canvas/95 backdrop-blur-xs text-ink shadow-2xs border border-rule">
                       {product.type}
                     </span>
                     {product.tkdn !== null && (
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-700 text-on-accent shadow-2xs">
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-700 text-on-accent shadow-2xs">
                         TKDN {product.tkdn}%
                       </span>
                     )}
@@ -660,7 +660,7 @@ export default function CatalogExplorer() {
 
                   <div className="absolute top-2 right-2">
                     <span
-                      className={`px-2 py-0.5 rounded-md text-[10px] font-semibold shadow-2xs ${
+                      className={`px-2.5 py-0.5 rounded-md text-xs font-semibold shadow-2xs ${
                         product.origin === "PDN"
                           ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                           : "bg-blue-50 text-accent border border-blue-200"

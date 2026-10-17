@@ -396,7 +396,7 @@ export default function MaintenanceExplodedView() {
                           {String(item.order).padStart(2, "0")}
                         </span>
                         {!item.confirmed && (
-                          <span className="text-[10px] uppercase font-semibold tracking-wider text-muted bg-wash px-2 py-0.5 rounded-pill border border-rule">
+                          <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
                             Draft
                           </span>
                         )}
@@ -500,7 +500,7 @@ export default function MaintenanceExplodedView() {
                         onBlur={() => setHoveredId(null)}
                         aria-label={`Komponen ${String(item.order).padStart(2, "0")}: ${item.label}`}
                         aria-expanded={activeId === item.id}
-                        className="absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-hidden z-30"
+                        className="absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-hidden z-30 min-w-11 min-h-11 flex items-center justify-center"
                       >
                         {/* Minimum 44x44px Touch Target Wrapper */}
                         <span className="absolute -inset-2.5 rounded-full" />
@@ -580,7 +580,7 @@ export default function MaintenanceExplodedView() {
                           {String(item.order).padStart(2, "0")}
                         </span>
                         {!item.confirmed && (
-                          <span className="text-[10px] uppercase font-semibold tracking-wider text-muted bg-wash px-2 py-0.5 rounded-pill border border-rule">
+                          <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
                             Draft
                           </span>
                         )}
@@ -634,7 +634,7 @@ export default function MaintenanceExplodedView() {
                           {currentScrollItem.label}
                         </h3>
                       </div>
-                      <span className="text-[10px] uppercase font-semibold tracking-wider text-muted bg-wash px-2 py-0.5 rounded-pill border border-rule">
+                      <span className="text-xs uppercase font-semibold tracking-wider text-muted bg-wash px-2.5 py-0.5 rounded-pill border border-rule">
                         Draft
                       </span>
                     </div>
