@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CatalogExplorer from "@/components/catalog/CatalogExplorer";
@@ -9,8 +10,22 @@ import { SITE_CONTENT } from "@/src/content/site";
 export const metadata: Metadata = {
   title: "Katalog Produk & Solusi INAPROC LKPP | PT Agung Wijaya Nitya",
   description:
-    "Jelajahi daftar produk perangkat TI, komputasi, dan peralatan PT Agung Wijaya Nitya yang terdaftar di e-Katalog Elektronik INAPROC LKPP.",
+    "Jelajahi daftar 742 produk perangkat TI, komputasi, dan peralatan PT Agung Wijaya Nitya yang terdaftar di e-Katalog Elektronik INAPROC LKPP.",
 };
+
+function CatalogLoadingSkeleton() {
+  return (
+    <div className="w-full flex flex-col gap-6 animate-pulse" aria-busy="true">
+      <div className="h-24 w-full bg-canvas border border-rule rounded-card" />
+      <div className="h-12 w-full bg-canvas border border-rule rounded-control" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="h-72 bg-canvas border border-rule rounded-card" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function KatalogPage() {
   const company = SITE_CONTENT.company;
@@ -55,8 +70,10 @@ export default function KatalogPage() {
             </p>
           </div>
 
-          {/* Interactive Catalog Explorer with Filters, Search, and Factual Cards */}
-          <CatalogExplorer />
+          {/* Interactive Catalog Explorer with Filters, Search, and URL Synchronization */}
+          <Suspense fallback={<CatalogLoadingSkeleton />}>
+            <CatalogExplorer />
+          </Suspense>
         </div>
       </main>
 

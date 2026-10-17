@@ -72,6 +72,23 @@ export default function LiniPengadaanSection() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
+
+              {/* Action: Link to filtered catalog */}
+              <div className="mt-4 pt-3 border-t border-rule/60">
+                <a
+                  href={
+                    idx === 0
+                      ? "/katalog?kategori=Peralatan%20Elektronik"
+                      : idx === 1
+                      ? "/katalog?kategori=Peralatan%20Kantor"
+                      : "/katalog?kategori=Peralatan%20Elektronik"
+                  }
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent-hover group"
+                >
+                  <span>Buka di katalog</span>
+                  <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                </a>
+              </div>
             </Reveal>
           ))}
         </div>

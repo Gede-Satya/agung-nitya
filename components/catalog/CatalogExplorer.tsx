@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useState, useMemo, useId, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useId,
+  useCallback,
+  useRef,
+} from "react";
 import Image from "next/image";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   Search,
   X,
@@ -10,21 +17,20 @@ import {
   Building2,
   MapPin,
   RefreshCw,
-  Layers,
   ArrowUpDown,
   ShoppingBag,
   ChevronLeft,
   ChevronRight,
-  Filter,
-  ShieldCheck,
-  Tag,
   Boxes,
+  RotateCcw,
+  AlertTriangle,
 } from "lucide-react";
 import {
   ALL_INAPROC_PRODUCTS,
   POPULAR_CATEGORIES,
-  InaprocProduct,
+  CATALOG_METADATA,
 } from "@/src/data/inaprocCatalog";
+import { SITE_CONTENT } from "@/src/content/site";
 
 const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
 
@@ -34,21 +40,136 @@ export default function CatalogExplorer() {
   const typeSelectId = useId();
   const perPageSelectId = useId();
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
-  const [selectedOrigin, setSelectedOrigin] = useState<"all" | "PDN" | "Impor">("all");
-  const [selectedType, setSelectedType] = useState<"all" | "Barang" | "Jasa" | "Digital">("all");
-  const [sortBy, setSortBy] = useState<"default" | "price-asc" | "price-desc" | "name">("default");
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Read URL query parameters as the single source of truth (DESIGN.md §5)
+  const urlQ = searchParams.get("q") ?? "";
+  const selectedCategory = searchParams.get("kategori") ?? "Semua";
+  const selectedOrigin = (searchParams.get("asal") as "all" | "PDN" | "Impor") ?? "all";
+  const selectedType =
+    (searchParams.get("tipe") as "all" | "Barang" | "Jasa" | "Digital") ?? "all";
+  const sortBy =
+    (searchParams.get("sort") as "default" | "price-asc" | "price-desc" | "name" | "name-desc") ??
+    "default";
+  const currentPage = Math.max(1, Number(searchParams.get("hal")) || 1);
+
+  // Controlled search input with React 19 safe sync
+  const [prevUrlQ, setPrevUrlQ] = useState(urlQ);
+  const [searchInputValue, setSearchInputValue] = useState(urlQ);
+  if (urlQ !== prevUrlQ) {
+    setPrevUrlQ(urlQ);
+    setSearchInputValue(urlQ);
+  }
+
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  // Reset to page 1 on filter or search changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory, selectedOrigin, selectedType, sortBy, itemsPerPage]);
+  // Helper to update URL query params
+  const updateUrl = useCallback(
+    (updates: {
+      q?: string;
+      kategori?: string;
+      asal?: string;
+      tipe?: string;
+      sort?: string;
+      hal?: number;
+    }) => {
+      const params = new URLSearchParams(searchParams.toString());
 
-  // Dynamic category counts
+      const nextQ = updates.q !== undefined ? updates.q : searchInputValue;
+      const nextCategory = updates.kategori !== undefined ? updates.kategori : selectedCategory;
+      const nextOrigin = updates.asal !== undefined ? updates.asal : selectedOrigin;
+      const nextType = updates.tipe !== undefined ? updates.tipe : selectedType;
+      const nextSort = updates.sort !== undefined ? updates.sort : sortBy;
+      const nextPage = updates.hal !== undefined ? updates.hal : currentPage;
+
+      if (nextQ.trim()) params.set("q", nextQ.trim());
+      else params.delete("q");
+
+      if (nextCategory && nextCategory !== "Semua") params.set("kategori", nextCategory);
+      else params.delete("kategori");
+
+      if (nextOrigin && nextOrigin !== "all") params.set("asal", nextOrigin);
+      else params.delete("asal");
+
+      if (nextType && nextType !== "all") params.set("tipe", nextType);
+      else params.delete("tipe");
+
+      if (nextSort && nextSort !== "default") params.set("sort", nextSort);
+      else params.delete("sort");
+
+      if (nextPage > 1) params.set("hal", String(nextPage));
+      else params.delete("hal");
+
+      const queryString = params.toString();
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [
+      searchParams,
+      pathname,
+      router,
+      searchInputValue,
+      selectedCategory,
+      selectedOrigin,
+      selectedType,
+      sortBy,
+      currentPage,
+    ]
+  );
+
+  // Debounced search input sync to URL
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const handleSearchChange = (value: string) => {
+    setSearchInputValue(value);
+
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    searchTimeoutRef.current = setTimeout(() => {
+      updateUrl({ q: value, hal: 1 });
+    }, 350);
+  };
+
+  const handleCategorySelect = (category: string) => {
+    updateUrl({ kategori: category, hal: 1 });
+  };
+
+  const handleOriginSelect = (origin: "all" | "PDN" | "Impor") => {
+    updateUrl({ asal: origin, hal: 1 });
+  };
+
+  const handleTypeSelect = (type: "all" | "Barang" | "Jasa" | "Digital") => {
+    updateUrl({ tipe: type, hal: 1 });
+  };
+
+  const handleSortSelect = (sort: "default" | "price-asc" | "price-desc" | "name" | "name-desc") => {
+    updateUrl({ sort });
+  };
+
+  const handleResetFilters = () => {
+    setSearchInputValue("");
+    setHasError(false);
+    updateUrl({
+      q: "",
+      kategori: "Semua",
+      asal: "all",
+      tipe: "all",
+      sort: "default",
+      hal: 1,
+    });
+  };
+
+  const handleSimulateRefresh = () => {
+    setIsLoading(true);
+    setHasError(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 400);
+  };
+
+  // Dynamic category counts across snapshot
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { Semua: ALL_INAPROC_PRODUCTS.length };
     for (const p of ALL_INAPROC_PRODUCTS) {
@@ -61,7 +182,7 @@ export default function CatalogExplorer() {
     return counts;
   }, []);
 
-  // Filtered and sorted list
+  // Filtered and sorted products
   const filteredProducts = useMemo(() => {
     let result = [...ALL_INAPROC_PRODUCTS];
 
@@ -88,8 +209,8 @@ export default function CatalogExplorer() {
     }
 
     // Filter by Search Query
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    if (searchInputValue.trim()) {
+      const q = searchInputValue.toLowerCase().trim();
       result = result.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -106,46 +227,33 @@ export default function CatalogExplorer() {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === "name") {
       result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === "name-desc") {
+      result.sort((a, b) => b.name.localeCompare(a.name));
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedOrigin, selectedType, sortBy]);
+  }, [searchInputValue, selectedCategory, selectedOrigin, selectedType, sortBy]);
 
   // Pagination calculation
   const totalItems = filteredProducts.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * itemsPerPage;
   const paginatedProducts = useMemo(() => {
     return filteredProducts.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredProducts, startIndex, itemsPerPage]);
 
-  const handleResetFilters = () => {
-    setSearchQuery("");
-    setSelectedCategory("Semua");
-    setSelectedOrigin("all");
-    setSelectedType("all");
-    setSortBy("default");
-    setCurrentPage(1);
-  };
-
-  const handleSimulateRefresh = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 400);
-  };
-
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    // Smooth scroll to top of product list
+    updateUrl({ hal: page });
+
     const el = document.getElementById("catalog-results");
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  // Generate pagination buttons with ellipsis
+  // Pagination range with ellipsis
   const paginationRange = useMemo(() => {
     const range: (number | string)[] = [];
     const delta = 2;
@@ -154,7 +262,7 @@ export default function CatalogExplorer() {
       if (
         i === 1 ||
         i === totalPages ||
-        (i >= currentPage - delta && i <= currentPage + delta)
+        (i >= safeCurrentPage - delta && i <= safeCurrentPage + delta)
       ) {
         range.push(i);
       } else if (range[range.length - 1] !== "...") {
@@ -162,11 +270,23 @@ export default function CatalogExplorer() {
       }
     }
     return range;
-  }, [currentPage, totalPages]);
+  }, [safeCurrentPage, totalPages]);
+
+  // Check if any filter is active
+  const hasActiveFilters = Boolean(
+    searchInputValue.trim() ||
+      selectedCategory !== "Semua" ||
+      selectedOrigin !== "all" ||
+      selectedType !== "all" ||
+      sortBy !== "default"
+  );
 
   return (
     <div className="w-full flex flex-col gap-8 sm:gap-10">
-      {/* Official INAPROC Store Sync Status Header */}
+      {/* =========================================================================
+          DATA FRESHNESS & SNAPSHOT STATUS NOTE (DESIGN.md §5)
+          Clear provenance, lastVerifiedAt date, and persistent INAPROC link.
+         ========================================================================= */}
       <div className="w-full rounded-card bg-canvas border border-rule p-5 sm:p-6 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="w-10 h-10 rounded-control bg-accent/10 flex items-center justify-center shrink-0 text-accent">
@@ -175,19 +295,18 @@ export default function CatalogExplorer() {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-semibold text-ink">
-                Etalase Resmi INAPROC LKPP — PT Agung Wijaya Nitya
+                Etalase Resmi INAPROC LKPP — {SITE_CONTENT.company.name}
               </span>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <CheckCircle2 className="w-3 h-3" />
-                Snapshot 742 Produk (Per {ALL_INAPROC_PRODUCTS.length > 0 ? "17 Oktober 2026" : "Katalog"})
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Snapshot {CATALOG_METADATA.totalCount} Produk (Per {CATALOG_METADATA.lastVerifiedAt})
               </span>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-wash text-accent border border-rule">
-                <ShieldCheck className="w-3 h-3" />
-                Penyedia UMKK Aktif
+                {CATALOG_METADATA.providerType} • {CATALOG_METADATA.providerStatus}
               </span>
             </div>
             <p className="text-xs text-muted max-w-2xl">
-              Memuat data snapshot 742 barang, jasa pemeliharaan, dan sistem informasi dari etalase penyedia LKPP. Seluruh harga dan spesifikasi resmi dapat dikonfirmasi langsung di tautan INAPROC terkait.
+              Data katalog diverifikasi dari etalase LKPP pada {CATALOG_METADATA.lastVerifiedAt}. Seluruh spesifikasi, ketersediaan, dan harga resmi dapat dikonfirmasi langsung pada tautan resmi INAPROC.
             </p>
           </div>
         </div>
@@ -195,17 +314,18 @@ export default function CatalogExplorer() {
         <div className="flex items-center gap-2.5 shrink-0 self-stretch md:self-auto justify-end">
           <button
             onClick={handleSimulateRefresh}
-            aria-label="Refresh data katalog"
-            className="p-2.5 rounded-control border border-rule hover:bg-wash text-muted transition-colors"
-            title="Muat ulang data"
+            type="button"
+            aria-label="Segarkan data katalog"
+            className="p-2.5 rounded-control border border-rule bg-canvas hover:bg-wash text-muted transition-colors cursor-pointer"
+            title="Muat ulang data snapshot"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-accent" : ""}`} />
           </button>
           <a
-            href="https://katalog.inaproc.id/agung-wijaya-nitya"
+            href={CATALOG_METADATA.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-all shadow-2xs group"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs group"
           >
             <span>Buka di INAPROC</span>
             <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -213,9 +333,11 @@ export default function CatalogExplorer() {
         </div>
       </div>
 
-      {/* Search & Filter Control Bar */}
+      {/* =========================================================================
+          SEARCH & FILTER TOOLBAR (DESIGN.md §5)
+          Search by name/brand, origin toggle, type select, sort select.
+         ========================================================================= */}
       <div className="w-full flex flex-col gap-4">
-        {/* Top Filter Row: Search Input + Sort + Origin + Type */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
           {/* Search Box */}
           <div className="sm:col-span-2 lg:col-span-5 relative">
@@ -223,19 +345,20 @@ export default function CatalogExplorer() {
               Cari nama produk, brand, atau kategori
             </label>
             <div className="relative flex items-center w-full">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+              <Search className="w-4 h-4 text-muted absolute left-3.5 pointer-events-none" />
               <input
                 id={searchInputId}
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari dari 742 produk (cth: Sony, Epson, SIMDINKES, Soundcard)..."
-                className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-white border border-black/10 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink placeholder:text-slate-400 transition-all shadow-2xs"
+                value={searchInputValue}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                placeholder="Cari dari 742 produk (cth: Sony, Epson, SIMDINKES, Server)..."
+                className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-canvas border border-rule rounded-control focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink placeholder:text-muted transition-all shadow-2xs"
               />
-              {searchQuery && (
+              {searchInputValue && (
                 <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 text-slate-400 hover:text-ink transition-colors p-0.5"
+                  type="button"
+                  onClick={() => handleSearchChange("")}
+                  className="absolute right-3 text-muted hover:text-ink transition-colors p-0.5 cursor-pointer"
                   aria-label="Hapus kata kunci pencarian"
                 >
                   <X className="w-4 h-4" />
@@ -247,53 +370,58 @@ export default function CatalogExplorer() {
           {/* Type Filter */}
           <div className="lg:col-span-2">
             <label htmlFor={typeSelectId} className="sr-only">
-              Filter Tipe
+              Filter Tipe Produk
             </label>
             <div className="relative">
               <select
                 id={typeSelectId}
                 value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value as any)}
-                className="w-full py-2.5 pl-3 pr-8 text-xs bg-white border border-black/10 rounded-xl appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs"
+                onChange={(e) =>
+                  handleTypeSelect(e.target.value as "all" | "Barang" | "Jasa" | "Digital")
+                }
+                className="w-full py-2.5 pl-3 pr-8 text-xs bg-canvas border border-rule rounded-control appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer"
               >
                 <option value="all">Semua Tipe</option>
                 <option value="Barang">Tipe: Barang</option>
                 <option value="Jasa">Tipe: Jasa Layanan</option>
                 <option value="Digital">Tipe: Digital / Software</option>
               </select>
-              <Boxes className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Boxes className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
-          {/* Origin Filter */}
+          {/* Origin Filter (PDN / Impor) */}
           <div className="lg:col-span-2">
-            <div className="flex p-0.5 bg-slate-100 rounded-xl border border-black/5 h-full items-center">
+            <div className="flex p-0.5 bg-wash rounded-control border border-rule h-full items-center">
               <button
-                onClick={() => setSelectedOrigin("all")}
-                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
+                type="button"
+                onClick={() => handleOriginSelect("all")}
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-[10px] transition-all cursor-pointer ${
                   selectedOrigin === "all"
-                    ? "bg-white text-ink shadow-2xs font-semibold"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-canvas text-ink shadow-2xs font-semibold"
+                    : "text-muted hover:text-ink"
                 }`}
               >
                 Semua Asal
               </button>
               <button
-                onClick={() => setSelectedOrigin("PDN")}
-                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
+                type="button"
+                onClick={() => handleOriginSelect("PDN")}
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-[10px] transition-all cursor-pointer ${
                   selectedOrigin === "PDN"
-                    ? "bg-white text-emerald-700 shadow-2xs font-semibold"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-canvas text-emerald-800 shadow-2xs font-semibold"
+                    : "text-muted hover:text-ink"
                 }`}
               >
                 PDN
               </button>
               <button
-                onClick={() => setSelectedOrigin("Impor")}
-                className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-all ${
+                type="button"
+                onClick={() => handleOriginSelect("Impor")}
+                className={`flex-1 py-1.5 text-[11px] font-medium rounded-[10px] transition-all cursor-pointer ${
                   selectedOrigin === "Impor"
-                    ? "bg-white text-blue-700 shadow-2xs font-semibold"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-canvas text-accent shadow-2xs font-semibold"
+                    : "text-muted hover:text-ink"
                 }`}
               >
                 Impor
@@ -301,7 +429,7 @@ export default function CatalogExplorer() {
             </div>
           </div>
 
-          {/* Sorting */}
+          {/* Sorting Control */}
           <div className="lg:col-span-3">
             <label htmlFor={sortSelectId} className="sr-only">
               Urutkan berdasarkan
@@ -310,15 +438,20 @@ export default function CatalogExplorer() {
               <select
                 id={sortSelectId}
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full py-2.5 pl-3 pr-8 text-xs bg-white border border-black/10 rounded-xl appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs"
+                onChange={(e) =>
+                  handleSortSelect(
+                    e.target.value as "default" | "price-asc" | "price-desc" | "name" | "name-desc"
+                  )
+                }
+                className="w-full py-2.5 pl-3 pr-8 text-xs bg-canvas border border-rule rounded-control appearance-none focus:outline-hidden focus:ring-2 focus:ring-accent/20 focus:border-accent text-ink transition-all shadow-2xs cursor-pointer"
               >
                 <option value="default">Urutkan: Default INAPROC</option>
+                <option value="name">Nama: A → Z</option>
+                <option value="name-desc">Nama: Z → A</option>
                 <option value="price-asc">Harga: Terendah → Tertinggi</option>
                 <option value="price-desc">Harga: Tertinggi → Terendah</option>
-                <option value="name">Nama: A → Z</option>
               </select>
-              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
         </div>
@@ -332,19 +465,20 @@ export default function CatalogExplorer() {
             return (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                type="button"
+                onClick={() => handleCategorySelect(cat)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-ink text-white shadow-2xs"
-                    : "bg-white text-slate-600 border border-black/8 hover:bg-slate-50 hover:text-ink"
+                    ? "bg-ink text-on-accent shadow-2xs font-semibold"
+                    : "bg-canvas text-muted border border-rule hover:bg-wash hover:text-ink"
                 }`}
               >
                 <span>{cat}</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
+                  className={`text-[10px] px-1.5 py-0.5 rounded-pill font-semibold ${
                     isSelected
-                      ? "bg-white/20 text-white"
-                      : "bg-slate-100 text-slate-500"
+                      ? "bg-white/20 text-on-accent"
+                      : "bg-wash text-muted border border-rule"
                   }`}
                 >
                   {count}
@@ -355,16 +489,26 @@ export default function CatalogExplorer() {
         </div>
       </div>
 
-      {/* Results Header Info & Active Filters Count */}
-      <div id="catalog-results" className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-black/6">
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-ink">
-            Menampilkan {totalItems === 0 ? 0 : startIndex + 1}–{Math.min(startIndex + itemsPerPage, totalItems)} dari {totalItems} produk
-          </span>
-          {(searchQuery || selectedCategory !== "Semua" || selectedOrigin !== "all" || selectedType !== "all" || sortBy !== "default") && (
+      {/* =========================================================================
+          RESULTS COUNT & ACTIVE FILTER SUMMARY
+         ========================================================================= */}
+      <div
+        id="catalog-results"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-muted pt-2 border-t border-rule"
+      >
+        <div className="flex items-center gap-2 flex-wrap">
+          {!isLoading && (
+            <span className="font-medium text-ink">
+              Menampilkan {totalItems === 0 ? 0 : startIndex + 1}–
+              {Math.min(startIndex + itemsPerPage, totalItems)} dari {totalItems} produk
+            </span>
+          )}
+
+          {hasActiveFilters && (
             <button
               onClick={handleResetFilters}
-              className="text-accent hover:underline font-semibold flex items-center gap-1 ml-2"
+              type="button"
+              className="text-accent hover:underline font-semibold flex items-center gap-1 ml-2 cursor-pointer"
             >
               <X className="w-3 h-3" />
               Reset filter
@@ -373,15 +517,15 @@ export default function CatalogExplorer() {
         </div>
 
         {/* Items Per Page Selector */}
-        <div className="flex items-center gap-2">
-          <label htmlFor={perPageSelectId} className="text-slate-400 hidden sm:inline">
+        <div className="flex items-center gap-2 self-end sm:self-auto">
+          <label htmlFor={perPageSelectId} className="text-muted hidden sm:inline">
             Tampilkan:
           </label>
           <select
             id={perPageSelectId}
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="py-1 px-2 text-xs bg-white border border-black/10 rounded-lg text-ink focus:outline-hidden focus:border-accent"
+            className="py-1 px-2 text-xs bg-canvas border border-rule rounded-control text-ink focus:outline-hidden focus:border-accent cursor-pointer"
           >
             {ITEMS_PER_PAGE_OPTIONS.map((opt) => (
               <option key={opt} value={opt}>
@@ -392,169 +536,238 @@ export default function CatalogExplorer() {
         </div>
       </div>
 
-      {/* Loading Skeleton State */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-2xl bg-white border border-black/8 p-4 flex flex-col gap-3 animate-pulse"
+      {/* =========================================================================
+          CATALOG STATES: Loading, Error, Empty Source, No Matches, Product Grid
+         ========================================================================= */}
+      {hasError ? (
+        /* Error State (DESIGN.md §5) */
+        <div className="w-full rounded-card bg-canvas border border-rule p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
+          <div className="w-14 h-14 rounded-full bg-wash flex items-center justify-center text-muted">
+            <AlertTriangle className="w-7 h-7" />
+          </div>
+          <div className="flex flex-col gap-1 max-w-md">
+            <h3 className="text-base font-semibold text-ink">
+              Katalog data tidak dapat dimuat
+            </h3>
+            <p className="text-xs text-muted">
+              Terjadi kendala saat memuat data katalog. Anda dapat mencoba memuat ulang atau langsung membuka etalase resmi INAPROC LKPP.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              onClick={handleSimulateRefresh}
+              type="button"
+              className="px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs inline-flex items-center gap-1.5 cursor-pointer"
             >
-              <div className="w-full aspect-square rounded-xl bg-slate-100" />
-              <div className="h-4 bg-slate-100 rounded-md w-3/4" />
-              <div className="h-3 bg-slate-100 rounded-md w-1/2" />
-              <div className="h-6 bg-slate-100 rounded-md w-2/3 mt-2" />
-              <div className="h-9 bg-slate-100 rounded-xl w-full mt-auto" />
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Coba Lagi</span>
+            </button>
+            <a
+              href={CATALOG_METADATA.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-wash text-ink hover:bg-wash/80 border border-rule transition-colors"
+            >
+              <span>Buka Profil INAPROC</span>
+              <ExternalLink className="w-3.5 h-3.5 text-muted" />
+            </a>
+          </div>
+        </div>
+      ) : isLoading ? (
+        /* Loading Skeleton State (DESIGN.md §5) */
+        <div className="flex flex-col gap-4">
+          <p className="text-xs text-muted italic flex items-center gap-2">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin text-accent" />
+            <span>Memuat katalog…</span>
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-card bg-canvas border border-rule p-4 flex flex-col gap-3 animate-pulse"
+              >
+                <div className="w-full aspect-square rounded-control bg-wash" />
+                <div className="h-4 bg-wash rounded-md w-3/4" />
+                <div className="h-3 bg-wash rounded-md w-1/2" />
+                <div className="h-6 bg-wash rounded-md w-2/3 mt-2" />
+                <div className="h-9 bg-wash rounded-control w-full mt-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : ALL_INAPROC_PRODUCTS.length === 0 ? (
+        /* Empty Source State (DESIGN.md §5) */
+        <div className="w-full rounded-card bg-canvas border border-rule p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
+          <div className="w-14 h-14 rounded-full bg-wash flex items-center justify-center text-muted">
+            <ShoppingBag className="w-7 h-7" />
+          </div>
+          <div className="flex flex-col gap-1 max-w-md">
+            <h3 className="text-base font-semibold text-ink">
+              Belum ada produk yang ditampilkan
+            </h3>
+            <p className="text-xs text-muted">
+              Saat ini data katalog sedang disinkronkan. Silakan kunjungi profil resmi penyedia di INAPROC LKPP untuk melihat daftar penawaran aktif.
+            </p>
+          </div>
+          <div className="pt-2">
+            <a
+              href={CATALOG_METADATA.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs"
+            >
+              <span>Buka Profil INAPROC</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+      ) : paginatedProducts.length > 0 ? (
+        /* Product Grid (DESIGN.md §5) */
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {paginatedProducts.map((product) => (
+            <div
+              key={product.id}
+              className="group rounded-card bg-canvas border border-rule hover:border-accent/40 p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-xs relative"
+            >
+              {/* Top Section: Media & Badges */}
+              <div className="flex flex-col gap-3">
+                {/* Image Container */}
+                <div className="relative w-full aspect-square rounded-control overflow-hidden bg-wash border border-rule/60 flex items-center justify-center">
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <ShoppingBag className="w-12 h-12 text-muted/40" />
+                  )}
+
+                  {/* Badges */}
+                  <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-canvas/90 backdrop-blur-xs text-ink shadow-2xs border border-rule">
+                      {product.type}
+                    </span>
+                    {product.tkdn !== null && (
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-700 text-on-accent shadow-2xs">
+                        TKDN {product.tkdn}%
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="absolute top-2 right-2">
+                    <span
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-semibold shadow-2xs ${
+                        product.origin === "PDN"
+                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                          : "bg-blue-50 text-accent border border-blue-200"
+                      }`}
+                    >
+                      {product.origin}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Category & Brand */}
+                <div className="flex items-center justify-between text-[11px] text-muted gap-2">
+                  <span className="truncate font-medium text-accent">
+                    {product.category}
+                  </span>
+                  {product.brand && (
+                    <span className="truncate max-w-[110px] text-muted font-normal">
+                      {product.brand}
+                    </span>
+                  )}
+                </div>
+
+                {/* Product Title */}
+                <h3
+                  className="text-sm font-semibold text-ink line-clamp-2 leading-snug group-hover:text-accent transition-colors"
+                  title={product.name}
+                >
+                  {product.name}
+                </h3>
+
+                {/* Location & Scale */}
+                <div className="flex items-center gap-2 text-[11px] text-muted">
+                  <span className="flex items-center gap-1 truncate">
+                    <MapPin className="w-3 h-3 text-muted shrink-0" />
+                    {product.location}
+                  </span>
+                  <span>•</span>
+                  <span className="shrink-0">{product.scale}</span>
+                </div>
+              </div>
+
+              {/* Bottom Section: Official Price & Persistent INAPROC Link */}
+              <div className="flex flex-col gap-3 pt-3 mt-3 border-t border-rule/60">
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase tracking-wider text-muted font-medium">
+                    Harga resmi termasuk PPN
+                  </span>
+                  <span className="text-base font-bold text-ink">
+                    {product.priceFormatted}
+                  </span>
+                </div>
+
+                <a
+                  href={product.url || CATALOG_METADATA.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-control text-xs font-semibold bg-wash text-ink hover:bg-accent hover:text-on-accent transition-all group/btn border border-rule/70"
+                >
+                  <span>Lihat di INAPROC</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted group-hover/btn:text-on-accent transition-colors" />
+                </a>
+              </div>
             </div>
           ))}
         </div>
-      ) : paginatedProducts.length > 0 ? (
-        /* Product Grid */
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {paginatedProducts.map((product) => {
-            return (
-              <div
-                key={product.id}
-                className="group rounded-2xl bg-white border border-black/8 hover:border-black/15 p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-md relative"
-              >
-                {/* Top Section: Media & Badges */}
-                <div className="flex flex-col gap-3">
-                  {/* Image Container */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#F5F5F7] border border-black/5 flex items-center justify-center">
-                    {product.image ? (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                        className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <ShoppingBag className="w-12 h-12 text-slate-300" />
-                    )}
-
-                    {/* Floating Badges */}
-                    <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/90 backdrop-blur-xs text-ink shadow-2xs border border-black/5">
-                        {product.type}
-                      </span>
-                      {product.tkdn && (
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-600 text-white shadow-2xs">
-                          TKDN {product.tkdn}%
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="absolute top-2 right-2">
-                      <span
-                        className={`px-2 py-0.5 rounded-md text-[10px] font-semibold shadow-2xs ${
-                          product.origin === "PDN"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : "bg-blue-50 text-blue-700 border border-blue-200"
-                        }`}
-                      >
-                        {product.origin}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Category & Brand */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 gap-2">
-                    <span className="truncate font-medium text-accent">
-                      {product.category}
-                    </span>
-                    {product.brand && (
-                      <span className="truncate max-w-[110px] text-slate-500 font-normal">
-                        {product.brand}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Product Title */}
-                  <h3
-                    className="text-sm font-semibold text-ink line-clamp-2 leading-snug group-hover:text-accent transition-colors"
-                    title={product.name}
-                  >
-                    {product.name}
-                  </h3>
-
-                  {/* Metadata: Location & Scale */}
-                  <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                    <span className="flex items-center gap-1 truncate">
-                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                      {product.location}
-                    </span>
-                    <span>•</span>
-                    <span className="shrink-0">{product.scale}</span>
-                  </div>
-                </div>
-
-                {/* Bottom Section: Price & CTA */}
-                <div className="flex flex-col gap-3 pt-3 mt-3 border-t border-black/5">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
-                      Harga Termasuk Pajak (PPN)
-                    </span>
-                    <span className="text-base font-bold text-ink">
-                      {product.priceFormatted}
-                    </span>
-                  </div>
-
-                  {/* INAPROC Direct Button */}
-                  <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold bg-[#F5F5F7] text-ink hover:bg-accent hover:text-white transition-all group/btn"
-                  >
-                    <span>Lihat di INAPROC</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-white transition-colors" />
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       ) : (
-        /* Empty State */
-        <div className="w-full rounded-2xl bg-white border border-black/8 p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
-          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
-            <Search className="w-8 h-8" />
+        /* No Matches State (DESIGN.md §5) */
+        <div className="w-full rounded-card bg-canvas border border-rule p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
+          <div className="w-14 h-14 rounded-full bg-wash flex items-center justify-center text-muted">
+            <Search className="w-7 h-7" />
           </div>
           <div className="flex flex-col gap-1 max-w-md">
             <h3 className="text-base font-semibold text-ink">
               Produk tidak ditemukan
             </h3>
-            <p className="text-xs text-slate-500">
-              Tidak ada produk yang cocok dengan kata kunci &ldquo;{searchQuery}&rdquo; atau filter yang dipilih. Silakan coba kata kunci lain atau reset filter.
+            <p className="text-xs text-muted">
+              Tidak ada produk yang cocok dengan kriteria pencarian &ldquo;{searchInputValue}&rdquo; atau filter yang dipilih. Silakan reset filter atau kunjungi etalase resmi.
             </p>
           </div>
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={handleResetFilters}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent-strong transition-all shadow-2xs"
+              type="button"
+              className="px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs cursor-pointer"
             >
               Reset Semua Filter
             </button>
             <a
-              href="https://katalog.inaproc.id/agung-wijaya-nitya"
+              href={CATALOG_METADATA.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-ink hover:bg-slate-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-control text-xs font-semibold bg-wash text-ink hover:bg-wash/80 border border-rule transition-colors"
             >
               <span>Buka Etalase INAPROC</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+              <ExternalLink className="w-3.5 h-3.5 text-muted" />
             </a>
           </div>
         </div>
       )}
 
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-black/8">
-          <span className="text-xs text-slate-500 order-2 sm:order-1">
-            Halaman {currentPage} dari {totalPages} ({totalItems} total produk)
+      {/* =========================================================================
+          PAGINATION CONTROLS
+         ========================================================================= */}
+      {totalPages > 1 && !isLoading && !hasError && paginatedProducts.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-rule">
+          <span className="text-xs text-muted order-2 sm:order-1">
+            Halaman {safeCurrentPage} dari {totalPages} ({totalItems} total produk)
           </span>
 
           <nav
@@ -563,10 +776,11 @@ export default function CatalogExplorer() {
           >
             {/* Previous Page */}
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => handlePageChange(safeCurrentPage - 1)}
+              disabled={safeCurrentPage === 1}
+              type="button"
               aria-label="Halaman sebelumnya"
-              className="p-2 rounded-lg border border-black/8 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors"
+              className="p-2 rounded-control border border-rule bg-canvas hover:bg-wash disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -577,23 +791,24 @@ export default function CatalogExplorer() {
                 return (
                   <span
                     key={`ellipsis-${index}`}
-                    className="px-2 py-1 text-xs text-slate-400 select-none"
+                    className="px-2 py-1 text-xs text-muted select-none"
                   >
                     ...
                   </span>
                 );
               }
 
-              const isCurrent = page === currentPage;
+              const isCurrent = page === safeCurrentPage;
               return (
                 <button
                   key={page}
                   onClick={() => handlePageChange(Number(page))}
+                  type="button"
                   aria-current={isCurrent ? "page" : undefined}
-                  className={`min-w-8 h-8 px-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`min-w-8 h-8 px-2 rounded-control text-xs font-semibold transition-all cursor-pointer ${
                     isCurrent
-                      ? "bg-accent text-white shadow-2xs"
-                      : "bg-white border border-black/8 text-slate-600 hover:bg-slate-50 hover:text-ink"
+                      ? "bg-accent text-on-accent shadow-2xs font-bold"
+                      : "bg-canvas border border-rule text-muted hover:bg-wash hover:text-ink"
                   }`}
                 >
                   {page}
@@ -603,10 +818,11 @@ export default function CatalogExplorer() {
 
             {/* Next Page */}
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(safeCurrentPage + 1)}
+              disabled={safeCurrentPage === totalPages}
+              type="button"
               aria-label="Halaman berikutnya"
-              className="p-2 rounded-lg border border-black/8 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors"
+              className="p-2 rounded-control border border-rule bg-canvas hover:bg-wash disabled:opacity-30 disabled:pointer-events-none text-ink transition-colors cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

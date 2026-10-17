@@ -32,12 +32,18 @@ export default function HeroShowcase() {
           className="flex flex-col items-center max-w-4xl mx-auto"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-pill bg-canvas border border-rule shadow-2xs mb-3">
+          <a
+            href={SITE_CONTENT.company.inaprocUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-pill bg-canvas border border-rule shadow-2xs mb-3 hover:border-accent transition-colors group cursor-pointer"
+          >
             <span className="h-2 w-2 rounded-pill bg-accent" />
-            <span className="text-xs font-medium text-muted">
+            <span className="text-xs font-medium text-muted group-hover:text-ink transition-colors">
               {hero.badge}
             </span>
-          </div>
+            <span className="text-[10px] text-accent font-semibold tracking-wide">↗</span>
+          </a>
 
           {/* 1. Headline */}
           <h1 className="font-heading type-hero text-ink text-balance max-w-4xl">
