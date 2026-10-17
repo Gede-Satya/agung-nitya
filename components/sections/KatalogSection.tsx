@@ -52,25 +52,6 @@ export default function KatalogSection() {
         <div className="relative w-full">
           <Formation works={formationProducts} />
         </div>
-
-        {/* Bottom Banner directing to /katalog */}
-        <div className="w-full rounded-2xl bg-white border border-black/8 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-sm font-semibold text-ink">
-              Mencari daftar lengkap spesifikasi dan harga?
-            </span>
-            <p className="text-xs text-slate-500">
-              Kunjungi halaman katalog khusus dengan filter kategori, pencarian interaktif, dan tautan langsung ke etalase INAPROC.
-            </p>
-          </div>
-          <Link
-            href="/katalog"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] text-ink hover:bg-slate-200 transition-colors shrink-0"
-          >
-            <span>Buka Halaman Katalog</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
       </div>
     </section>
   );

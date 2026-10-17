@@ -8,7 +8,7 @@ import type {
 } from "react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
-import { ExternalLink, ChevronLeft, ChevronRight, Layers } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 
 import type {
   FmLayout,
@@ -650,13 +650,6 @@ export const Formation = ({ works }: FormationProps): ReactNode => {
     <div className="flex flex-col gap-3 w-full">
       {/* Top Gallery Toolbar: Hints on left, Mode Switcher on right (always clear of sticky navbar) */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-1 py-1">
-        <div className="flex items-center gap-2 text-xs font-medium text-zinc-500">
-          <Layers className="w-3.5 h-3.5 text-accent" />
-          <span>Tampilan 3D Interaktif</span>
-          <span className="text-zinc-300 hidden sm:inline">•</span>
-          <span className="text-zinc-400 hidden sm:inline">Geser atau gunakan tombol panah</span>
-        </div>
-
         {/* Mode Switcher: Datar, Melingkar, Miring */}
         <div
           role="tablist"
