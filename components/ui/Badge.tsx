@@ -19,11 +19,11 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 const variantStyles: Record<BadgeVariant, string> = {
   neutral: "bg-canvas text-ink border border-rule shadow-2xs",
   subtle: "bg-wash text-muted border border-rule",
-  accent: "bg-accent/10 text-accent border border-accent/20",
-  pdn: "bg-emerald-50 text-emerald-800 border border-emerald-200",
-  impor: "bg-blue-50 text-accent border border-blue-200",
-  tkdn: "bg-emerald-700 text-on-accent shadow-2xs",
-  success: "bg-emerald-50 text-emerald-800 border border-emerald-200",
+  accent: "bg-accent/10 text-accent-ink border border-accent/20",
+  pdn: "bg-success/10 text-success border border-success/20",
+  impor: "bg-accent/10 text-accent-ink border border-accent/20",
+  tkdn: "bg-success text-white shadow-2xs",
+  success: "bg-success/10 text-success border border-success/20",
   outline: "bg-transparent text-muted border border-rule",
 };
 

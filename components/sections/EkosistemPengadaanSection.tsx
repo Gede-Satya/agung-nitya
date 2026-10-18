@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 import Reveal from "@/components/ui/Reveal";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function EkosistemPengadaanSection() {
   const content = SITE_CONTENT.ekosistem;
@@ -11,73 +11,86 @@ export default function EkosistemPengadaanSection() {
   return (
     <section
       id="ekosistem"
-      className="relative w-full py-14 sm:py-20 bg-wash text-ink border-b border-rule/50 scroll-mt-16 sm:scroll-mt-20"
+      className="relative w-full scroll-mt-16 border-b border-rule/50 bg-canvas py-16 text-ink sm:scroll-mt-20 sm:py-24"
     >
-      <div className="shell grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        {/* Left Column: Narrative Copy */}
-        <Reveal className="lg:col-span-5 flex flex-col justify-center gap-4 pt-2">
-          <span className="text-xs font-semibold tracking-wider text-accent uppercase">
-            {content.eyebrow}
-          </span>
+      <div className="shell flex flex-col gap-12 sm:gap-16">
+        {/* Narrative + profile */}
+        <Reveal>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <SectionHeading
+                eyebrow={content.eyebrow}
+                title={content.title}
+                lead={content.paragraphs[0]}
+              />
+              {content.paragraphs[1] && (
+                <p className="type-body mt-4 max-w-[58ch] text-muted">
+                  {content.paragraphs[1]}
+                </p>
+              )}
+            </div>
 
-          <h2 className="font-heading type-h2 text-ink">
-            {content.title}
-          </h2>
-
-          <div className="flex flex-col gap-3 type-body text-muted max-w-[64ch]">
-            {content.paragraphs.map((p, idx) => (
-              <p key={idx}>{p}</p>
-            ))}
-          </div>
-
-          <div className="pt-2">
-            <a
-              href={SITE_CONTENT.company.inaprocUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent hover:text-accent-hover hover:underline"
-            >
-              <span>{content.profileLinkText}</span>
-              <ChevronRight className="h-4 w-4" />
-            </a>
+            <div className="lg:col-span-5 lg:text-right">
+              <a
+                href={SITE_CONTENT.company.inaprocUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-control border border-rule bg-canvas px-5 text-sm font-medium text-ink transition-colors hover:border-accent hover:text-accent-ink"
+              >
+                <ShieldCheck className="h-4 w-4 text-accent-ink" />
+                <span>{content.profileLinkText}</span>
+              </a>
+            </div>
           </div>
         </Reveal>
 
-        {/* Right Column: Workflow Card */}
-        <Reveal
-          delay={0.1}
-          className="lg:col-span-7 p-6 sm:p-8 rounded-card bg-canvas border border-rule/70 shadow-xs"
-        >
-          <h3 className="font-heading type-h3 text-ink mb-5">
-            {content.cardTitle}
-          </h3>
+        {/* Procurement pathway */}
+        <Reveal delay={0.08}>
+          <ol className="relative grid grid-cols-1 gap-8 md:grid-cols-5 md:gap-5">
+            {/* Desktop connector */}
+            <span
+              aria-hidden="true"
+              className="absolute left-0 right-0 top-5 hidden h-px bg-rule md:block"
+            />
+            {/* Mobile connector */}
+            <span
+              aria-hidden="true"
+              className="absolute bottom-2 left-5 top-2 w-px bg-rule md:hidden"
+            />
 
-          <ul className="flex flex-col gap-2.5">
             {content.workflowItems.map((item, idx) => (
               <li
-                key={idx}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 p-3.5 sm:p-4 rounded-control bg-wash border border-rule/50"
+                key={item.title}
+                className="relative flex gap-4 md:flex-col md:gap-4"
               >
-                <span className="font-heading text-sm font-semibold text-ink shrink-0">
-                  {item.title}
+                <span className="relative z-10 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-rule bg-canvas font-mono text-xs font-bold text-accent-ink">
+                  {String(idx + 1).padStart(2, "0")}
                 </span>
-                <span className="text-xs text-muted sm:text-right">
-                  {item.desc}
-                </span>
+                <div className="flex flex-col gap-1.5 pb-2 md:pb-0">
+                  <h3 className="font-heading text-sm font-semibold leading-snug text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted">
+                    {item.desc}
+                  </p>
+                </div>
               </li>
             ))}
-          </ul>
+          </ol>
+        </Reveal>
 
-          {/* Footer of Card */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-5 mt-3 border-t border-rule text-xs text-muted">
-            <span>
+        {/* Footer note */}
+        <Reveal delay={0.12}>
+          <div className="flex flex-col items-start justify-between gap-4 rounded-card border border-rule/70 bg-wash px-6 py-5 sm:flex-row sm:items-center">
+            <span className="text-sm text-muted">
               {content.cardFooterNotice}
             </span>
             <a
               href="#kontak"
-              className="inline-flex min-h-11 items-center font-semibold text-accent hover:text-accent-hover tracking-wider uppercase"
+              className="group inline-flex min-h-11 items-center gap-2 rounded-control bg-accent px-5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover"
             >
-              {content.ctaActionText}
+              <span>{content.ctaActionText}</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
           </div>
         </Reveal>

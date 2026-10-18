@@ -18,8 +18,8 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    // Tree-shake large barrel packages used by the scene and UI.
-    optimizePackageImports: ["three", "@react-three/drei", "gsap"],
+    // Tree-shake large barrel packages used by the UI.
+    optimizePackageImports: ["lucide-react"],
   },
 };
 

@@ -36,7 +36,11 @@ export default function KatalogPage() {
       <Navbar />
 
       {/* Main Content Area */}
-      <main id="konten-katalog" className="flex-1 w-full pt-20 sm:pt-24 pb-16 sm:pb-24">
+      <main id="konten-katalog" className="relative flex-1 w-full pt-20 sm:pt-24 pb-16 sm:pb-24">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-72 brand-aura"
+        />
         <div className="shell flex flex-col gap-8 sm:gap-10">
           {/* Breadcrumb & Navigation Back */}
           <div className="flex items-center justify-between text-xs text-muted pt-2">
@@ -55,8 +59,8 @@ export default function KatalogPage() {
           {/* Catalog Header Hero Banner */}
           <div className="flex flex-col gap-3 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-pill bg-canvas border border-rule w-fit shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-accent" />
-              <span className="text-xs font-semibold text-accent tracking-wide uppercase">
+              <ShieldCheck className="w-4 h-4 text-accent-ink" />
+              <span className="text-xs font-semibold text-accent-ink tracking-wide uppercase">
                 Etalase Resmi INAPROC LKPP ({company.inaprocProviderType})
               </span>
             </div>

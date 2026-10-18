@@ -2,6 +2,8 @@
 
 /* ──────────────────────────────────────────────────────────────
    Design Tokens — PT Agung Wijaya Nitya (DESIGN.md §6)
+   Direction: "Corporate navy & gold" — deep navy #0B1D36 with
+   gold #C9A227 accents on a soft-white surface.
    Single source of truth for colors, typography, spacing & radii.
    ────────────────────────────────────────────────────────────── */
 
@@ -9,20 +11,27 @@
   /* Colors per DESIGN.md §6 */
   --color-canvas: #FFFFFF;
   --color-wash: #F5F7FA;
+  --color-wash-2: #E9EDF3;
   --color-surface: #FFFFFF;
-  --color-rule: #D9E0E8;
-  --color-ink: #17212B;
-  --color-muted: #536273;
-  --color-accent: #126EAE;
-  --color-accent-hover: #0B5F99;
-  --color-on-accent: #FFFFFF;
-  --color-success: #216E4E;
+  --color-rule: #D9E0E9;
+  --color-rule-strong: #B9C4D2;
+  --color-ink: #0B1D36;
+  --color-ink-soft: #24395B;
+  --color-muted: #4C5E78;
+  --color-navy: #0B1D36;
+  --color-navy-soft: #14304F;
+  --color-accent: #C9A227;
+  --color-accent-hover: #B08D1F;
+  --color-accent-ink: #8A6A12;
+  --color-accent-soft: #FAF3DF;
+  --color-on-accent: #0B1D36;
+  --color-success: #1F7A52;
   --color-error: #B42318;
 
   /* Aliases for semantic alignment */
-  --color-primary: #17212B;
-  --color-border: #D9E0E8;
-  --color-accent-strong: #0B5F99;
+  --color-primary: #0B1D36;
+  --color-border: #D9E0E9;
+  --color-accent-strong: #B08D1F;
 
   /* Radii per DESIGN.md §6 */
   --radius-card: 20px;
@@ -34,8 +43,9 @@
   --radius-buttons: 12px;
 
   /* Typography families per DESIGN.md §6 */
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-heading: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Menlo", monospace;
 
   /* Easing curves per DESIGN.md §8 */
   --ease-default: cubic-bezier(0.22, 1, 0.36, 1);
@@ -44,23 +54,31 @@
 :root {
   --color-canvas: #FFFFFF;
   --color-wash: #F5F7FA;
+  --color-wash-2: #E9EDF3;
   --color-surface: #FFFFFF;
-  --color-rule: #D9E0E8;
-  --color-ink: #17212B;
-  --color-muted: #536273;
-  --color-accent: #126EAE;
-  --color-accent-hover: #0B5F99;
-  --color-on-accent: #FFFFFF;
-  --color-success: #216E4E;
+  --color-rule: #D9E0E9;
+  --color-rule-strong: #B9C4D2;
+  --color-ink: #0B1D36;
+  --color-ink-soft: #24395B;
+  --color-muted: #4C5E78;
+  --color-navy: #0B1D36;
+  --color-navy-soft: #14304F;
+  --color-accent: #C9A227;
+  --color-accent-hover: #B08D1F;
+  --color-accent-ink: #8A6A12;
+  --color-accent-soft: #FAF3DF;
+  --color-on-accent: #0B1D36;
+  --color-success: #1F7A52;
   --color-error: #B42318;
 
-  --text-hero: clamp(2.25rem, 1.2rem + 4vw, 4.5rem);
-  --text-h2: clamp(1.875rem, 1.2rem + 2vw, 2.75rem);
+  --text-hero: clamp(2.5rem, 1.05rem + 5vw, 5rem);
+  --text-display: clamp(2rem, 1.3rem + 2.6vw, 3.5rem);
+  --text-h2: clamp(1.9rem, 1.25rem + 2.2vw, 3rem);
   --text-h3: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
   --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
   --text-small: 0.875rem;
 
-  --space-section: clamp(3.5rem, 1.5rem + 4vw, 6rem);
+  --space-section: clamp(4rem, 2rem + 5vw, 7.5rem);
   --space-gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
   --container-max: 1200px;
   --radius-card: 20px;
@@ -75,17 +93,26 @@
 
 @utility type-hero {
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--text-hero);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+@utility type-display {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-display);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
 }
 
 @utility type-h2 {
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: var(--text-h2);
-  line-height: 1.15;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 @utility type-h3 {
@@ -93,6 +120,7 @@
   font-weight: 600;
   font-size: var(--text-h3);
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 @utility type-body {
@@ -109,11 +137,92 @@
   line-height: 1.5;
 }
 
+@utility type-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 @utility shell {
   width: 100%;
   max-width: var(--container-max);
   margin-inline: auto;
   padding-inline: var(--space-gutter);
+}
+
+/* Signature brand aura — restrained mesh used behind hero/headers. */
+@utility brand-aura {
+  background-image:
+    radial-gradient(
+      42% 55% at 78% 8%,
+      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      48% 60% at 12% 0%,
+      color-mix(in srgb, #2E6BB8 12%, transparent) 0%,
+      transparent 72%
+    );
+}
+
+/* Deep navy gradient surface for hero and dark sections (DESIGN.md §6). */
+@utility navy-surface {
+  background-color: var(--color-navy);
+  background-image:
+    radial-gradient(
+      60% 85% at 80% -12%,
+      color-mix(in srgb, var(--color-accent) 24%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      55% 75% at 4% 6%,
+      color-mix(in srgb, #2E6BB8 30%, transparent) 0%,
+      transparent 66%
+    ),
+    linear-gradient(158deg, #0B1D36 0%, #102745 54%, #0B1D36 100%);
+}
+
+/* Subtle gold-on-navy hairline grid for dark hero stages. */
+@utility navy-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, #FFFFFF 7%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #FFFFFF 7%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 56px 56px;
+}
+
+/* Fine technical grid, used sparingly behind product stages. */
+@utility grid-pattern {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-rule-strong) 34%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-rule-strong) 34%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 56px 56px;
+}
+
+@utility dot-pattern {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-rule-strong) 60%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
 }
 
 /* ──────────────────────────────────────────────────────────────
@@ -144,12 +253,12 @@
   }
 
   ::selection {
-    background-color: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
     color: var(--color-ink);
   }
 
   :is(a, button, input, select, textarea, summary, [role="button"]):focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-ink);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -179,4 +288,35 @@
 }
 .skip-link:focus-visible {
   transform: translateY(0);
+}
+
+/* Scrollbar-less horizontal rails (category marquee, filter chips) */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Marquee rail — infinite horizontal loop of duplicated content. */
+@keyframes awn-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.awn-marquee-track {
+  animation: awn-marquee 44s linear infinite;
+}
+.awn-marquee:hover .awn-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .awn-marquee-track {
+    animation: none;
+  }
 }

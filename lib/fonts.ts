@@ -1,15 +1,14 @@
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 
 /**
  * Single source of truth for typography (DESIGN.md §6).
- * Family: Inter with weights 400 (body), 500 (labels/buttons), and 600 (headings).
+ * Family: Geist — a modern grotesk used for both display and body copy.
  * Fallback: system sans-serif stack.
  */
-export const inter = Inter({
+export const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-inter",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
-export const fontVariables = inter.variable;
+export const fontVariables = geist.variable;

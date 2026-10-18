@@ -46,7 +46,7 @@ Never invent product availability, stock, prices, specifications, delivery cover
 
 - Do not copy manufacturer logos, product photos, or INAPROC branding assets unless the owner has confirmed permission and usage rules. Prefer original diagrams, simple category icons, and neutral illustration. Link to INAPROC for official product images and details.
 
-- Use the company logo as supplied; do not recolor, stretch, or upscale a low-resolution asset. The interface accent must follow the blue in the current logo. Request a vector/high-resolution version if needed, but do not block the design on it.
+- Use the company logo as supplied; do not recolor, stretch, or upscale a low-resolution asset. The interface palette follows the owner-supplied brand pair—deep navy `#0B1D36` and gold `#C9A227`—while the logo asset itself stays untouched. Request a vector/high-resolution version if needed, but do not block the design on it.
 
 - Do not reuse a third-party visual identity as the company’s design system. In particular, avoid Apple-specific typography, product UI, exact layouts, and wording.
 
@@ -60,7 +60,7 @@ A dependable, clear procurement partner that helps institutional buyers understa
 
 ### Design movement
 
-**Contemporary procurement editorial:** a light, spacious product-story presentation combined with the clarity and utility of a well-organized B2B catalog.
+**Corporate navy & gold:** a confident, high-contrast corporate presentation built on deep navy (`#0B1D36`) surfaces with restrained gold (`#C9A227`) accents over a soft-white canvas. Dark navy bands anchor the hero and the closing CTA, while catalog and content areas stay bright, spacious, and information-dense. The precision and product-forward confidence of modern B2B software marketing stays, but the tone reads as an institutional procurement vendor: dependable, official, and calm rather than playful.
 
 ### Core principles
 
@@ -74,9 +74,11 @@ A dependable, clear procurement partner that helps institutional buyers understa
 
 ### Visual signature
 
-- A clean white canvas with restrained cool-neutral section bands.
+- A soft-white canvas with deep navy section bands for the hero and the closing CTA.
 
-- The logo’s blue as the primary interface accent, used for links, focus indicators, and important actions; keep the rest of the palette quiet so the brand mark remains recognizable.
+- **Navy is authority, gold is action.** Deep navy carries headings, dark bands, and the brand mark; gold marks primary actions, active navigation, and key eyebrow labels. Keep gold fills for buttons and small motifs only—never as low-contrast body text.
+
+- Gold must satisfy contrast as text: use `--color-accent-ink` (`#8A6A12`) for accent-colored text on light surfaces, and the bright `--color-accent` (`#C9A227`) only on navy surfaces or as a fill behind navy text.
 
 - A simple “procurement pathway” motif—small connected steps or rules—may illustrate how a buyer moves from need to listing to inquiry. Keep it subtle and do not imply official endorsement by INAPROC.
 
@@ -140,7 +142,7 @@ Keep the home page concise. It is an introduction and routing page, not a duplic
 
 - A link to the official provider profile may appear as a supporting trust action.
 
-- Use a single clear visual focus: an original abstract equipment composition, a simple category illustration, or a carefully composed image whose rights are confirmed.
+- Use a single clear visual focus. The hero sits on a deep navy gradient band: headline, lead, CTAs, and trust chips in white with a gold primary action, plus a `navy-grid` texture and the 3D storytelling scene (Section 7) as the right-hand visual. A live-feeling product mock (an HTML/CSS “katalog pengadaan” dashboard preview) may sit inside a light device/browser frame on top of the dark band. The mock is illustrative interface chrome only—it must not display fabricated prices, stock, or product claims.
 
 - Do not crowd the hero with rotating slides, excessive badges, multiple competing primary buttons, or a headline that promises every listed capability.
 
@@ -293,6 +295,8 @@ Initial draft content (all `confirmed: false` until the owner approves):
 
 - Do not make a dense row of tiny filter chips the only control. Allow wrapping or horizontal scrolling only when its behavior is clear.
 
+- The toolbar is sticky beneath the header on both desktop and mobile so search, filters, and sorting stay reachable while browsing results. On desktop, category pills wrap so no option is hidden; horizontal scrolling is reserved for narrow mobile rails. The sticky surface uses a translucent wash with backdrop blur and must never obscure a focused control or results count.
+
 - Sorting labels must explain the result order, e.g. **Harga terendah** or **Nama A–Z**. Do not offer price sorting if prices are incomplete or incomparable.
 
 - Keep the search term and filters in the URL query string where practical so a filtered catalog can be shared and browser back/forward works.
@@ -337,28 +341,36 @@ Use CSS custom properties as the source of truth. Keep all text/background combi
 | --- | --- | --- |
 | `--color-canvas` | `#FFFFFF` | Main page background |
 | `--color-wash` | `#F5F7FA` | Alternating page bands and quiet panels |
+| `--color-wash-2` | `#E9EDF3` | Third, slightly deeper band for section rhythm |
 | `--color-surface` | `#FFFFFF` | Cards, menus, and form surfaces |
-| `--color-rule` | `#D9E0E8` | Dividers and control outlines |
-| `--color-ink` | `#17212B` | Primary text and headings |
-| `--color-muted` | `#536273` | Secondary text; verify contrast on each surface |
-| `--color-accent` | `#126EAE` | Primary blue sampled from the company logo; links, active states, focus, and primary actions |
-| `--color-accent-hover` | `#0B5F99` | Darker accessible hover and pressed state derived from the logo blue |
-| `--color-on-accent` | `#FFFFFF` | Text on the accent fill |
-| `--color-success` | `#216E4E` | Confirmed success state only |
+| `--color-rule` | `#D9E0E9` | Dividers and control outlines |
+| `--color-rule-strong` | `#B9C4D2` | Grid patterns and stronger separations |
+| `--color-ink` | `#0B1D36` | Primary text, headings, and dark navy bands |
+| `--color-ink-soft` | `#24395B` | Dense secondary text on light surfaces |
+| `--color-muted` | `#4C5E78` | Secondary text; verify contrast on each surface |
+| `--color-navy` | `#0B1D36` | Dark band background (hero, closing CTA, footer) |
+| `--color-navy-soft` | `#14304F` | Raised surfaces and hovers inside navy bands |
+| `--color-accent` | `#C9A227` | Brand gold: primary actions, active states, motifs |
+| `--color-accent-hover` | `#B08D1F` | Darker accessible hover and pressed state |
+| `--color-accent-ink` | `#8A6A12` | Accent-colored **text** on light surfaces (AA) |
+| `--color-accent-soft` | `#FAF3DF` | Quiet gold fills, selected chips, icon wells |
+| `--color-on-accent` | `#0B1D36` | Text on the gold accent fill (navy) |
+| `--color-success` | `#1F7A52` | Confirmed success state only |
 | `--color-error` | `#B42318` | Error state only |
 
-The current company logo is the source of truth for the brand accent: its dominant blue is `#126EAE`, paired with white. This value is sampled from the logo asset currently published on the company website; if an official vector or brand guide is later supplied, refine the token to match it and recheck contrast. White text on `#126EAE` has approximately 5.4:1 contrast; keep `#0B5F99` for hover/pressed states. Neutral backgrounds and text colors support the logo rather than introducing competing brand hues. Avoid gradients, neon, large saturated color fields, and decorative status colors.
+Navy `#0B1D36` and gold `#C9A227` form the brand pair supplied by the owner. Gold is a **fill**, not a text color on light surfaces: white-on-gold fails contrast, so primary buttons use a gold fill with navy labels (`--color-on-accent`), and any gold-tinted text on light surfaces uses `--color-accent-ink`. Verified ratios: navy-on-gold ≈ 7.0:1, white-on-navy ≈ 16.9:1, gold-on-navy ≈ 7.0:1, `accent-ink`-on-white ≈ 5.0:1. Focus outlines use `--color-accent-ink` so they stay visible on both light and navy surfaces. Restrained atmospheric gradients—the navy `navy-surface` mesh and a fine `grid-pattern`/`navy-grid`—are allowed only as low-opacity backgrounds behind content; do not use large saturated color fields, neon, or decorative status colors.
 
 ### Typography (decided)
 
-- **Font:** Inter, self-hosted via `next/font`, defined in one place (`lib/fonts.ts`). Fallback: system sans-serif stack. All text on the site, including image labels and hotspot cards, uses this family. No second family. Do not depend on proprietary Apple fonts.
+- **Font:** Geist, self-hosted via `next/font`, defined in one place (`lib/fonts.ts`). Fallback: system sans-serif stack. All text on the site, including image labels and hotspot cards, uses this family. No second family. Do not depend on proprietary Apple fonts.
 
-- **Weights:** headings 600, body 400, labels and buttons 500.
+- **Weights:** hero and display headings 700; other headings 600; body 400; labels and buttons 500.
 
 | Token | Value |
 | --- | --- |
-| `--text-hero` | `clamp(2.25rem, 1.2rem + 4vw, 4.5rem)`, line-height 1.1, tracking -0.02em |
-| `--text-h2` | `clamp(1.875rem, 1.2rem + 2vw, 2.75rem)`, line-height 1.15 |
+| `--text-hero` | `clamp(2.5rem, 1.05rem + 5vw, 5rem)`, line-height 1.02, tracking -0.035em |
+| `--text-display` | `clamp(2rem, 1.3rem + 2.6vw, 3.5rem)`, line-height 1.06, tracking -0.03em |
+| `--text-h2` | `clamp(1.9rem, 1.25rem + 2.2vw, 3rem)`, line-height 1.08, tracking -0.025em |
 | `--text-h3` | `clamp(1.125rem, 1rem + 0.5vw, 1.5rem)`, line-height 1.3 |
 | `--text-body` | `clamp(1rem, 0.95rem + 0.2vw, 1.125rem)`, line-height 1.6 |
 | `--text-small` | `0.875rem` (14px, the minimum for any content text) |
@@ -374,8 +386,8 @@ The current company logo is the source of truth for the brand accent: its domina
 | Token | Value |
 | --- | --- |
 | Spacing scale | 4, 8, 12, 16, 24, 32, 48, 64, 96px (4px base unit) |
-| `--space-section` | 96px desktop, 56px mobile |
-| `--space-gutter` | 40px desktop, 16px mobile |
+| `--space-section` | `clamp(4rem, 2rem + 5vw, 7.5rem)` (≈64–120px) |
+| `--space-gutter` | `clamp(1rem, 0.5rem + 2vw, 2.5rem)` |
 | `--container-max` | 1200px |
 | `--radius-card` | 20px |
 | `--radius-control` | 12px (buttons, inputs) |
@@ -390,9 +402,11 @@ The current company logo is the source of truth for the brand accent: its domina
 
 ### Buttons and links
 
-- Primary action: solid accent blue, white label, strong contrast, clear verb-first Indonesian text.
+- Primary action: solid gold (`--color-accent`) with navy (`--color-on-accent`) label, strong contrast, clear verb-first Indonesian text.
 
-- Secondary action: outlined or text-link style with an obvious focus/hover state.
+- Secondary action: outlined or text-link style with an obvious focus/hover state. On navy surfaces, the outlined variant uses a translucent white border and white label.
+
+- Accent-colored text and inline links on light surfaces use `--color-accent-ink`, never the bright gold fill color.
 
 - Links should describe the destination. Avoid ambiguous labels such as “Klik di sini”.
 
@@ -440,7 +454,7 @@ Use product storytelling as a deliberate part of the home-page experience: a con
 
 - Do not use hospitals, doctors, or medical-device scenes as generic company imagery. Use a neutral software/interface illustration for a specific software catalog category, when useful.
 
-- Keep the bright editorial look: white and cool-neutral surfaces, product imagery with breathing room, and restrained company-blue accents. The object or footage is the visual focus; avoid dense overlays and decorative chrome.
+- Keep the corporate look: soft-white and cool-neutral surfaces inside bright content bands, deep navy bands for hero and closing CTA, product imagery with breathing room, and restrained gold accents. The object or footage is the visual focus; avoid dense overlays and decorative chrome.
 
 ## 8. Motion and interaction
 
@@ -546,7 +560,7 @@ Use product storytelling as a deliberate part of the home-page experience: a con
 
 ## 13. Open items requiring owner confirmation
 
-- Official logo vector/high-resolution asset (the current blue/white logo already defines the interface accent).
+- Official logo vector/high-resolution asset (the current logo is used as-is; the navy/gold interface palette is owner-supplied and independent of the mark).
 
 - Confirmed phone/WhatsApp number.
 

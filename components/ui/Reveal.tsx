@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
-/** Easing kurva Apple-style: power3.out — tanpa bounce/elastic. */
+/** Easing curve: power3.out — tanpa bounce/elastic. */
 export const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 interface RevealProps {
@@ -17,15 +17,11 @@ interface RevealProps {
 
 /**
  * Reveal-on-scroll sekali-main untuk grup visual.
- * Menghormati prefers-reduced-motion: tanpa animasi sama sekali.
+ * Prefers-reduced-motion ditangani global oleh `MotionConfig reducedMotion="user"`
+ * (lihat SmoothScrollProvider), sehingga markup SSR identik di semua kondisi dan
+ * tidak memicu hydration mismatch.
  */
 export default function Reveal({ children, delay = 0, y = 24, className }: RevealProps) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
     <motion.div
       className={className}

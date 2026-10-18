@@ -16,7 +16,6 @@ import {
   CheckCircle2,
   Building2,
   MapPin,
-  RefreshCw,
   ArrowUpDown,
   ShoppingBag,
   ChevronLeft,
@@ -37,6 +36,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Drawer } from "@/components/ui/Drawer";
 
 const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
+const GENERIC_BRAND = "Generik / Multi-brand";
 
 function ProductCardMedia({ product }: { product: InaprocProduct }) {
   const [hasError, setHasError] = useState(false);
@@ -48,13 +48,13 @@ function ProductCardMedia({ product }: { product: InaprocProduct }) {
         <div
           className="absolute inset-0 opacity-[0.06] pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(circle at center, #126EAE 1.5px, transparent 1.5px)`,
+            backgroundImage: `radial-gradient(circle at center, #0B1D36 1.5px, transparent 1.5px)`,
             backgroundSize: "16px 16px",
           }}
         />
         <div className="relative z-0 flex flex-col items-center mt-4">
-          <div className="w-11 h-11 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-1.5 transition-transform duration-300 group-hover:scale-110 shadow-2xs">
-            <Package className="w-5 h-5 text-accent" />
+          <div className="w-11 h-11 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-ink mb-1.5 transition-transform duration-300 group-hover:scale-110 shadow-2xs">
+            <Package className="w-5 h-5 text-accent-ink" />
           </div>
           <span className="text-[10px] font-mono font-medium text-muted tracking-wide">
             ID: {product.id.slice(-6)}
@@ -62,7 +62,7 @@ function ProductCardMedia({ product }: { product: InaprocProduct }) {
           <span className="text-[11px] font-medium text-ink/75 line-clamp-1 mt-0.5 px-2 max-w-[160px]">
             {product.category}
           </span>
-          <span className="inline-flex items-center text-[10px] font-semibold text-accent mt-2 px-2 py-0.5 rounded-full bg-accent/5 border border-accent/15">
+          <span className="inline-flex items-center text-[10px] font-semibold text-accent-ink mt-2 px-2 py-0.5 rounded-full bg-accent/5 border border-accent/15">
             Katalog INAPROC
           </span>
         </div>
@@ -114,7 +114,6 @@ export default function CatalogExplorer() {
   }
 
   const [itemsPerPage, setItemsPerPage] = useState(24);
-  const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
@@ -210,14 +209,6 @@ export default function CatalogExplorer() {
       sort: "default",
       hal: 1,
     });
-  };
-
-  const handleSimulateRefresh = () => {
-    setIsLoading(true);
-    setHasError(false);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 400);
   };
 
   // Dynamic category counts across snapshot
@@ -346,7 +337,7 @@ export default function CatalogExplorer() {
          ========================================================================= */}
       <div className="w-full rounded-card bg-canvas border border-rule p-4 sm:p-6 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-control bg-accent/10 flex items-center justify-center shrink-0 text-accent">
+          <div className="w-10 h-10 rounded-control bg-accent/10 flex items-center justify-center shrink-0 text-accent-ink">
             <Building2 className="w-5 h-5" />
           </div>
           <div className="flex flex-col gap-1">
@@ -354,30 +345,21 @@ export default function CatalogExplorer() {
               <span className="text-sm font-semibold text-ink">
                 Etalase Resmi INAPROC LKPP — {SITE_CONTENT.company.name}
               </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-success/10 text-success border border-success/20">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Snapshot {CATALOG_METADATA.totalCount} Produk (Per {CATALOG_METADATA.lastVerifiedAt})
               </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-wash text-accent border border-rule">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-medium bg-wash text-accent-ink border border-rule">
                 {CATALOG_METADATA.providerType} • {CATALOG_METADATA.providerStatus}
               </span>
             </div>
-            <p className="text-xs text-muted max-w-2xl leading-relaxed">
+            <p className="text-sm text-muted max-w-2xl leading-relaxed">
               Data katalog diverifikasi dari etalase LKPP pada {CATALOG_METADATA.lastVerifiedAt}. Seluruh spesifikasi, ketersediaan, dan harga resmi dapat dikonfirmasi langsung pada tautan resmi INAPROC.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0 self-stretch md:self-auto justify-end">
-          <button
-            onClick={handleSimulateRefresh}
-            type="button"
-            aria-label="Segarkan data katalog"
-            className="p-2.5 min-h-11 min-w-11 flex items-center justify-center rounded-control border border-rule bg-canvas hover:bg-wash text-muted transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
-            title="Muat ulang data snapshot"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-accent" : ""}`} />
-          </button>
           <a
             href={CATALOG_METADATA.sourceUrl}
             target="_blank"
@@ -394,7 +376,7 @@ export default function CatalogExplorer() {
           MOBILE CONTROLS (< 1024px)
           Compact layout: Search + Filter Sheet Button + Sort Select (DESIGN.md §5 & §9)
          ========================================================================= */}
-      <div className="flex lg:hidden flex-col gap-3">
+      <div className="sticky top-14 z-30 -mx-4 flex flex-col gap-3 bg-wash/90 px-4 py-3 backdrop-blur-md lg:hidden">
         {/* Search Input Mobile */}
         <div className="relative flex items-center w-full">
           <Search className="w-4 h-4 text-muted absolute left-3.5 pointer-events-none" />
@@ -426,7 +408,7 @@ export default function CatalogExplorer() {
             className="flex-1 min-h-11 px-4 py-2 rounded-control bg-canvas border border-rule hover:bg-wash flex items-center justify-between text-xs font-medium text-ink transition-colors shadow-2xs cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
           >
             <span className="flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4 text-accent" />
+              <SlidersHorizontal className="w-4 h-4 text-accent-ink" />
               <span>Filter & Kategori</span>
             </span>
             {activeFilterCount > 0 && (
@@ -453,8 +435,6 @@ export default function CatalogExplorer() {
               <option value="default">Default</option>
               <option value="name">Nama A → Z</option>
               <option value="name-desc">Nama Z → A</option>
-              <option value="price-asc">Harga Terendah</option>
-              <option value="price-desc">Harga Tertinggi</option>
             </select>
             <ArrowUpDown className="w-3.5 h-3.5 text-muted absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
@@ -464,7 +444,7 @@ export default function CatalogExplorer() {
         {hasActiveFilters && (
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {selectedCategory !== "Semua" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-ink text-on-accent text-xs">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-ink text-white text-xs">
                 <span>{selectedCategory}</span>
                 <button
                   type="button"
@@ -505,7 +485,7 @@ export default function CatalogExplorer() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-xs text-accent font-semibold hover:underline whitespace-nowrap ml-1 cursor-pointer"
+              className="text-xs text-accent-ink font-semibold hover:underline whitespace-nowrap ml-1 cursor-pointer"
             >
               Reset semua
             </button>
@@ -516,7 +496,7 @@ export default function CatalogExplorer() {
       {/* =========================================================================
           DESKTOP TWO-TIER COMMAND BAR (>= 1024px) (DESIGN.md §5)
          ========================================================================= */}
-      <div className="hidden lg:flex flex-col gap-3.5 bg-wash/50 p-4 rounded-card border border-rule/70 shadow-2xs">
+      <div className="hidden lg:flex lg:sticky lg:top-16 lg:z-30 flex-col gap-3.5 bg-wash/90 p-4 rounded-card border border-rule/70 shadow-2xs backdrop-blur-md">
         {/* Tier 1: Search, Origin Segment & Sort */}
         <div className="flex items-center gap-3 w-full">
           {/* Search Box */}
@@ -552,7 +532,7 @@ export default function CatalogExplorer() {
             <button
               type="button"
               onClick={() => handleOriginSelect("all")}
-              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+              className={`px-3.5 h-full text-xs font-medium rounded-control transition-all cursor-pointer ${
                 selectedOrigin === "all"
                   ? "bg-wash text-ink shadow-2xs font-semibold"
                   : "text-muted hover:text-ink"
@@ -563,9 +543,9 @@ export default function CatalogExplorer() {
             <button
               type="button"
               onClick={() => handleOriginSelect("PDN")}
-              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+              className={`px-3.5 h-full text-xs font-medium rounded-control transition-all cursor-pointer ${
                 selectedOrigin === "PDN"
-                  ? "bg-emerald-50 text-emerald-800 shadow-2xs font-semibold"
+                  ? "bg-success/10 text-success shadow-2xs font-semibold"
                   : "text-muted hover:text-ink"
               }`}
             >
@@ -574,9 +554,9 @@ export default function CatalogExplorer() {
             <button
               type="button"
               onClick={() => handleOriginSelect("Impor")}
-              className={`px-3.5 h-full text-xs font-medium rounded-[10px] transition-all cursor-pointer ${
+              className={`px-3.5 h-full text-xs font-medium rounded-control transition-all cursor-pointer ${
                 selectedOrigin === "Impor"
-                  ? "bg-blue-50 text-accent shadow-2xs font-semibold"
+                  ? "bg-accent/10 text-accent-ink shadow-2xs font-semibold"
                   : "text-muted hover:text-ink"
               }`}
             >
@@ -603,8 +583,6 @@ export default function CatalogExplorer() {
                 <option value="default">Urutkan: Default INAPROC</option>
                 <option value="name">Nama: A → Z</option>
                 <option value="name-desc">Nama: Z → A</option>
-                <option value="price-asc">Harga: Terendah → Tertinggi</option>
-                <option value="price-desc">Harga: Tertinggi → Terendah</option>
               </select>
               <ArrowUpDown className="w-3.5 h-3.5 text-muted absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
@@ -614,7 +592,7 @@ export default function CatalogExplorer() {
         {/* Tier 2: Category Filter Pills + Type Filter */}
         <div className="flex items-center justify-between gap-4 pt-0.5">
           {/* Category Filter Pills with Badges */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none flex-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none flex-1 lg:flex-wrap lg:overflow-visible">
             {POPULAR_CATEGORIES.map((cat) => {
               const isSelected = selectedCategory === cat;
               const count = categoryCounts[cat] || 0;
@@ -626,7 +604,7 @@ export default function CatalogExplorer() {
                   onClick={() => handleCategorySelect(cat)}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium whitespace-nowrap transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent ${
                     isSelected
-                      ? "bg-ink text-on-accent shadow-2xs font-semibold"
+                      ? "bg-ink text-white shadow-2xs font-semibold"
                       : "bg-canvas text-muted border border-rule hover:bg-wash hover:text-ink"
                   }`}
                 >
@@ -634,7 +612,7 @@ export default function CatalogExplorer() {
                   <span
                     className={`text-[11px] px-1.5 py-0.5 rounded-pill font-semibold ${
                       isSelected
-                        ? "bg-white/20 text-on-accent"
+                        ? "bg-white/20 text-white"
                         : "bg-wash text-muted border border-rule"
                     }`}
                   >
@@ -676,21 +654,19 @@ export default function CatalogExplorer() {
       <div
         id="catalog-results"
         aria-live="polite"
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-muted pt-3.5 border-t border-rule mt-1"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-muted pt-3.5 border-t border-rule mt-1"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          {!isLoading && (
-            <span className="font-medium text-ink">
-              Menampilkan {totalItems === 0 ? 0 : startIndex + 1}–
-              {Math.min(startIndex + itemsPerPage, totalItems)} dari {totalItems} produk
-            </span>
-          )}
+          <span className="font-medium text-ink">
+            Menampilkan {totalItems === 0 ? 0 : startIndex + 1}–
+            {Math.min(startIndex + itemsPerPage, totalItems)} dari {totalItems} produk
+          </span>
 
           {hasActiveFilters && (
             <button
               onClick={handleResetFilters}
               type="button"
-              className="text-accent hover:underline font-semibold flex items-center gap-1 ml-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
+              className="text-accent-ink hover:underline font-semibold flex items-center gap-1 ml-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
             >
               <X className="w-3.5 h-3.5" />
               Reset filter
@@ -731,17 +707,17 @@ export default function CatalogExplorer() {
             <h3 className="text-base font-semibold text-ink">
               Katalog data tidak dapat dimuat
             </h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-sm text-muted leading-relaxed">
               Terjadi kendala saat menyinkronkan data snapshot etalase. Silakan coba kembali atau kunjungi langsung profil penyedia di INAPROC LKPP.
             </p>
           </div>
           <div className="flex items-center gap-3 pt-2">
             <button
-              onClick={handleSimulateRefresh}
+              onClick={() => router.refresh()}
               type="button"
-              className="px-4 py-2.5 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs cursor-pointer"
+              className="px-4 py-2.5 min-h-11 rounded-control text-xs font-semibold bg-accent text-on-accent hover:bg-accent-hover transition-colors shadow-2xs cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
             >
-              Coba Muat Ulang
+              Muat Ulang
             </button>
             <a
               href={CATALOG_METADATA.sourceUrl}
@@ -754,24 +730,6 @@ export default function CatalogExplorer() {
             </a>
           </div>
         </div>
-      ) : isLoading ? (
-        /* Loading Skeleton */
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 animate-pulse" aria-busy="true">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-96 rounded-card bg-canvas border border-rule p-4 flex flex-col justify-between"
-            >
-              <div className="flex flex-col gap-3">
-                <div className="w-full aspect-square bg-wash rounded-control" />
-                <div className="h-4 w-24 bg-wash rounded-sm" />
-                <div className="h-5 w-full bg-wash rounded-sm" />
-                <div className="h-3 w-32 bg-wash rounded-sm" />
-              </div>
-              <div className="h-10 w-full bg-wash rounded-control mt-4" />
-            </div>
-          ))}
-        </div>
       ) : ALL_INAPROC_PRODUCTS.length === 0 ? (
         /* Empty Source State (DESIGN.md §5) */
         <div className="w-full rounded-card bg-canvas border border-rule p-12 text-center flex flex-col items-center justify-center gap-4 shadow-xs">
@@ -782,7 +740,7 @@ export default function CatalogExplorer() {
             <h3 className="text-base font-semibold text-ink">
               Belum ada produk yang ditampilkan
             </h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-sm text-muted leading-relaxed">
               Saat ini data katalog sedang disinkronkan. Silakan kunjungi profil resmi penyedia di INAPROC LKPP untuk melihat daftar penawaran aktif.
             </p>
           </div>
@@ -832,11 +790,11 @@ export default function CatalogExplorer() {
                 </div>
 
                 {/* Category & Brand */}
-                <div className="flex items-center justify-between text-xs text-muted gap-2">
-                  <span className="truncate font-semibold text-accent">
+                <div className="flex items-center justify-between text-sm text-muted gap-2">
+                  <span className="truncate font-semibold text-accent-ink">
                     {product.category}
                   </span>
-                  {product.brand && (
+                  {product.brand && product.brand !== GENERIC_BRAND && (
                     <span className="truncate max-w-[120px] text-muted font-normal">
                       {product.brand}
                     </span>
@@ -845,16 +803,16 @@ export default function CatalogExplorer() {
 
                 {/* Product Title */}
                 <h3
-                  className="text-sm font-semibold text-ink line-clamp-2 leading-snug group-hover:text-accent transition-colors"
+                  className="text-sm font-semibold text-ink line-clamp-2 leading-snug group-hover:text-accent-ink transition-colors"
                   title={product.name}
                 >
                   {product.name}
                 </h3>
 
                 {/* Location & Scale */}
-                <div className="flex items-center gap-2 text-xs text-muted">
+                <div className="flex items-center gap-2 text-sm text-muted">
                   <span className="flex items-center gap-1 truncate">
-                    <MapPin className="w-3.5 h-3.5 text-muted shrink-0" />
+                    <MapPin className="w-4 h-4 text-muted shrink-0" />
                     {product.location}
                   </span>
                   <span>•</span>
@@ -865,12 +823,25 @@ export default function CatalogExplorer() {
               {/* Bottom Section: Official Price & Persistent INAPROC Link */}
               <div className="flex flex-col gap-3 pt-3 mt-3 border-t border-rule/60">
                 <div className="flex flex-col">
-                  <span className="text-xs uppercase tracking-wider text-muted font-medium">
-                    Harga resmi termasuk PPN
-                  </span>
-                  <span className="text-base font-bold text-ink">
-                    {product.priceFormatted}
-                  </span>
+                  {product.price > 0 ? (
+                    <>
+                      <span className="text-xs uppercase tracking-wider text-muted font-medium">
+                        Harga resmi termasuk PPN
+                      </span>
+                      <span className="text-base font-bold text-ink">
+                        {product.priceFormatted}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-xs uppercase tracking-wider text-muted font-medium">
+                        Harga resmi
+                      </span>
+                      <span className="text-sm font-semibold text-muted">
+                        Dikonfirmasi saat penawaran di INAPROC
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <a
@@ -897,7 +868,7 @@ export default function CatalogExplorer() {
             <h3 className="text-base font-semibold text-ink">
               Produk tidak ditemukan
             </h3>
-            <p className="text-xs text-muted leading-relaxed">
+            <p className="text-sm text-muted leading-relaxed">
               Tidak ada produk yang cocok dengan kriteria pencarian &ldquo;{searchInputValue}&rdquo; atau filter yang dipilih. Silakan reset filter atau kunjungi etalase resmi.
             </p>
           </div>
@@ -925,9 +896,9 @@ export default function CatalogExplorer() {
       {/* =========================================================================
           PAGINATION CONTROLS
          ========================================================================= */}
-      {totalPages > 1 && !isLoading && !hasError && paginatedProducts.length > 0 && (
+      {totalPages > 1 && !hasError && paginatedProducts.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-rule">
-          <span className="text-xs text-muted order-2 sm:order-1">
+          <span className="text-sm text-muted order-2 sm:order-1">
             Halaman {safeCurrentPage} dari {totalPages} ({totalItems} total produk)
           </span>
 
@@ -1038,7 +1009,7 @@ export default function CatalogExplorer() {
                     onClick={() => handleCategorySelect(cat)}
                     className={`flex items-center justify-between p-3 rounded-control text-xs transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-accent/10 border border-accent/30 text-accent font-semibold"
+                        ? "bg-accent/10 border border-accent/30 text-accent-ink font-semibold"
                         : "bg-wash border border-rule/50 text-ink hover:bg-canvas"
                     }`}
                   >

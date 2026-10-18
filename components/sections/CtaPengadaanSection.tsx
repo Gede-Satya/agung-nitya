@@ -57,7 +57,7 @@ function ContactActions() {
   return (
     <>
       {activeNeedLabel && (
-        <div className="mb-6 inline-flex items-center gap-2 rounded-card border border-accent/30 bg-accent/5 px-4 py-2.5 text-xs font-medium text-accent">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-card border border-accent/30 bg-accent/10 px-4 py-2.5 text-xs font-medium text-accent">
           <Wrench className="w-4 h-4 shrink-0" />
           <span>
             Kebutuhan Terpilih: <strong>{activeNeedLabel}</strong>
@@ -69,7 +69,7 @@ function ContactActions() {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[580px] mx-auto mb-8">
         <a
           href={mailHref}
-          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] gap-2 shadow-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+          className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-control bg-accent px-8 text-sm font-semibold text-on-accent transition-all hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] gap-2 shadow-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           <Mail className="w-4 h-4" />
           <span>{contact.directEmailLabel}</span>
@@ -99,7 +99,7 @@ export default function CtaPengadaanSection() {
     >
       <div id="cta-pengadaan" className="sr-only" aria-hidden="true" />
       <div className="shell px-4">
-        <Reveal className="relative rounded-card bg-ink text-white p-8 sm:p-14 overflow-hidden border border-white/10 shadow-lg text-center max-w-4xl mx-auto">
+        <Reveal className="relative rounded-card navy-surface text-white p-8 sm:p-14 overflow-hidden border border-white/10 shadow-lg text-center max-w-4xl mx-auto">
           {/* Subtle Ambient Glow */}
           <div
             aria-hidden="true"
@@ -107,7 +107,7 @@ export default function CtaPengadaanSection() {
           />
 
           {/* Eyebrow */}
-          <p className="relative text-xs font-semibold uppercase tracking-wider text-blue-300 mb-3">
+          <p className="relative text-xs font-semibold uppercase tracking-wider text-white/70 mb-3">
             {contact.eyebrow}
           </p>
 
@@ -128,7 +128,7 @@ export default function CtaPengadaanSection() {
           </div>
 
           {/* Verified contact note */}
-          <div className="relative flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-4 border-t border-white/10 text-xs text-white/60">
+          <div className="relative flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-4 border-t border-white/10 text-sm text-white/75">
             <span>
               Email Resmi: <strong className="text-white">{company.email}</strong>
             </span>

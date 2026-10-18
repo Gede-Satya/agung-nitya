@@ -1,38 +1,42 @@
 import Navbar from "@/components/layout/Navbar";
 import HeroShowcase from "@/components/sections/HeroShowcase";
-import LiniPengadaanSection from "@/components/sections/LiniPengadaanSection";
+import TrustMetricsSection from "@/components/sections/TrustMetricsSection";
+import KategoriProdukSection from "@/components/sections/KategoriProdukSection";
 import KatalogSection from "@/components/sections/KatalogSection";
 import PemeliharaanHardwareSection from "@/components/sections/PemeliharaanHardwareSection";
+import WhyChooseUsSection from "@/components/sections/WhyChooseUsSection";
 import EkosistemPengadaanSection from "@/components/sections/EkosistemPengadaanSection";
-import UnitSiapPengadaanSection from "@/components/sections/UnitSiapPengadaanSection";
 import CtaPengadaanSection from "@/components/sections/CtaPengadaanSection";
 import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <main id="konten-utama" className="min-h-screen bg-canvas text-ink relative selection:bg-accent/20 selection:text-ink">
-      {/* Dual-Tier Apple Header */}
+    <main id="konten-utama" className="min-h-screen bg-canvas text-ink relative selection:bg-accent/30 selection:text-ink">
+      {/* Compact sticky header */}
       <Navbar />
 
-      {/* Hero Stage: Hardware Lineup & Floating Capsule */}
+      {/* Hero Stage: navy band with hardware lineup & interface preview */}
       <HeroShowcase />
 
-      {/* Lini Pengadaan Utama: 3 High-Impact Cards */}
-      <LiniPengadaanSection />
+      {/* Trust bar (verified credentials) + key metrics */}
+      <TrustMetricsSection />
+
+      {/* Kategori Produk & Layanan: 4 high-impact cards */}
+      <KategoriProdukSection />
 
       {/* Galeri Interaktif: e-Katalog INAPROC */}
       <KatalogSection />
 
-      {/* Scroll-Driven Hardware Maintenance & Exploded View Architecture */}
+      {/* Hardware Maintenance & Exploded View */}
       <PemeliharaanHardwareSection />
+
+      {/* Kenapa Memilih Kami */}
+      <WhyChooseUsSection />
 
       {/* Ekosistem Pengadaan Resmi & SLA Jaminan Kontrak */}
       <EkosistemPengadaanSection />
 
-      {/* Unit Siap Pengadaan: 4 Product Cards Grid */}
-      <UnitSiapPengadaanSection />
-
-      {/* CTA: RFQ Pill & Direct Consultation */}
+      {/* CTA: dark navy card with gold action */}
       <CtaPengadaanSection />
 
       {/* Enterprise Footer */}

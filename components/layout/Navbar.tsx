@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, CalendarCheck } from "lucide-react";
 import { SITE_CONTENT } from "@/src/content/site";
 
 export default function Navbar() {
@@ -118,24 +118,24 @@ export default function Navbar() {
           {/* Brand */}
           <Link
             href="/"
-            className="flex min-h-11 items-center gap-2.5 hover:opacity-85 transition-opacity"
+            className="flex min-h-11 items-center gap-3 hover:opacity-90 transition-opacity"
           >
-            <span className="relative block h-7 w-7 shrink-0 overflow-hidden rounded-full border border-rule">
+            <span className="relative block h-8 w-8 sm:h-9 sm:w-9 shrink-0">
               <Image
                 src="/images/logo-awn-transparent.png"
-                alt="Logo Resmi PT Agung Wijaya Nitya"
+                alt="Logo Resmi PT. Agung Wijaya Nitya"
                 fill
                 priority
-                className="object-cover"
-                sizes="28px"
+                className="object-contain"
+                sizes="(max-width: 640px) 32px, 36px"
               />
             </span>
             <span className="leading-tight">
-              <span className="block font-heading text-sm sm:text-base font-semibold text-ink tracking-tight">
-                Agung Wijaya Nitya
+              <span className="block font-heading text-base sm:text-lg font-bold text-[#0c1f38] tracking-tight">
+                PT. Agung Wijaya Nitya
               </span>
-              <span className="block text-xs font-medium text-muted">
-                Katalog & Solusi Pengadaan
+              <span className="block text-xs sm:text-[13px] font-medium text-slate-600">
+                Vendor Pengadaan Barang &amp; Jasa
               </span>
             </span>
           </Link>
@@ -143,24 +143,24 @@ export default function Navbar() {
           {/* Central links (desktop) */}
           <nav
             aria-label="Navigasi utama"
-            className="hidden lg:flex items-center gap-1 text-sm font-medium text-ink/80"
+            className="hidden lg:flex items-center gap-2 text-sm sm:text-[15px] font-medium text-slate-700"
           >
             {navLinks.map((link) => {
-              const isActive = activeId === link.id;
+              const isActive = activeId === link.id || (link.id === "hero" && activeId === null);
               return (
                 <Link
                   key={link.id}
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative inline-flex min-h-11 items-center px-3 transition-colors hover:text-ink ${
-                    isActive ? "text-accent font-semibold" : ""
+                  className={`relative inline-flex min-h-11 items-center px-3.5 transition-colors hover:text-[#0c1f38] ${
+                    isActive ? "text-[#0c1f38] font-bold" : "text-slate-600"
                   }`}
                 >
                   {link.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-x-3 -bottom-px h-0.5 rounded-pill bg-accent transition-opacity duration-200 ${
-                      isActive ? "opacity-100" : "opacity-0"
+                    className={`absolute inset-x-2.5 -bottom-[1px] h-[3px] rounded-full bg-[#c28e2b] transition-all duration-200 ${
+                      isActive ? "opacity-100 scale-x-100" : "opacity-0 scale-x-50"
                     }`}
                   />
                 </Link>
@@ -172,8 +172,9 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href={primaryAction.href}
-              className="hidden min-h-11 items-center justify-center rounded-control bg-accent px-5 text-sm font-medium text-on-accent transition-all hover:bg-accent-hover active:scale-[0.98] sm:inline-flex"
+              className="hidden min-h-10 items-center justify-center gap-2 rounded-lg bg-[#c28e2b] px-4.5 py-2 text-sm font-semibold text-white shadow-xs transition-all hover:bg-[#ad7e24] active:scale-[0.98] sm:inline-flex"
             >
+              <CalendarCheck className="h-4 w-4" />
               <span>{primaryAction.label}</span>
             </Link>
 
@@ -222,7 +223,7 @@ export default function Navbar() {
                       tabIndex={menuOpen ? 0 : -1}
                       aria-current={isActive ? "page" : undefined}
                       className={`group flex min-h-12 items-center justify-between text-base transition-colors ${
-                        isActive ? "text-accent font-semibold" : "text-ink"
+                        isActive ? "text-accent-ink font-semibold" : "text-ink"
                       }`}
                     >
                       {link.label}
@@ -230,7 +231,7 @@ export default function Navbar() {
                         aria-hidden="true"
                         className={`h-4 w-4 transition-all ${
                           isActive
-                            ? "text-accent"
+                            ? "text-accent-ink"
                             : "text-muted group-hover:translate-x-0.5 group-hover:text-ink"
                         }`}
                       />
@@ -243,9 +244,10 @@ export default function Navbar() {
                   href={primaryAction.href}
                   onClick={() => setMenuOpen(false)}
                   tabIndex={menuOpen ? 0 : -1}
-                  className="flex min-h-12 items-center justify-center rounded-control bg-accent text-base font-medium text-on-accent transition-colors hover:bg-accent-hover"
+                  className="flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#c28e2b] text-base font-semibold text-white transition-colors hover:bg-[#ad7e24]"
                 >
-                  {primaryAction.label}
+                  <CalendarCheck className="h-5 w-5" />
+                  <span>{primaryAction.label}</span>
                 </Link>
               </li>
             </ul>

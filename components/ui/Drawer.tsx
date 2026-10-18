@@ -97,7 +97,7 @@ export function Drawer({
               {title}
             </h2>
             {description && (
-              <p id="drawer-description" className="text-xs text-muted mt-0.5">
+              <p id="drawer-description" className="text-sm text-muted mt-0.5">
                 {description}
               </p>
             )}

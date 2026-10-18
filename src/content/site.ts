@@ -9,12 +9,32 @@ export interface NavLink {
   id: string;
 }
 
-export interface CategoryCard {
-  badge: string;
+export interface TrustBarItem {
+  label: string;
+  detail: string;
+}
+
+export interface MetricItem {
+  value: string;
+  label: string;
+}
+
+export type KategoriIcon = "server" | "monitor" | "display" | "wrench";
+
+export interface KategoriItem {
   title: string;
   desc: string;
+  items: string;
+  icon: KategoriIcon;
   image: string;
   alt: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface WhyUsPoint {
+  title: string;
+  desc: string;
 }
 
 export interface WorkflowItem {
@@ -69,14 +89,36 @@ export interface SiteContent {
       href: string;
     };
     categoryChips: string[];
-    trustPoints: string[];
+    mock: {
+      badge: string;
+      title: string;
+      tabs: string[];
+      metrics: { label: string; value: string }[];
+      rows: { label: string; detail: string; tag: string }[];
+      footnote: string;
+    };
   };
-  liniPengadaan: {
+  /** Trust bar di bawah hero — hanya kredensial terverifikasi (DESIGN.md §1). */
+  trustBar: {
+    items: TrustBarItem[];
+    footnote: string;
+  };
+  /** Kartu metrik ringkas di bawah trust bar. */
+  metrics: MetricItem[];
+  /** Kategori produk & layanan (4 kartu). */
+  kategori: {
     eyebrow: string;
     title: string;
     subtitle: string;
-    profileLinkText: string;
-    cards: CategoryCard[];
+    linkText: string;
+    items: KategoriItem[];
+  };
+  /** "Kenapa memilih kami" — 3 poin. */
+  whyUs: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    points: WhyUsPoint[];
   };
   ekosistem: {
     eyebrow: string;
@@ -159,29 +201,28 @@ export const SITE_CONTENT: SiteContent = {
   navigation: {
     links: [
       { label: "Beranda", href: "/", id: "hero" },
-      { label: "Lini Produk", href: "/#lini-utama", id: "lini-utama" },
-      { label: "Katalog", href: "/katalog", id: "katalog" },
+      { label: "Tentang Kami", href: "/#ekosistem", id: "ekosistem" },
+      { label: "Produk", href: "/katalog", id: "katalog" },
       { label: "Layanan", href: "/#pemeliharaan", id: "pemeliharaan" },
-      { label: "Ekosistem", href: "/#ekosistem", id: "ekosistem" },
       { label: "Kontak", href: "/#kontak", id: "kontak" },
     ],
     primaryAction: {
-      label: "Minta Penawaran",
+      label: "Request Quotation",
       href: "/#kontak",
     },
   },
 
   hero: {
     badge: "Penyedia Aktif INAPROC Katalog Elektronik",
-    title: "Pengadaan perangkat TI untuk instansi dan proyek pemerintah.",
+    title: "Vendor Pengadaan Barang & Jasa Terpercaya di Bali",
     subtitle:
-      "Komputer, server, UPS, dan display dengan penawaran resmi, tersedia juga lewat e-katalog INAPROC.",
+      "Melayani kebutuhan perangkat keras IT, peralatan kantor, medis, dan rumah tangga untuk instansi pemerintah & swasta.",
     ctaPrimary: {
-      label: "Lihat Katalog",
+      label: "Lihat Katalog Produk",
       href: "/katalog",
     },
     ctaSecondary: {
-      label: "Minta Penawaran",
+      label: "Ajukan Penawaran",
       href: "/#kontak",
     },
     categoryChips: [
@@ -190,41 +231,104 @@ export const SITE_CONTENT: SiteContent = {
       "Backup Power (UPS)",
       "Commercial Display",
     ],
-    trustPoints: [
-      "Tersedia di E-Katalog INAPROC",
-      "Penyedia Kategori UMKK",
-      "Penawaran & Faktur Pajak Resmi",
-      "Dukungan BoQ & Administrasi Tender",
+    mock: {
+      badge: "Ilustrasi antarmuka",
+      title: "Katalog pengadaan",
+      tabs: ["Etalase", "Kategori", "Pemeliharaan"],
+      metrics: [
+        { label: "Produk terdaftar", value: "742" },
+        { label: "Status penyedia", value: "Aktif" },
+        { label: "Kualifikasi", value: "UMKK" },
+      ],
+      rows: [
+        { label: "Peralatan Elektronik", detail: "Etalase resmi", tag: "Barang" },
+        { label: "Jasa Layanan", detail: "Penawaran resmi", tag: "Jasa" },
+        { label: "Perangkat Lunak", detail: "Katalog digital", tag: "Digital" },
+      ],
+      footnote: "Ilustrasi antarmuka. Data resmi mengikuti etalase INAPROC.",
+    },
+  },
+
+  trustBar: {
+    items: [
+      { label: "INAPROC LKPP", detail: "Penyedia aktif" },
+      { label: "Katalog Elektronik", detail: "Etalase resmi" },
+      { label: "UMKK", detail: "Kualifikasi usaha" },
+      { label: "Badung, Bali", detail: "Domisili penyedia" },
+    ],
+    footnote: "Kredensial mengikuti profil resmi penyedia pada etalase INAPROC LKPP.",
+  },
+
+  metrics: [
+    { value: "742", label: "Produk terdaftar di INAPROC" },
+    { value: "Aktif", label: "Status penyedia INAPROC" },
+    { value: "UMKK", label: "Kualifikasi usaha penyedia" },
+    { value: "Badung, Bali", label: "Basis operasional penyedia" },
+  ],
+
+  kategori: {
+    eyebrow: "Kategori Produk & Layanan",
+    title: "Empat lini yang paling sering diminta instansi.",
+    subtitle:
+      "Setiap kategori mengikuti taksonomi etalase resmi INAPROC sehingga daftar dan penawaran dapat diverifikasi langsung.",
+    linkText: "Telusuri kategori",
+    items: [
+      {
+        title: "Perangkat Keras TI",
+        desc: "Server rack, workstation, laptop bisnis, UPS, dan periferal jaringan untuk kebutuhan operasional instansi.",
+        items: "Server · Laptop · UPS · Periferal",
+        icon: "server",
+        image: "/images/card-server-storage.jpg",
+        alt: "Ilustrasi server rack dan unit penyimpanan data",
+        href: "/katalog?kategori=Peralatan%20Elektronik",
+      },
+      {
+        title: "Peralatan Kantor & Fasilitas",
+        desc: "Rak, lemari penyimpanan, troli, dan perlengkapan ruang kerja untuk menunjang aktivitas harian dinas.",
+        items: "Rak · Lemari · Troli",
+        icon: "monitor",
+        image: "/images/card-workstation-pc.jpg",
+        alt: "Ilustrasi perangkat kerja dan perlengkapan kantor",
+        href: "/katalog?kategori=Peralatan%20Kantor",
+      },
+      {
+        title: "Elektronik & Rumah Tangga",
+        desc: "Display komersial, peralatan elektronik, dan perkakas pendukung fasilitas ruangan instansi.",
+        items: "Display · Elektronik · Perkakas",
+        icon: "display",
+        image: "/images/card-commercial-display-render.jpg",
+        alt: "Ilustrasi monitor dan display komersial ruangan",
+        href: "/katalog",
+      },
+      {
+        title: "Jasa Pemeliharaan Hardware",
+        desc: "Perbaikan dan pemeliharaan komponen perangkat TI, termasuk penggantian komponen yang tersedia di etalase.",
+        items: "Diagnosa · Perbaikan · Penggantian",
+        icon: "wrench",
+        image: "/images/ups-smart-online.jpg",
+        alt: "Ilustrasi unit proteksi daya yang dipelihara secara berkala",
+        href: "/#pemeliharaan",
+      },
     ],
   },
 
-  liniPengadaan: {
-    eyebrow: "Lini Pengadaan",
-    title: "Kenali lini pengadaan utama.",
+  whyUs: {
+    eyebrow: "Kenapa Memilih Kami",
+    title: "Tiga alasan yang bisa Anda periksa sendiri.",
     subtitle:
-      "Dukungan komprehensif mulai dari pusat data, komputasi meja, hingga display modern.",
-    profileLinkText: "Lihat profil INAPROC",
-    cards: [
+      "Kami menampilkan hal-hal yang dapat diverifikasi pada profil resmi, bukan klaim yang tidak dapat dibuktikan.",
+    points: [
       {
-        badge: "Pusat Data & Server",
-        title: "Server, storage, dan UPS untuk keandalan operasional.",
-        desc: "Penyediaan infrastruktur pusat data, unit komputasi rak redundan, dan sistem proteksi daya cadangan untuk kontinuitas fasilitas instansi.",
-        image: "/images/card-server-storage.jpg",
-        alt: "Ilustrasi server rack dan unit penyimpanan data pusat data",
+        title: "Etalase resmi INAPROC",
+        desc: "Daftar item dan penawaran mengikuti etalase resmi INAPROC Katalog Elektronik LKPP, sehingga instansi dapat memeriksanya langsung.",
       },
       {
-        badge: "Produktivitas Kerja",
-        title: "Laptop bisnis, PC desktop, dan periferal kerja instansi.",
-        desc: "Platform perangkat kerja terkelola untuk pemenuhan kebutuhan operasional harian dinas, instansi, dan fasilitas layanan publik.",
-        image: "/images/card-workstation-pc.jpg",
-        alt: "Ilustrasi laptop dan workstation bisnis perkantoran",
+        title: "Dokumen penawaran lengkap",
+        desc: "Faktur pajak, kwitansi resmi, dan berita acara serah terima (BAST) disiapkan untuk memenuhi administrasi pengadaan instansi.",
       },
       {
-        badge: "Fasilitas & Display Komersial",
-        title: "Smart display, monitor komersial, dan perlengkapan ruang modern.",
-        desc: "Panel display beresolusi tinggi untuk ruang rapat, ruang pertemuan, signage informasi, serta perlengkapan pendukung fasilitas instansi.",
-        image: "/images/card-commercial-display-render.jpg",
-        alt: "Ilustrasi monitor dan display komersial untuk ruang instansi",
+        title: "Pendampingan teknis",
+        desc: "Penjelasan teknis dan verifikasi fungsional unit setelah serah terima, serta jalur pemeliharaan komponen perangkat TI.",
       },
     ],
   },
