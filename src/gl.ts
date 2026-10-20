@@ -145,8 +145,10 @@ export function createGlRenderer(canvas: HTMLCanvasElement): GlRenderer {
 
   function resize() {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const width = Math.floor(window.innerWidth * dpr);
-    const height = Math.floor(window.innerHeight * dpr);
+    const clientW = canvas.clientWidth || window.innerWidth;
+    const clientH = canvas.clientHeight || window.innerHeight;
+    const width = Math.floor(clientW * dpr);
+    const height = Math.floor(clientH * dpr);
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;

@@ -4,7 +4,8 @@ import { makeSequence, Sequence } from "./sequence";
 import { HERO_SCENES, smoothstep, lerp } from "./stage";
 
 // DOM Elements
-const heroStage = document.getElementById("hero-stage") as HTMLElement;
+const heroWrapper = (document.getElementById("hero-wrapper") || document.getElementById("hero-stage")) as HTMLElement;
+const heroStage = (document.getElementById("hero-stage") || document.getElementById("hero-pin")) as HTMLElement;
 const glCanvas = document.getElementById("gl-canvas") as HTMLCanvasElement;
 const linesCanvas = document.getElementById("lines-canvas") as HTMLCanvasElement;
 const bootPoster = document.getElementById("boot-poster") as HTMLImageElement;
@@ -54,9 +55,11 @@ window.addEventListener("touchstart", unlockMedia, { once: true });
 scenePills.forEach((pill) => {
   pill.addEventListener("click", () => {
     const targetP = parseFloat(pill.dataset.progress || "0");
-    if (!heroStage) return;
-    const scrollDistance = heroStage.offsetHeight - window.innerHeight;
-    const targetY = heroStage.offsetTop + targetP * scrollDistance;
+    if (!heroWrapper) return;
+    const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
+    const holdDistance = Math.min(window.innerHeight * 0.75, totalScrollDistance * 0.2);
+    const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
+    const targetY = heroWrapper.offsetTop + targetP * activeScrubDistance;
     window.scrollTo({
       top: targetY,
       behavior: "smooth",
@@ -113,12 +116,18 @@ let currentSceneIndex = 0;
 function tick(timestamp: number) {
   const time = timestamp * 0.001;
 
-  // Calculate local progress within the hero stage
-  if (heroStage) {
-    const scrollDistance = heroStage.offsetHeight - window.innerHeight;
-    const heroRect = heroStage.getBoundingClientRect();
+  // Calculate local progress strictly from the hero wrapper's own scroll range
+  if (heroWrapper) {
+    const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
+    const heroRect = heroWrapper.getBoundingClientRect();
     const heroScrolled = Math.max(0, -heroRect.top);
-    targetProgress = scrollDistance > 0 ? Math.min(1, Math.max(0, heroScrolled / scrollDistance)) : 0;
+
+    // Hold buffer: scene 05 reaches 100% (SCRUB // 100%) while still fully pinned,
+    // and stays held at 100% full-screen before the wrapper ends and releases sticky.
+    const holdDistance = Math.min(window.innerHeight * 0.75, totalScrollDistance * 0.2);
+    const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
+
+    targetProgress = totalScrollDistance > 0 ? Math.min(1, Math.max(0, heroScrolled / activeScrubDistance)) : 0;
   }
 
   // Smooth lerp progress

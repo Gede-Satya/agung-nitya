@@ -176,19 +176,23 @@
       transform: translateY(-1px);
     }
 
-    /* HERO PINNED STAGE (~4.5 VIEWPORTS TALL FOR CLEAN SHORT SCRUB) */
-    .hero-stage {
+    /* HERO PINNED STAGE (OUTER WRAPPER CREATES ~4–5 VIEWPORT HEIGHTS OF SCROLL DISTANCE) */
+    .hero-wrapper {
       position: relative;
       width: 100%;
-      height: 450vh;
+      height: 520vh;
+      margin: 0;
+      padding: 0;
     }
 
-    .hero-pin {
+    .hero-stage, .hero-pin {
       position: sticky;
       top: 0;
       left: 0;
       width: 100vw;
+      max-width: 100%;
       height: 100vh;
+      height: 100svh;
       overflow: hidden;
       background: #FFFFFF;
     }
@@ -196,11 +200,13 @@
     /* FULL-BLEED CANVASES & MEDIA (EDGE TO EDGE) */
     canvas.gl, canvas.lines {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       display: block;
       pointer-events: none;
+      object-fit: cover;
     }
     canvas.gl { z-index: 1; }
     canvas.lines { z-index: 2; }
@@ -749,11 +755,14 @@
 
     /* REDUCED MOTION SUPPORT */
     @media (prefers-reduced-motion: reduce) {
-      .hero-stage {
+      .hero-wrapper {
         height: 100vh !important;
+        height: 100svh !important;
       }
-      .hero-pin {
+      .hero-stage, .hero-pin {
         position: relative !important;
+        height: 100vh !important;
+        height: 100svh !important;
       }
       canvas.gl, canvas.lines, video.ambient-loop {
         display: none !important;
@@ -823,9 +832,9 @@
     </div>
   </header>
 
-  <!-- HERO STAGE (PINNED SCROLL SEQUENCE ~4.5 VIEWPORTS TALL) -->
-  <section class="hero-stage" id="hero-stage" aria-label="Sinematik Hero PT Agung Wijaya Nitya">
-    <div class="hero-pin" id="hero-pin">
+  <!-- HERO WRAPPER (OUTER SCROLL CONTAINER CREATES ~4–5 VIEWPORT HEIGHTS OF SCROLL DISTANCE) -->
+  <div class="hero-wrapper" id="hero-wrapper" aria-label="Sinematik Hero PT Agung Wijaya Nitya">
+    <section class="hero-stage hero-pin" id="hero-stage">
       
       <!-- 1. WebGL1 Full-Bleed Canvas -->
       <canvas class="gl" id="gl-canvas"></canvas>
@@ -873,8 +882,8 @@
         <span class="hud-scrub" id="scrub-indicator">SCRUB // 00%</span>
       </div>
 
-    </div>
-  </section>
+    </section>
+  </div>
 
   <!-- NATURAL HOMEPAGE CONTENT FLOW (FOLLOWS HERO PIN) -->
   <main class="site-main" id="main-content">
