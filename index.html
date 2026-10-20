@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="only light" />
+  <meta name="theme-color" content="#FFFFFF" />
+
+  <title>PT. Agung Wijaya Nitya — Mitra Pengadaan Perangkat IT & Institusi</title>
+  <meta name="description" content="PT. Agung Wijaya Nitya: Mitra pengadaan perangkat IT dan kebutuhan institusi di Kabupaten Badung, Bali. Perangkat keras, software, dan layanan purnajual resmi di INAPROC, PaDi UMKM, LPSE." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Fonts: Instrument Serif (Display Editorial), Plus Jakarta Sans (Grotesk Body), JetBrains Mono (Technical Eyebrows) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Preload hero poster and sequence manifest -->
+  <link rel="preload" as="image" href="/films/perusahaan-loop-poster.jpg" />
+  <link rel="preload" as="fetch" href="/films/t12/manifest.json" crossorigin />
+
+  <style>
+    /* CSS RESET & CORE VARIABLES */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #FFFFFF;
+      --text: #1D1D1F;
+      --text-muted: rgba(29, 29, 31, 0.68);
+      --accent-blue: rgb(11, 107, 174);
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --stage-height: 6000vh;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: clip;
+      width: 100%;
+    }
+
+    /* TALL STAGE SCROLL TRACK */
+    main {
+      position: relative;
+      width: 100%;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: var(--stage-height);
+    }
+
+    /* STICKY VIEWPORT PIN (EVERYTHING LIVES INSIDE THIS 100VH CONTAINER) */
+    .pin {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    /* FULL-BLEED CANVASES */
+    canvas.gl, canvas.lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+
+    canvas.gl {
+      z-index: 1;
+    }
+
+    canvas.lines {
+      z-index: 2;
+    }
+
+    /* BOOT POSTER (INSTANT FIRST PAINT BEFORE WEBGL IS READY) */
+    .boot {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 10;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+    .boot.hidden {
+      opacity: 0;
+    }
+
+    /* AMBIENT BACKGROUND VIDEOS (ONLY 2 REAL VIDEOS FOR HERO & FOOTER) */
+    video.ambient-loop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    /* HEADER & BRAND HUD */
+    header.hud-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      pointer-events: auto;
+    }
+
+    .hud-logo {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hud-brand {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .hud-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+    }
+
+    .hud-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: 9999px;
+      background: var(--text);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+    }
+    .btn-cta:hover {
+      background: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.55rem 1rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(29, 29, 31, 0.15);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: #FFFFFF;
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    /* CHAPTER RAIL (LEFT VERTICAL) */
+    nav.rail {
+      position: absolute;
+      left: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      z-index: 25;
+      pointer-events: auto;
+    }
+
+    .rail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+    }
+    .rail-item.active {
+      opacity: 1;
+    }
+    .rail-tick {
+      width: 14px;
+      height: 1.5px;
+      background: var(--text);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .rail-item.active .rail-tick {
+      width: 24px;
+      background: var(--accent-blue);
+    }
+    .rail-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      display: none;
+    }
+    @media (min-width: 1024px) {
+      .rail-label { display: block; }
+    }
+    @media (max-width: 860px) {
+      nav.rail { display: none !important; }
+      .coord-tl { display: none !important; }
+    }
+
+    /* HTML TEXT OVERLAY LAYERS */
+    .text-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 5vw;
+      z-index: 20;
+      pointer-events: none;
+      will-change: transform, opacity;
+      opacity: 0;
+    }
+
+    .layer-content {
+      width: 100%;
+      max-width: 960px;
+      pointer-events: auto;
+    }
+
+    .hero-panel {
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 24px;
+      padding: clamp(1.75rem, 3.5vw, 3rem);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+      max-width: 840px;
+    }
+
+    /* TYPOGRAPHY SYSTEM */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+    }
+
+    h1, h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      line-height: 1.05;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5.25rem);
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      margin-bottom: 1.25rem;
+    }
+
+    p.subhead {
+      font-family: var(--font-sans);
+      font-size: clamp(1rem, 1.5vw, 1.35rem);
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.55;
+      max-width: 680px;
+    }
+
+    /* CARDS & GRIDS (EMPAT PILAR, PRODUK, CARA PENGADAAN) */
+    .grid-pilar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.25rem;
+    }
+
+    .pilar-card {
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(29, 29, 31, 0.12);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+    .pilar-card h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .pilar-card p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* PRODUK BEATS */
+    .beats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .beat-item {
+      padding: 1.25rem 1.75rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border-left: 3px solid var(--accent-blue);
+      border-top: 1px solid rgba(29, 29, 31, 0.08);
+      border-right: 1px solid rgba(29, 29, 31, 0.08);
+      border-bottom: 1px solid rgba(29, 29, 31, 0.08);
+    }
+    .beat-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-blue);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .beat-text {
+      font-size: 0.9375rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* CARA PENGADAAN STEPS */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.25rem;
+    }
+    .step-card {
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(29, 29, 31, 0.1);
+    }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 0.75rem;
+    }
+    .step-title {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .step-desc {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FAQ ACCORDION */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 2rem;
+      max-width: 800px;
+    }
+    .faq-item {
+      padding: 1.15rem 1.5rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(29, 29, 31, 0.1);
+    }
+    .faq-q {
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .faq-a {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FOOTER LAYER */
+    .footer-content {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(29, 29, 31, 0.12);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .footer-contacts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .footer-contacts a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+    .footer-contacts a:hover {
+      text-decoration: underline;
+    }
+    .footer-line {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: rgba(29, 29, 31, 0.45);
+      letter-spacing: 0.04em;
+    }
+
+    /* MOBILE RESPONSIVE POLISH */
+    @media (max-width: 640px) {
+      .hud-nav {
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+        gap: 0.5rem;
+      }
+      .hud-brand {
+        font-size: 0.75rem;
+      }
+      .hud-tag {
+        font-size: 0.5625rem;
+      }
+      .btn-cta, .btn-secondary {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.5625rem;
+      }
+      .hero-panel {
+        padding: 1.35rem;
+        border-radius: 16px;
+      }
+      .text-layer {
+        padding: 1rem;
+      }
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+      }
+      .card-item {
+        padding: 1.15rem 1.25rem;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+      }
+      .step-card {
+        padding: 1.15rem 1.25rem;
+      }
+      .footer-content {
+        padding: 1.75rem 1.25rem;
+        border-radius: 16px;
+      }
+      .faq-item {
+        padding: 1rem 1.15rem;
+      }
+    }
+
+    /* ACCESSIBILITY: REDUCED MOTION FALLBACK */
+    @media (prefers-reduced-motion: reduce) {
+      .stage {
+        height: auto !important;
+      }
+      .pin {
+        position: relative !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .text-layer {
+        position: relative !important;
+        opacity: 1 !important;
+        transform: none !important;
+        padding: 4rem 2rem !important;
+      }
+      canvas.gl, canvas.lines, video.ambient-loop {
+        display: none !important;
+      }
+      .boot {
+        position: relative !important;
+        height: 50vh !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- INLINE SVG FILTER DEFINITIONS (FE-TURBULENCE ORGANIC WARP/GRAIN) -->
+  <svg class="inkdef" aria-hidden="true">
+    <defs>
+      <filter id="inkf" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015 0.02" numOctaves="3" seed="5" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" result="warp" />
+        <feComposite in="warp" in2="SourceGraphic" operator="in" />
+      </filter>
+    </defs>
+  </svg>
+
+  <main>
+    <section class="stage" id="stage">
+      <div class="pin" id="pin">
+        <!-- 1. WebGL1 Fullscreen Canvas -->
+        <canvas class="gl" id="gl-canvas"></canvas>
+
+        <!-- 2. Lines & Crosshairs 2D Overlay Canvas -->
+        <canvas class="lines" id="lines-canvas"></canvas>
+
+        <!-- 3. Ambient Videos (Photo 1 Hero and Photo 5 Footer) -->
+        <video class="ambient-loop" id="hero-loop" muted loop playsinline preload="metadata" poster="/films/perusahaan-loop-poster.jpg" src="/films/perusahaan-loop.mp4"></video>
+        <video class="ambient-loop" id="footer-loop" muted loop playsinline preload="none" poster="/films/penutup-loop-poster.jpg" src="/films/penutup-loop.mp4"></video>
+
+        <!-- 4. First-Paint Boot Poster -->
+        <img class="boot" id="boot-poster" src="/films/perusahaan-loop-poster.jpg" alt="PT. Agung Wijaya Nitya" />
+
+        <!-- 5. Header / Brand HUD -->
+        <header class="hud-nav" aria-label="Navigasi Utama">
+          <div class="hud-logo">
+            <span class="hud-brand">PT. Agung Wijaya Nitya</span>
+            <span class="hud-tag">Kabupaten Badung, Bali</span>
+          </div>
+          <div class="hud-actions">
+            <a href="https://katalog.inaproc.id/agung-wijaya-nitya" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+              e-Katalog LKPP ↗
+            </a>
+            <a href="#hubungi" class="btn-cta" id="nav-cta">
+              Minta Penawaran →
+            </a>
+          </div>
+        </header>
+
+        <!-- 6. Left Chapter Rail -->
+        <nav class="rail" id="chapter-rail" aria-label="Daftar Bab">
+          <a class="rail-item active" data-progress="0.0" title="Hero">
+            <span class="rail-tick"></span>
+            <span class="rail-label">00 Intro</span>
+          </a>
+          <a class="rail-item" data-progress="0.18" title="Empat Pilar">
+            <span class="rail-tick"></span>
+            <span class="rail-label">01 Empat Pilar</span>
+          </a>
+          <a class="rail-item" data-progress="0.44" title="Produk & Layanan">
+            <span class="rail-tick"></span>
+            <span class="rail-label">02 Produk</span>
+          </a>
+          <a class="rail-item" data-progress="0.68" title="Cara Pengadaan">
+            <span class="rail-tick"></span>
+            <span class="rail-label">03 Pengadaan</span>
+          </a>
+          <a class="rail-item" data-progress="0.88" title="FAQ">
+            <span class="rail-tick"></span>
+            <span class="rail-label">04 FAQ</span>
+          </a>
+          <a class="rail-item" data-progress="0.96" title="Hubungi Kami">
+            <span class="rail-tick"></span>
+            <span class="rail-label">05 Kontak</span>
+          </a>
+        </nav>
+
+        <!-- 7. HTML Text Overlay Layers (Rendered cleanly for SEO & Accessibility) -->
+        
+        <!-- SECTION 1: HERO (0.00 - 0.04) -->
+        <section class="text-layer" id="layer-hero" aria-label="Hero">
+          <div class="layer-content">
+            <div class="hero-panel">
+              <span class="eyebrow">PT. AGUNG WIJAYA NITYA — KABUPATEN BADUNG, BALI</span>
+              <h1>Mitra pengadaan perangkat IT dan kebutuhan institusi.</h1>
+              <p class="subhead">
+                Perangkat keras, perangkat lunak, peralatan, dan layanan purnajual untuk instansi pemerintah dan swasta. Hadir di INAPROC, PaDi UMKM, LPSE, dan platform pengadaan lainnya.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: EMPAT PILAR (0.14 - 0.24) -->
+        <section class="text-layer" id="layer-pilar" aria-label="Empat Pilar">
+          <div class="layer-content">
+            <span class="eyebrow">EMPAT PILAR, SATU MITRA</span>
+            <h2>Empat pilar, satu mitra.</h2>
+            <div class="grid-pilar">
+              <div class="pilar-card">
+                <h3>Software & IT Services</h3>
+                <p>Layanan dan solusi perangkat lunak untuk operasional institusi.</p>
+              </div>
+              <div class="pilar-card">
+                <h3>Computers & Electronics</h3>
+                <p>Perdagangan, perawatan, dan perbaikan perangkat komputer dan elektronik.</p>
+              </div>
+              <div class="pilar-card">
+                <h3>Equipment & Supplies</h3>
+                <p>Peralatan dan perlengkapan institusi, dari penyimpanan hingga perlengkapan kantor.</p>
+              </div>
+              <div class="pilar-card">
+                <h3>Service & Support</h3>
+                <p>Pemeliharaan, penyewaan peralatan, dan dukungan purnajual.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: PRODUK & LAYANAN (0.38 - 0.52) -->
+        <section class="text-layer" id="layer-produk" aria-label="Produk dan Layanan">
+          <div class="layer-content">
+            <span class="eyebrow">PORTFOLIO SOLUSI</span>
+            <h2>Dari perangkat keras sampai layanan, dalam satu rangkaian.</h2>
+            <div class="beats-container">
+              <div class="beat-item">
+                <div class="beat-label">01 // HARDWARE</div>
+                <div class="beat-text">Dimulai dari perangkat keras yang tepat: UPS, monitor, server rack, rak dan lemari penyimpanan, hingga perlengkapan institusi lainnya.</div>
+              </div>
+              <div class="beat-item">
+                <div class="beat-label">02 // SOFTWARE</div>
+                <div class="beat-text">Dihidupkan oleh perangkat lunak dan layanan IT yang sesuai kebutuhan.</div>
+              </div>
+              <div class="beat-item">
+                <div class="beat-label">03 // SERVICE</div>
+                <div class="beat-text">Dijaga oleh layanan pemeliharaan hardware, supaya perangkat tetap andal.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: CARA PENGADAAN (0.64 - 0.74) -->
+        <section class="text-layer" id="layer-cara" aria-label="Cara Pengadaan">
+          <div class="layer-content">
+            <span class="eyebrow">ALUR KERJA TERSTRUKTUR</span>
+            <h2>Pengadaan yang sederhana dan transparan.</h2>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-num">01</div>
+                <div class="step-title">Pilih</div>
+                <div class="step-desc">Telusuri produk kami di katalog INAPROC atau PaDi UMKM, atau hubungi kami untuk kebutuhan khusus.</div>
+              </div>
+              <div class="step-card">
+                <div class="step-num">02</div>
+                <div class="step-title">Minta penawaran</div>
+                <div class="step-desc">Sampaikan kebutuhan dan spesifikasi, kami kirimkan penawaran resmi.</div>
+              </div>
+              <div class="step-card">
+                <div class="step-num">03</div>
+                <div class="step-title">Pesan</div>
+                <div class="step-desc">Lakukan pemesanan melalui platform pengadaan yang Anda gunakan.</div>
+              </div>
+              <div class="step-card">
+                <div class="step-num">04</div>
+                <div class="step-title">Terima & dukung</div>
+                <div class="step-desc">Pengiriman, serah terima BAST, dan dukungan purnajual menyeluruh.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: FAQ (0.84 - 0.92) -->
+        <section class="text-layer" id="layer-faq" aria-label="Pertanyaan Umum">
+          <div class="layer-content">
+            <span class="eyebrow">TANYA JAWAB PENGADAAN</span>
+            <h2>Pertanyaan yang sering diajukan.</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <div class="faq-q">Di platform apa PT. Agung Wijaya Nitya terdaftar?</div>
+                <div class="faq-a">INAPROC, PaDi UMKM, LPSE, dan platform pengadaan lainnya.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">Produk apa saja yang tersedia?</div>
+                <div class="faq-a">Perangkat IT (misalnya UPS, monitor, server rack), peralatan penyimpanan dan perlengkapan institusi, serta layanan pemeliharaan hardware.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">Apakah tersedia layanan pemeliharaan?</div>
+                <div class="faq-a">Ya, layanan pemeliharaan hardware tersedia dan tercantum di katalog kami.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">Bagaimana jika kebutuhan saya tidak ada di katalog?</div>
+                <div class="faq-a">Hubungi kami dan sampaikan kebutuhan Anda, kami bantu carikan solusinya.</div>
+              </div>
+              <div class="faq-item">
+                <div class="faq-q">Di mana lokasi perusahaan?</div>
+                <div class="faq-a">Kabupaten Badung, Bali.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: HUBUNGI KAMI / FOOTER (0.92 - 1.00) -->
+        <section class="text-layer" id="layer-footer" aria-label="Kontak dan Footer">
+          <div class="layer-content">
+            <div class="footer-content">
+              <span class="eyebrow">KONSULTASI & KEMITRAAN</span>
+              <h2>Butuh pengadaan perangkat IT atau perlengkapan institusi?</h2>
+              <div class="footer-contacts">
+                <span>Kabupaten Badung, Bali</span>
+                <span>•</span>
+                <a href="mailto:info@agungwijayanitya.com">info@agungwijayanitya.com</a>
+                <span>•</span>
+                <a href="https://katalog.inaproc.id/agung-wijaya-nitya" target="_blank" rel="noopener noreferrer">Katalog INAPROC ↗</a>
+              </div>
+              <a href="mailto:info@agungwijayanitya.com?subject=Permohonan%20Penawaran%20Pengadaan%20PT%20Agung%20Wijaya%20Nitya" class="btn-cta" style="margin-bottom: 2rem;">
+                Minta Penawaran Sekarang →
+              </a>
+              <div class="footer-line">
+                © PT. Agung Wijaya Nitya. Unlocking Innovation, Empowering Possibilities.
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

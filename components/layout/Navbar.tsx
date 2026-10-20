@@ -28,51 +28,70 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Update active link based on scrollspy
+  // Update active link based on IntersectionObserver and hash URL (A7)
   useEffect(() => {
     if (pathname === "/katalog") return;
 
-    const handleScrollspy = () => {
-      const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-      const elements = navLinks
-        .filter((l) => l.href.startsWith("/#") || l.href.startsWith("#"))
-        .map((l) => ({
-          id: l.id,
-          el: document.getElementById(l.id),
-        }))
-        .filter((item): item is { id: string; el: HTMLElement } => item.el !== null);
-
-      if (elements.length === 0) return;
-
-      // Cek apakah mendekati dasar halaman (highlight kontak)
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 60
-      ) {
-        setScrollActiveId(elements[elements.length - 1].id);
-        return;
+    // Sinkronisasi dengan initial hash jika ada saat load
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hashId = window.location.hash.replace("#", "");
+      if (navLinks.some((l) => l.id === hashId)) {
+        setScrollActiveId(hashId);
       }
+    }
 
-      let currentActive: string | null = null;
-      for (const item of elements) {
-        const top = item.el.offsetTop;
-        const bottom = top + item.el.offsetHeight;
-        if (scrollPosition >= top && scrollPosition < bottom) {
-          currentActive = item.id;
-          break;
+    const sectionIds = ["hero", "ekosistem", "pemeliharaan", "kontak"];
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sectionElements.length === 0) return;
+
+    const visibleRatios: Record<string, number> = {};
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibleRatios[entry.target.id] = entry.isIntersecting
+            ? entry.intersectionRatio
+            : 0;
+        });
+
+        let maxId: string | null = null;
+        let maxRatio = 0;
+
+        for (const [id, ratio] of Object.entries(visibleRatios)) {
+          if (ratio > maxRatio) {
+            maxRatio = ratio;
+            maxId = id;
+          }
         }
-      }
 
-      setScrollActiveId(currentActive);
+        if (maxId && maxRatio > 0) {
+          setScrollActiveId(maxId);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-15% 0px -40% 0px",
+        threshold: [0, 0.15, 0.3, 0.5, 0.7, 1.0],
+      }
+    );
+
+    sectionElements.forEach((el) => observer.observe(el));
+
+    const handleHashChange = () => {
+      const hashId = window.location.hash.replace("#", "");
+      if (navLinks.some((l) => l.id === hashId)) {
+        setScrollActiveId(hashId);
+      }
     };
 
-    window.addEventListener("scroll", handleScrollspy, { passive: true });
-    window.addEventListener("resize", handleScrollspy, { passive: true });
-    handleScrollspy();
+    window.addEventListener("hashchange", handleHashChange);
 
     return () => {
-      window.removeEventListener("scroll", handleScrollspy);
-      window.removeEventListener("resize", handleScrollspy);
+      observer.disconnect();
+      window.removeEventListener("hashchange", handleHashChange);
     };
   }, [pathname, navLinks]);
 
@@ -131,10 +150,10 @@ export default function Navbar() {
               />
             </span>
             <span className="leading-tight">
-              <span className="block font-heading text-base sm:text-lg font-bold text-[#0c1f38] tracking-tight">
+              <span className="block font-heading text-base sm:text-lg font-bold text-ink tracking-tight">
                 PT. Agung Wijaya Nitya
               </span>
-              <span className="block text-xs sm:text-[13px] font-medium text-slate-600">
+              <span className="block text-xs sm:text-[13px] font-medium text-muted">
                 Vendor Pengadaan Barang &amp; Jasa
               </span>
             </span>
@@ -143,7 +162,7 @@ export default function Navbar() {
           {/* Central links (desktop) */}
           <nav
             aria-label="Navigasi utama"
-            className="hidden lg:flex items-center gap-2 text-sm sm:text-[15px] font-medium text-slate-700"
+            className="hidden lg:flex items-center gap-2 text-sm sm:text-[15px] font-medium text-muted"
           >
             {navLinks.map((link) => {
               const isActive = activeId === link.id || (link.id === "hero" && activeId === null);
@@ -152,14 +171,14 @@ export default function Navbar() {
                   key={link.id}
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative inline-flex min-h-11 items-center px-3.5 transition-colors hover:text-[#0c1f38] ${
-                    isActive ? "text-[#0c1f38] font-bold" : "text-slate-600"
+                  className={`relative inline-flex min-h-11 items-center px-3.5 transition-colors hover:text-ink ${
+                    isActive ? "text-ink font-bold" : "text-muted"
                   }`}
                 >
                   {link.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-x-2.5 -bottom-[1px] h-[3px] rounded-full bg-[#c28e2b] transition-all duration-200 ${
+                    className={`absolute inset-x-2.5 -bottom-[1px] h-[3px] rounded-full bg-accent transition-all duration-200 ${
                       isActive ? "opacity-100 scale-x-100" : "opacity-0 scale-x-50"
                     }`}
                   />
@@ -172,7 +191,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href={primaryAction.href}
-              className="hidden min-h-10 items-center justify-center gap-2 rounded-lg bg-[#c28e2b] px-4.5 py-2 text-sm font-semibold text-white shadow-xs transition-all hover:bg-[#ad7e24] active:scale-[0.98] sm:inline-flex"
+              className="hidden min-h-10 items-center justify-center gap-2 rounded-control bg-accent px-4.5 py-2 text-sm font-semibold text-on-accent shadow-xs transition-all hover:bg-accent-hover active:scale-[0.98] sm:inline-flex"
             >
               <CalendarCheck className="h-4 w-4" />
               <span>{primaryAction.label}</span>
@@ -244,7 +263,7 @@ export default function Navbar() {
                   href={primaryAction.href}
                   onClick={() => setMenuOpen(false)}
                   tabIndex={menuOpen ? 0 : -1}
-                  className="flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#c28e2b] text-base font-semibold text-white transition-colors hover:bg-[#ad7e24]"
+                  className="flex min-h-12 items-center justify-center gap-2 rounded-control bg-accent text-base font-semibold text-on-accent transition-colors hover:bg-accent-hover"
                 >
                   <CalendarCheck className="h-5 w-5" />
                   <span>{primaryAction.label}</span>

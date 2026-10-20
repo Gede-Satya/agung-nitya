@@ -88,15 +88,6 @@ export interface SiteContent {
       label: string;
       href: string;
     };
-    categoryChips: string[];
-    mock: {
-      badge: string;
-      title: string;
-      tabs: string[];
-      metrics: { label: string; value: string }[];
-      rows: { label: string; detail: string; tag: string }[];
-      footnote: string;
-    };
   };
   /** Trust bar di bawah hero — hanya kredensial terverifikasi (DESIGN.md §1). */
   trustBar: {
@@ -203,7 +194,7 @@ export const SITE_CONTENT: SiteContent = {
       { label: "Beranda", href: "/", id: "hero" },
       { label: "Tentang Kami", href: "/#ekosistem", id: "ekosistem" },
       { label: "Produk", href: "/katalog", id: "katalog" },
-      { label: "Layanan", href: "/#pemeliharaan", id: "pemeliharaan" },
+      { label: "Pemeliharaan", href: "/#pemeliharaan", id: "pemeliharaan" },
       { label: "Kontak", href: "/#kontak", id: "kontak" },
     ],
     primaryAction: {
@@ -214,7 +205,7 @@ export const SITE_CONTENT: SiteContent = {
 
   hero: {
     badge: "Penyedia Aktif INAPROC Katalog Elektronik",
-    title: "Vendor Pengadaan Barang & Jasa Terpercaya di Bali",
+    title: "Vendor pengadaan barang & jasa untuk instansi di Bali",
     subtitle:
       "Melayani kebutuhan perangkat keras IT, peralatan kantor, medis, dan rumah tangga untuk instansi pemerintah & swasta.",
     ctaPrimary: {
@@ -224,28 +215,6 @@ export const SITE_CONTENT: SiteContent = {
     ctaSecondary: {
       label: "Ajukan Penawaran",
       href: "/#kontak",
-    },
-    categoryChips: [
-      "Komputer & Workstation",
-      "Server Rack & Storage",
-      "Backup Power (UPS)",
-      "Commercial Display",
-    ],
-    mock: {
-      badge: "Ilustrasi antarmuka",
-      title: "Katalog pengadaan",
-      tabs: ["Etalase", "Kategori", "Pemeliharaan"],
-      metrics: [
-        { label: "Produk terdaftar", value: "742" },
-        { label: "Status penyedia", value: "Aktif" },
-        { label: "Kualifikasi", value: "UMKK" },
-      ],
-      rows: [
-        { label: "Peralatan Elektronik", detail: "Etalase resmi", tag: "Barang" },
-        { label: "Jasa Layanan", detail: "Penawaran resmi", tag: "Jasa" },
-        { label: "Perangkat Lunak", detail: "Katalog digital", tag: "Digital" },
-      ],
-      footnote: "Ilustrasi antarmuka. Data resmi mengikuti etalase INAPROC.",
     },
   },
 

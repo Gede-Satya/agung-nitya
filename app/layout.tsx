@@ -3,9 +3,9 @@ import { fontVariables } from "@/lib/fonts";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import "./globals.css";
 
-const title = "PT Agung Wijaya Nitya | Katalog dan Solusi Pengadaan";
+const title = "PT Agung Wijaya Nitya | Vendor Pengadaan Barang & Jasa Instansi";
 const description =
-  "Penyedia aktif UMKK pada INAPROC Katalog Elektronik untuk kebutuhan perangkat komputasi, infrastruktur TI, dan perlengkapan instansi pemerintah.";
+  "Penyedia aktif UMKK di INAPROC Katalog Elektronik LKPP yang berbasis di Kabupaten Badung, Bali. Melayani pengadaan perangkat keras TI, peralatan kantor & laboratorium, elektronik rumah tangga, dan jasa pemeliharaan untuk instansi pemerintah maupun swasta.";
 
 export const metadata: Metadata = {
   title,
@@ -13,10 +13,13 @@ export const metadata: Metadata = {
   applicationName: "PT Agung Wijaya Nitya",
   keywords: [
     "PT Agung Wijaya Nitya",
+    "vendor pengadaan barang dan jasa",
     "INAPROC Katalog Elektronik",
     "katalog LKPP",
     "pengadaan perangkat TI",
-    "perangkat komputasi instansi",
+    "peralatan kantor instansi",
+    "peralatan laboratorium",
+    "jasa pemeliharaan perangkat TI",
     "penyedia UMKK Badung Bali",
     "pengadaan pemerintah",
   ],
@@ -46,7 +49,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id" className={`${fontVariables}`}>
-      <body className="bg-canvas text-ink antialiased selection:bg-accent/20 selection:text-ink">
+        <body className="bg-canvas text-ink antialiased selection:bg-accent/30 selection:text-ink">
         <a href="#konten-utama" className="skip-link">
           Lewati ke konten utama
         </a>

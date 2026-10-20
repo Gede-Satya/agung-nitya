@@ -94,7 +94,7 @@ Use a compact, consistent header with a visible company mark and these destinati
 
 - **Katalog**
 
-- **Layanan** (only when the service content is confirmed). It contains the Pemeliharaan section (`#pemeliharaan`, see 4.1). Until the owner confirms the services, the nav item may point to the section, but every service claim inside it stays flagged as draft.
+- **Pemeliharaan** (only when the service content is confirmed). It contains the Pemeliharaan section (`#pemeliharaan`, see 4.1). Until the owner confirms the services, the nav item may point to the section, but every service claim inside it stays flagged as draft. Label it `Pemeliharaan`, not the generic `Layanan`.
 
 - **Tentang / Ekosistem**
 
@@ -113,6 +113,8 @@ On smaller screens, place navigation links in an accessible menu. Keep the quota
   - A small set of featured items or categories, with a clear link to the full catalog.
   - Maintenance section (Pemeliharaan, see 4.1).
   - Verifiable provider information and contact details.
+
+  Fixed order of home sections: hero → trust bar (verified credentials) and key metrics → category/product cards → e-catalog gallery → Pemeliharaan → Ekosistem (provider narrative, why-choose-us points, and procurement pathway in one section) → closing CTA → footer. Keep “why choose us” inside the Ekosistem section; do not give it a separate band.
 
 1. **Catalog (****`/katalog`****)**
   - Dedicated discovery page for the available product and service listings.
@@ -186,7 +188,9 @@ Do not imply that registered KBLI categories are equivalent to currently listed 
 - h2: “Dirancang untuk dirawat, bukan diganti.”
 - Closing CTA: “Jadwalkan pemeliharaan” → `/?tujuan=pemeliharaan#kontak`
 
-**Visual:** one generic, unbranded exploded-view laptop (a 2D layered image or the section’s own lightweight animation). It is not part of the hero 3D scene and must not conflict with it. Use an original or rights-cleared image. Do not use a manufacturer’s product photo.
+**Visual:** one generic, unbranded exploded-view laptop (a 2D layered image or the section’s own lightweight animation). It is not part of the hero band and must not conflict with it. Use an original or rights-cleared image. Do not use a manufacturer’s product photo.
+
+Implementation: the section is a pinned stage that scrubs a 300-frame 2D teardown sequence (`/frames/laptop/*.webp`, poster frame `0230.webp`) as the visitor scrolls through `#pemeliharaan`; hotspot markers and the side cards stay in sync with the active stage. With `prefers-reduced-motion` the pinned scroll is dropped and the frames are not scrubbed. See the motion-scene rules in §7 for payload, preloading, and fallbacks.
 
 **Components and numbering.** Fixed order, top to bottom, matching the physical layers in the image:
 
@@ -432,21 +436,19 @@ Use product storytelling as a deliberate part of the home-page experience: a con
 
 - Do not place text or the primary CTA over moving footage. Keep the section’s meaning and key information available as ordinary HTML text.
 
-### 3D scene
+### Home-page motion scene
 
-- Include one focused 3D storytelling scene on the home page, not throughout the site. Its purpose is to make the relationship between equipment, software, and service understandable—not to simulate a specific product or imply an unverified capability.
+- The home hero is a photo-led navy band with a gradient scrim; it does not rely on WebGL. Do not introduce a 3D/WebGL scene unless the owner asks for one and the payload is justified.
 
-- Concept: a clean, generic, unbranded IT device shown assembled, then gently separated into a few understandable layers. A neutral interface panel may represent software, and simple connection lines may represent implementation/support. Avoid healthcare-specific visuals unless a specific verified software listing is being described.
+- Exactly one scroll-driven motion story is allowed on the home page: the Pemeliharaan exploded-view frame sequence (`#pemeliharaan`, see 4.1). Keep it scoped to that section, keep the surrounding copy readable as ordinary HTML, and never trap scrolling—the page must keep scrolling naturally past the section.
 
-- Use original procedural geometry or a rights-cleared model. Do not copy a manufacturer’s design or present the generic model as an exact item sold by the company.
+- The sequence must degrade gracefully: with `prefers-reduced-motion` render a single static frame; if frames are unavailable, keep the first frame and the section copy/CTA usable without JavaScript.
 
-- Keep the camera calm: a slow orbit or controlled dolly, subtle idle motion, and clear cause-and-effect transitions. No spinning, shake, continuous scroll trapping, bloom, particles, cyberpunk/neon effects, or heavy glassmorphism.
+- Preload frames in the background after the core page content, pause work while the section is off-screen, and load a reduced frame step on small screens.
 
-- Load the scene after the core page content, pause it off-screen or when the tab is hidden, cap device pixel ratio on mobile, and provide a static poster/illustration fallback. The visitor must not need WebGL to understand the offer or reach the catalog/contact CTA.
+- Payload ceiling: the current sequence is 300 frames (~24.7 MB total). Treat that as the ceiling—reduce frame count or re-encode before adding any other heavy motion asset, and lower it whenever a lighter result keeps the story readable.
 
-- On mobile, shorten or simplify the animation rather than forcing a long pinned scroll sequence. With `prefers-reduced-motion`, show the static scene and remove camera travel and idle movement.
-
-- The 3D scene and the Pemeliharaan visual (4.1) are separate. The 3D scene explains the offer at a high level; Pemeliharaan lists component-level services. Do not reuse one as the other.
+- The home-page motion scene and the Pemeliharaan visual (4.1) are the same asset by design: there is no separate 3D scene to keep in sync.
 
 ### Asset and visual rules
 

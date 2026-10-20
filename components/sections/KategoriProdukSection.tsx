@@ -67,7 +67,7 @@ export default function KategoriProdukSection() {
                       {item.desc}
                     </p>
 
-                    <span className="mt-auto pt-4 text-xs font-medium uppercase tracking-wide text-accent-ink">
+                    <span className="mt-auto pt-4 text-xs font-medium uppercase tracking-wide text-muted">
                       {item.items}
                     </span>
 
