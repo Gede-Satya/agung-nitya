@@ -82,13 +82,6 @@ export function createLinesOverlay(canvas: HTMLCanvasElement): LinesOverlay {
       // Crosshair ticks at key intersections
       drawCrosshair(railX, topY, 5 * dpr);
       drawCrosshair(railX, botY, 5 * dpr);
-
-      // Technical progress ticker text on lower-left
-      const pct = Math.min(100, Math.max(0, Math.round(progress * 100)))
-        .toString()
-        .padStart(2, "0");
-      ctx.fillText(`SCRUB // ${pct}%`, railX + 12 * dpr, botY - 14 * dpr);
-      ctx.fillText(`AWN · BADUNG [BALI]`, padX, topY - 12 * dpr);
     },
   };
 }
