@@ -57,7 +57,7 @@ scenePills.forEach((pill) => {
     const targetP = parseFloat(pill.dataset.progress || "0");
     if (!heroWrapper) return;
     const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
-    const holdDistance = Math.min(window.innerHeight * 0.75, totalScrollDistance * 0.2);
+    const holdDistance = totalScrollDistance * 0.05;
     const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
     const targetY = heroWrapper.offsetTop + targetP * activeScrubDistance;
     window.scrollTo({
@@ -122,12 +122,26 @@ function tick(timestamp: number) {
     const heroRect = heroWrapper.getBoundingClientRect();
     const heroScrolled = Math.max(0, -heroRect.top);
 
-    // Hold buffer: scene 05 reaches 100% (SCRUB // 100%) while still fully pinned,
-    // and stays held at 100% full-screen before the wrapper ends and releases sticky.
-    const holdDistance = Math.min(window.innerHeight * 0.75, totalScrollDistance * 0.2);
+    // Wrapper progress strictly represents 0% to 100% of the outer hero wrapper
+    const wrapperProgress = totalScrollDistance > 0 ? (heroScrolled / totalScrollDistance) : 0;
+
+    // Active scrub completes over 95% of scroll; 95% to 100% holds scene 05 at 100% full-screen
+    const holdDistance = totalScrollDistance * 0.05;
     const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
 
     targetProgress = totalScrollDistance > 0 ? Math.min(1, Math.max(0, heroScrolled / activeScrubDistance)) : 0;
+
+    // When the hero wrapper has passed and sticky has naturally released, hide HUD
+    const heroSceneHud = document.getElementById("hero-scene-hud");
+    if (heroSceneHud) {
+      if (heroScrolled > totalScrollDistance) {
+        heroSceneHud.style.opacity = "0";
+        heroSceneHud.style.pointerEvents = "none";
+      } else {
+        heroSceneHud.style.opacity = "1";
+        heroSceneHud.style.pointerEvents = "auto";
+      }
+    }
   }
 
   // Smooth lerp progress
@@ -165,111 +179,49 @@ function tick(timestamp: number) {
     scrubIndicator.textContent = `SCRUB // ${Math.round(progress * 100).toString().padStart(2, "0")}%`;
   }
 
-  // Video loops management
-  if (progress < 0.08) {
-    heroVideo.style.opacity = `${(1.0 - smoothstep(0.02, 0.08, progress)) * 0.95}`;
-    playVideo(heroVideo);
-  } else {
-    heroVideo.style.opacity = "0";
-  }
-
-  if (progress > 0.85) {
-    footerVideo.style.opacity = `${smoothstep(0.85, 0.95, progress) * 0.95}`;
-    playVideo(footerVideo);
-  } else {
-    footerVideo.style.opacity = "0";
-  }
-
-  // Frame selection across the 5 scenes
+  // Frame selection across the 5 scenes (crisp clean transitions, exactly one scene dominant)
   let imgA: HTMLImageElement | HTMLVideoElement | null = null;
   let imgB: HTMLImageElement | HTMLVideoElement | null = null;
-  let mixVal = 0;
-  const transitionType = 0; // Crossfade between frames
-  const veilVal = 0.0; // 0.0 = Full natural documentary photo exposure, no dimming
-  let zoomVal = 0.0;
+  const mixVal = 0.0;
+  const transitionType = 0;
+  const veilVal = 0.0;
+  const zoomVal = 0.0;
   const panX = 0.0;
   const panY = 0.0;
 
   if (progress < 0.20) {
     // SCENE 1: Company Exterior (0.00 - 0.20)
-    const norm = progress / 0.20;
-    if (norm < 0.15) {
-      // First moments: photo 1 / ambient loop
-      imgA = heroVideo.readyState >= 2 ? heroVideo : bootPoster;
-      imgB = sequences.t12.nearest(0);
-      mixVal = norm / 0.15;
-      zoomVal = norm * 0.02;
-    } else {
-      // Walking sequence t12 -> Office
-      const t = (norm - 0.15) / 0.85;
-      const frameIndex = t * (sequences.t12.count - 1);
-      sequences.t12.setWant(frameIndex);
-      imgA = sequences.t12.nearest(Math.floor(frameIndex));
-      imgB = sequences.t12.nearest(Math.ceil(frameIndex));
-      mixVal = frameIndex - Math.floor(frameIndex);
-    }
+    const norm = Math.min(1, Math.max(0, progress / 0.20));
+    const frameIndex = norm * (sequences.t12.count - 1);
+    sequences.t12.setWant(frameIndex);
+    imgA = sequences.t12.nearest(Math.round(frameIndex));
+    imgB = imgA;
   } else if (progress < 0.40) {
     // SCENE 2: Office (0.20 - 0.40)
-    const norm = (progress - 0.20) / 0.20;
-    if (norm < 0.15) {
-      // Office held view
-      imgA = sequences.t12.nearest(sequences.t12.count - 1);
-      imgB = sequences.t23.nearest(0);
-      mixVal = norm / 0.15;
-      zoomVal = norm * 0.02;
-    } else {
-      // Walking sequence t23 -> Server Room
-      const t = (norm - 0.15) / 0.85;
-      const frameIndex = t * (sequences.t23.count - 1);
-      sequences.t23.setWant(frameIndex);
-      imgA = sequences.t23.nearest(Math.floor(frameIndex));
-      imgB = sequences.t23.nearest(Math.ceil(frameIndex));
-      mixVal = frameIndex - Math.floor(frameIndex);
-    }
+    const norm = Math.min(1, Math.max(0, (progress - 0.20) / 0.20));
+    const frameIndex = norm * (sequences.t23.count - 1);
+    sequences.t23.setWant(frameIndex);
+    imgA = sequences.t23.nearest(Math.round(frameIndex));
+    imgB = imgA;
   } else if (progress < 0.60) {
     // SCENE 3: Server Room (0.40 - 0.60)
-    const norm = (progress - 0.40) / 0.20;
-    if (norm < 0.15) {
-      // Server room held view
-      imgA = sequences.t23.nearest(sequences.t23.count - 1);
-      imgB = sequences.t34.nearest(0);
-      mixVal = norm / 0.15;
-      zoomVal = norm * 0.02;
-    } else {
-      // Walking sequence t34 -> Maintenance Room
-      const t = (norm - 0.15) / 0.85;
-      const frameIndex = t * (sequences.t34.count - 1);
-      sequences.t34.setWant(frameIndex);
-      imgA = sequences.t34.nearest(Math.floor(frameIndex));
-      imgB = sequences.t34.nearest(Math.ceil(frameIndex));
-      mixVal = frameIndex - Math.floor(frameIndex);
-    }
+    const norm = Math.min(1, Math.max(0, (progress - 0.40) / 0.20));
+    const frameIndex = norm * (sequences.t34.count - 1);
+    sequences.t34.setWant(frameIndex);
+    imgA = sequences.t34.nearest(Math.round(frameIndex));
+    imgB = imgA;
   } else if (progress < 0.80) {
     // SCENE 4: Hardware Maintenance (0.60 - 0.80)
-    const norm = (progress - 0.60) / 0.20;
-    if (norm < 0.15) {
-      // Maintenance room held view
-      imgA = sequences.t34.nearest(sequences.t34.count - 1);
-      imgB = sequences.t45.nearest(0);
-      mixVal = norm / 0.15;
-      zoomVal = norm * 0.02;
-    } else {
-      // Walking sequence t45 -> Closing Scene
-      const t = (norm - 0.15) / 0.85;
-      const frameIndex = t * (sequences.t45.count - 1);
-      sequences.t45.setWant(frameIndex);
-      imgA = sequences.t45.nearest(Math.floor(frameIndex));
-      imgB = sequences.t45.nearest(Math.ceil(frameIndex));
-      mixVal = frameIndex - Math.floor(frameIndex);
-    }
+    const norm = Math.min(1, Math.max(0, (progress - 0.60) / 0.20));
+    const frameIndex = norm * (sequences.t45.count - 1);
+    sequences.t45.setWant(frameIndex);
+    imgA = sequences.t45.nearest(Math.round(frameIndex));
+    imgB = imgA;
   } else {
-    // SCENE 5: Closing Scene (0.80 - 1.00)
-    const norm = (progress - 0.80) / 0.20;
+    // SCENE 5: Closing Consultation Desk (0.80 - 1.00)
     const held = sequences.t45.nearest(sequences.t45.count - 1);
     imgA = held;
-    imgB = footerVideo.readyState >= 2 ? footerVideo : held;
-    mixVal = Math.min(1, norm * 1.5);
-    zoomVal = norm * 0.02;
+    imgB = held;
   }
 
   // Fallback to boot poster if textures are not ready yet

@@ -40,6 +40,8 @@ export function createGlRenderer(canvas: HTMLCanvasElement): GlRenderer {
   let program: WebGLProgram | null = null;
   let texA: WebGLTexture | null = null;
   let texB: WebGLTexture | null = null;
+  let lastImgA: any = null;
+  let lastImgB: any = null;
 
   // Uniform locations
   let locUa: WebGLUniformLocation | null = null;
@@ -194,16 +196,22 @@ export function createGlRenderer(canvas: HTMLCanvasElement): GlRenderer {
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texA);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-      if (imgA && (("naturalWidth" in imgA && imgA.naturalWidth > 0) || ("videoWidth" in imgA && imgA.videoWidth > 0))) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgA);
+      if (imgA && (imgA !== lastImgA || ("videoWidth" in imgA && imgA.videoWidth > 0))) {
+        if (("naturalWidth" in imgA && imgA.naturalWidth > 0) || ("videoWidth" in imgA && imgA.videoWidth > 0)) {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgA);
+          lastImgA = imgA;
+        }
       }
 
       // Upload Texture B (Texture Unit 1)
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, texB);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-      if (imgB && (("naturalWidth" in imgB && imgB.naturalWidth > 0) || ("videoWidth" in imgB && imgB.videoWidth > 0))) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgB);
+      if (imgB && (imgB !== lastImgB || ("videoWidth" in imgB && imgB.videoWidth > 0))) {
+        if (("naturalWidth" in imgB && imgB.naturalWidth > 0) || ("videoWidth" in imgB && imgB.videoWidth > 0)) {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imgB);
+          lastImgB = imgB;
+        }
       }
 
       // Pass Uniforms
