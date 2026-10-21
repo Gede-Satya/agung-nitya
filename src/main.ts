@@ -22,10 +22,11 @@ const heroBottomBar = document.getElementById("hero-bottom-bar");
 // Check reduced motion preference
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Header scroll listener
+// Header scroll listener: keeps navbar completely transparent throughout the 500vh hero
 function onScroll() {
-  if (siteHeader) {
-    if (window.scrollY > 60) {
+  if (siteHeader && heroWrapper) {
+    const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
+    if (window.scrollY > totalScrollDistance) {
       siteHeader.classList.add("scrolled");
     } else {
       siteHeader.classList.remove("scrolled");
@@ -135,6 +136,7 @@ window.addEventListener("resize", onResize, { passive: true });
 // Animation State
 let targetProgress = 0;
 let progress = 0;
+let lastTimestamp = 0;
 let isBooted = false;
 let currentSceneIndex = 0;
 
@@ -176,10 +178,29 @@ function tick(timestamp: number) {
         heroBottomBar.style.pointerEvents = "auto";
       }
     }
+    if (siteHeader) {
+      if (heroScrolled > totalScrollDistance) {
+        siteHeader.classList.add("scrolled");
+      } else {
+        siteHeader.classList.remove("scrolled");
+      }
+    }
   }
 
-  // Smooth lerp progress
-  progress = lerp(progress, targetProgress, 0.15);
+  if (lastTimestamp === 0) {
+    lastTimestamp = timestamp;
+  }
+  const dt = Math.min(0.1, Math.max(0.001, (timestamp - lastTimestamp) * 0.001));
+  lastTimestamp = timestamp;
+
+  // Frame-rate independent exponential smoothing (lambda = 25.0)
+  // Delivers instant direct feel (~28ms half-life) identical across 60Hz, 120Hz, and 144Hz
+  const alpha = 1.0 - Math.exp(-25.0 * dt);
+  if (Math.abs(targetProgress - progress) < 0.00005) {
+    progress = targetProgress;
+  } else {
+    progress += (targetProgress - progress) * alpha;
+  }
 
   // Update sequences
   for (const key in sequences) {
@@ -220,10 +241,10 @@ function tick(timestamp: number) {
     scrubIndicator.textContent = `SCRUB // ${Math.round(progress * 100).toString().padStart(2, "0")}%`;
   }
 
-  // Frame selection across the 5 scenes (crisp clean transitions, exactly one scene dominant)
+  // Frame selection across the 5 scenes with sub-frame blending and boundary lookahead
   let imgA: HTMLImageElement | HTMLVideoElement | null = null;
   let imgB: HTMLImageElement | HTMLVideoElement | null = null;
-  const mixVal = 0.0;
+  let mixVal = 0.0;
   const transitionType = 0;
   const veilVal = 0.0;
   const zoomVal = 0.0;
@@ -233,36 +254,80 @@ function tick(timestamp: number) {
   if (progress < 0.20) {
     // SCENE 1: Company Exterior (0.00 - 0.20)
     const norm = Math.min(1, Math.max(0, progress / 0.20));
-    const frameIndex = norm * (sequences.t12.count - 1);
-    sequences.t12.setWant(frameIndex);
-    imgA = sequences.t12.nearest(Math.round(frameIndex));
-    imgB = imgA;
+    const frameFloat = norm * (sequences.t12.count - 1);
+    sequences.t12.setWant(frameFloat);
+    if (progress > 0.14) {
+      sequences.t23.setWant(0);
+    }
+    const pair = sequences.t12.getPair(frameFloat);
+    if (pair) {
+      imgA = pair.imgA;
+      imgB = pair.imgB;
+      mixVal = pair.mixVal;
+    }
   } else if (progress < 0.40) {
     // SCENE 2: Office (0.20 - 0.40)
     const norm = Math.min(1, Math.max(0, (progress - 0.20) / 0.20));
-    const frameIndex = norm * (sequences.t23.count - 1);
-    sequences.t23.setWant(frameIndex);
-    imgA = sequences.t23.nearest(Math.round(frameIndex));
-    imgB = imgA;
+    const frameFloat = norm * (sequences.t23.count - 1);
+    sequences.t23.setWant(frameFloat);
+    if (progress < 0.24) {
+      sequences.t12.setWant(sequences.t12.count - 1);
+    } else if (progress > 0.34) {
+      sequences.t34.setWant(0);
+    }
+    const pair = sequences.t23.getPair(frameFloat);
+    if (pair) {
+      imgA = pair.imgA;
+      imgB = pair.imgB;
+      mixVal = pair.mixVal;
+    }
   } else if (progress < 0.60) {
     // SCENE 3: Server Room (0.40 - 0.60)
     const norm = Math.min(1, Math.max(0, (progress - 0.40) / 0.20));
-    const frameIndex = norm * (sequences.t34.count - 1);
-    sequences.t34.setWant(frameIndex);
-    imgA = sequences.t34.nearest(Math.round(frameIndex));
-    imgB = imgA;
+    const frameFloat = norm * (sequences.t34.count - 1);
+    sequences.t34.setWant(frameFloat);
+    if (progress < 0.44) {
+      sequences.t23.setWant(sequences.t23.count - 1);
+    } else if (progress > 0.54) {
+      sequences.t45.setWant(0);
+    }
+    const pair = sequences.t34.getPair(frameFloat);
+    if (pair) {
+      imgA = pair.imgA;
+      imgB = pair.imgB;
+      mixVal = pair.mixVal;
+    }
   } else if (progress < 0.80) {
     // SCENE 4: Hardware Maintenance (0.60 - 0.80)
     const norm = Math.min(1, Math.max(0, (progress - 0.60) / 0.20));
-    const frameIndex = norm * (sequences.t45.count - 1);
-    sequences.t45.setWant(frameIndex);
-    imgA = sequences.t45.nearest(Math.round(frameIndex));
-    imgB = imgA;
+    const frameFloat = norm * (sequences.t45.count - 1);
+    sequences.t45.setWant(frameFloat);
+    if (progress < 0.64) {
+      sequences.t34.setWant(sequences.t34.count - 1);
+    } else if (progress > 0.74) {
+      sequences.t45.setWant(sequences.t45.count - 1);
+    }
+    const pair = sequences.t45.getPair(frameFloat);
+    if (pair) {
+      imgA = pair.imgA;
+      imgB = pair.imgB;
+      mixVal = pair.mixVal;
+    }
   } else {
     // SCENE 5: Closing Consultation Desk (0.80 - 1.00)
-    const held = sequences.t45.nearest(sequences.t45.count - 1);
-    imgA = held;
-    imgB = held;
+    sequences.t45.setWant(sequences.t45.count - 1);
+    const endFrame = sequences.t45.count - 1;
+    const pair = sequences.t45.getPair(endFrame);
+    if (pair) {
+      imgA = pair.imgA;
+      imgB = pair.imgB;
+      mixVal = 0.0;
+    } else {
+      const held = sequences.t45.nearest(endFrame);
+      imgA = held;
+      imgB = held;
+      mixVal = 0.0;
+    }
   }
 
   // Fallback to boot poster if textures are not ready yet

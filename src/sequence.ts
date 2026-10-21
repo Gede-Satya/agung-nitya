@@ -1,3 +1,9 @@
+export interface FramePair {
+  imgA: HTMLImageElement;
+  imgB: HTMLImageElement;
+  mixVal: number;
+}
+
 export interface Sequence {
   base: string;
   count: number;
@@ -8,11 +14,12 @@ export interface Sequence {
   setWant: (index: number) => void;
   getFrame: (index: number) => HTMLImageElement | null;
   nearest: (index: number) => HTMLImageElement | null;
+  getPair: (frameFloat: number) => FramePair | null;
   update: (currentProgress: number) => void;
 }
 
 // Global in-flight loader queue scheduler (max 6 parallel requests)
-const MAX_CONCURRENT = 5;
+const MAX_CONCURRENT = 6;
 let activeRequests = 0;
 const pendingQueue: (() => void)[] = [];
 
@@ -123,7 +130,7 @@ export function makeSequence(
   }
 
   function preDecodeNeighbors(center: number) {
-    for (let delta = -3; delta <= 3; delta++) {
+    for (let delta = -2; delta <= 3; delta++) {
       if (delta === 0) continue;
       const idx = center + delta;
       if (idx >= 0 && idx < count && frames[idx] && "decode" in frames[idx]!) {
@@ -132,18 +139,18 @@ export function makeSequence(
     }
   }
 
-  function tickLoader() {
-    // 1. Scan outward ±24 frames from want
+  function tickLoader(): boolean {
+    // 1. Scan outward ±24 frames from want (forward biased)
     for (let d = 0; d <= 24; d++) {
       const right = want + d;
       if (right < count && status[right] === "idle") {
         fetchFrame(right);
-        return;
+        return true;
       }
       const left = want - d;
       if (left >= 0 && status[left] === "idle") {
         fetchFrame(left);
-        return;
+        return true;
       }
     }
 
@@ -151,8 +158,17 @@ export function makeSequence(
     for (let idx of order) {
       if (status[idx] === "idle") {
         fetchFrame(idx);
-        return;
+        return true;
       }
+    }
+
+    return false;
+  }
+
+  function pumpLoader() {
+    while (activeRequests < MAX_CONCURRENT) {
+      const scheduled = tickLoader();
+      if (!scheduled) break;
     }
   }
 
@@ -174,14 +190,51 @@ export function makeSequence(
     return null;
   }
 
+  function getPair(frameFloat: number): FramePair | null {
+    const clamped = Math.max(0, Math.min(count - 1, frameFloat));
+    const floorIndex = Math.floor(clamped);
+    const ceilIndex = Math.min(count - 1, floorIndex + 1);
+    const fraction = clamped - floorIndex;
+
+    const frameA = frames[floorIndex];
+    const frameB = frames[ceilIndex];
+
+    const isReadyA = frameA !== null && frameA.naturalWidth > 0;
+    const isReadyB = frameB !== null && frameB.naturalWidth > 0;
+
+    // Ideal: both adjacent consecutive frames are ready -> smooth sub-frame interpolation
+    if (isReadyA && isReadyB) {
+      if (floorIndex === ceilIndex) {
+        return { imgA: frameA!, imgB: frameA!, mixVal: 0.0 };
+      }
+      return { imgA: frameA!, imgB: frameB!, mixVal: fraction };
+    }
+
+    // Stable zero-flicker fallback: if one is ready, hold it for both slots with mixVal = 0.0
+    if (isReadyA) {
+      return { imgA: frameA!, imgB: frameA!, mixVal: 0.0 };
+    }
+    if (isReadyB) {
+      return { imgA: frameB!, imgB: frameB!, mixVal: 0.0 };
+    }
+
+    // Neither is ready: use nearest available frame for both slots
+    const near = nearest(floorIndex);
+    if (near && near.naturalWidth > 0) {
+      return { imgA: near, imgB: near, mixVal: 0.0 };
+    }
+
+    return null;
+  }
+
   function update(currentProgress: number) {
-    const lead = 0.08;
+    const lead = 0.10;
     const inRange = currentProgress >= from - lead && currentProgress <= to + lead;
 
     if (!inRange) {
-      // Memory capping: if > 0.25 away from scroll range, prune frame references
+      // Memory capping: if > 0.35 away from scroll range, prune non-boundary frames
       const dist = Math.min(Math.abs(currentProgress - from), Math.abs(currentProgress - to));
-      if (dist > 0.25) {
+      if (dist > 0.35) {
         for (let i = 0; i < count; i++) {
           if (frames[i] && i !== 0 && i !== count - 1) {
             frames[i]!.src = "";
@@ -193,10 +246,8 @@ export function makeSequence(
       return;
     }
 
-    // While in range, keep the pipe loaded
-    if (activeRequests < MAX_CONCURRENT) {
-      tickLoader();
-    }
+    // While in range, keep the pipeline saturated
+    pumpLoader();
   }
 
   function setWant(index: number) {
@@ -205,7 +256,7 @@ export function makeSequence(
       want = nextWant;
       preDecodeNeighbors(want);
     }
-    tickLoader();
+    pumpLoader();
   }
 
   // Pre-seed first and last frames immediately
@@ -224,6 +275,7 @@ export function makeSequence(
     setWant,
     getFrame: (i: number) => frames[Math.max(0, Math.min(count - 1, Math.round(i)))],
     nearest,
+    getPair,
     update,
   };
 }
