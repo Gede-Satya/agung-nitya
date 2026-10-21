@@ -94,40 +94,33 @@ export default function PearScrollytellingStage() {
         {/* ──────────────────────────────────────────────────────────
             TOP HEADER / BRANDING BAR
             ────────────────────────────────────────────────────────── */}
-        <header className="relative z-30 w-full px-5 sm:px-8 md:px-12 pt-5 sm:pt-6 flex items-center justify-between pointer-events-auto">
-          {/* Logo Monogram */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg border border-accent/40 bg-accent/10 flex items-center justify-center text-accent font-serif font-bold text-base shadow-[0_0_15px_rgba(201,162,39,0.2)]">
-              Ω
-            </div>
-            <div className="flex flex-col">
-              <span className="font-mono text-[11px] tracking-widest text-white uppercase font-bold">
-                PT AGUNG WIJAYA NITYA
-              </span>
-              <span className="font-mono text-[9px] tracking-wider text-accent/80">
-                PENYEDIA RESMI INAPROC · BADUNG, BALI
-              </span>
-            </div>
+        <header className="relative z-30 w-full px-6 sm:px-10 md:px-16 pt-6 flex items-center justify-between pointer-events-auto">
+          {/* Brand */}
+          <div className="flex flex-col">
+            <span className="font-heading text-sm sm:text-base font-bold text-white tracking-tight">
+              PT Agung Wijaya Nitya
+            </span>
+            <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.12em] font-medium text-[#cde1fa]/80 uppercase">
+              PROCUREMENT PARTNER - BADUNG, BALI
+            </span>
           </div>
+
+          {/* Nav Links (Desktop) */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-white/85">
+            <button onClick={() => handleSelectChapter(0.35)} className="hover:text-white transition-colors">Produk</button>
+            <button onClick={() => handleSelectChapter(0.6)} className="hover:text-white transition-colors">Layanan</button>
+            <button onClick={() => handleSelectChapter(0.82)} className="hover:text-white transition-colors">Tentang</button>
+            <button onClick={() => handleSelectChapter(0.92)} className="hover:text-white transition-colors">Kontak</button>
+          </nav>
 
           {/* Quick Actions */}
           <div className="flex items-center gap-3">
-            <a
-              href="https://katalog.inaproc.id/agung-wijaya-nitya"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white font-mono text-[10px] tracking-wider uppercase transition-colors"
-            >
-              <span>e-Katalog LKPP</span>
-              <ExternalLink className="w-3 h-3 text-accent" />
-            </a>
-
             <button
               onClick={() => handleSelectChapter(0.92)}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent hover:bg-accent-hover text-navy font-mono text-[10px] tracking-wider uppercase font-bold transition-all shadow-md shadow-accent/20"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0B192C] border border-white/20 hover:bg-[#112847] hover:border-white/40 text-white font-mono text-xs tracking-wider uppercase font-semibold transition-all shadow-md shadow-black/30"
             >
               <span>Minta Penawaran</span>
-              <span className="text-xs">→</span>
+              <span className="text-xs">↗</span>
             </button>
           </div>
         </header>
@@ -135,9 +128,9 @@ export default function PearScrollytellingStage() {
         {/* ──────────────────────────────────────────────────────────
             CENTER STAGE: CHAPTER CONTENT (KINETIC TRANSITIONS)
             ────────────────────────────────────────────────────────── */}
-        <main className="relative z-20 flex-1 flex items-center justify-center px-6 sm:px-12 md:px-20 lg:px-28 w-full max-w-7xl mx-auto">
+        <main className="relative z-20 flex-1 flex items-center justify-start px-6 sm:px-12 md:px-16 lg:px-20 w-full max-w-7xl mx-auto">
           
-          {/* CHAPTER 1: THE MANDATE */}
+          {/* CHAPTER 1: HERO */}
           {currentChapter === 0 && (
             <motion.div
               key="ch-1"
@@ -145,62 +138,43 @@ export default function PearScrollytellingStage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full flex flex-col items-start lg:items-center text-left lg:text-center max-w-4xl"
+              className="w-full flex flex-col items-start text-left max-w-3xl"
             >
               {/* Eyebrow Label */}
-              <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full border border-white/10 bg-white/5">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                <span className="font-mono text-[10px] tracking-widest uppercase text-accent font-medium">
-                  BAB 1 · MANDAT & LEGALITAS PENGADAAN
+              <div className="inline-flex items-center gap-2 mb-4">
+                <span className="w-2 h-2 bg-[#d2e4fc] inline-block" />
+                <span className="font-mono text-xs tracking-[0.14em] uppercase text-[#d2e4fc] font-semibold">
+                  PENGADAAN UNTUK INSTITUSI &amp; BISNIS
                 </span>
               </div>
 
               {/* Main Headline */}
-              <h1 className="font-editorial text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white leading-[1.08] tracking-tight">
-                Bukan sekadar penyedia di atas kertas,{" "}
-                <span className="italic font-normal text-accent block sm:inline">
-                  rekanan terpercaya
-                </span>{" "}
-                di setiap lini pengadaan.
+              <h1 className="font-editorial italic text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-normal text-white leading-[1.05] tracking-tight">
+                <span className="block">Pengadaan</span>
+                <span className="block">Perangkat IT dan</span>
+                <span className="block">Perlengkapan Institusi</span>
               </h1>
 
               {/* Editorial Subhead */}
-              <p className="mt-5 sm:mt-6 font-sans text-sm sm:text-base md:text-lg text-white/75 max-w-2xl font-light leading-relaxed">
-                PT Agung Wijaya Nitya adalah penyedia aktif kualifikasi UMKK pada
-                Katalog Elektronik INAPROC LKPP berbasis di Kabupaten Badung, Bali.
-                Kami menyederhanakan pemenuhan belanja instansi pemerintah secara transparan, tepat waktu, dan akuntabel.
+              <p className="mt-5 font-sans text-base sm:text-lg text-white/85 max-w-lg font-normal leading-relaxed">
+                Dukungan untuk kebutuhan teknologi dan operasional bisnis maupun institusi.
               </p>
 
-              {/* Kinetic Micro-Beats */}
-              <div className="mt-8 flex flex-wrap items-center justify-start lg:justify-center gap-4 sm:gap-6">
-                <div className="flex items-center gap-2 font-mono text-xs text-white/70">
-                  <span className="w-1 h-1 rounded-full bg-accent" />
-                  <span>KAMI SEDIAKAN PRODUKNYA.</span>
-                </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-white/70">
-                  <span className="w-1 h-1 rounded-full bg-accent" />
-                  <span>KAMI JAMIN LEGALITASNYA.</span>
-                </div>
-                <div className="flex items-center gap-2 font-mono text-xs text-white/70">
-                  <span className="w-1 h-1 rounded-full bg-accent" />
-                  <span>KAMI KAWAL HINGGA SERAH TERIMA.</span>
-                </div>
-              </div>
-
               {/* Direct Actions */}
-              <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => handleSelectChapter(0.92)}
-                  className="px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-navy font-sans font-semibold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg shadow-accent/20 flex items-center gap-2"
+                  className="px-6 py-3 rounded-full bg-[#0B192C] border border-white/20 hover:bg-[#112847] hover:border-white/40 text-white font-mono font-semibold text-xs sm:text-sm tracking-wide transition-all shadow-xl shadow-black/30 flex items-center gap-2.5"
                 >
-                  Ajukan Permohonan Pengadaan
+                  Minta Penawaran
                   <span>→</span>
                 </button>
                 <button
                   onClick={() => handleSelectChapter(0.35)}
-                  className="px-5 py-3 rounded-xl border border-white/20 hover:border-white/40 bg-white/5 text-white font-sans text-xs sm:text-sm transition-colors"
+                  className="px-6 py-3 rounded-full border border-white/60 bg-white/5 hover:bg-white/15 hover:border-white text-white font-mono font-semibold text-xs sm:text-sm tracking-wide transition-all backdrop-blur-md flex items-center gap-2"
                 >
-                  Eksplorasi 742 Produk
+                  Jelajahi Produk
+                  <span>↓</span>
                 </button>
               </div>
             </motion.div>

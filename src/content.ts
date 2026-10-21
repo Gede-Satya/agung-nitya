@@ -27,9 +27,9 @@ export const CONTENT = {
   },
 
   hero: {
-    eyebrow: "PT. AGUNG WIJAYA NITYA — KABUPATEN BADUNG, BALI",
-    h1: "Mitra pengadaan perangkat IT dan kebutuhan institusi.",
-    sub: "Perangkat keras dan perlengkapan institusi untuk kebutuhan pengadaan bisnis dan instansi.",
+    eyebrow: "PENGADAAN UNTUK INSTITUSI & BISNIS",
+    h1: "Pengadaan Perangkat IT dan Perlengkapan Institusi",
+    sub: "Dukungan untuk kebutuhan teknologi dan operasional bisnis maupun institusi.",
     ctaPrimary: "Minta Penawaran",
     ctaSecondary: "Jelajahi Produk",
   },

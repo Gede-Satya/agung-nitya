@@ -14,10 +14,26 @@ const footerVideo = document.getElementById("footer-loop") as HTMLVideoElement;
 
 const sceneTitle = document.getElementById("scene-title");
 const scenePills = document.querySelectorAll<HTMLElement>(".scene-pill");
+const sceneNumBtns = document.querySelectorAll<HTMLElement>(".scene-num-btn");
 const scrubIndicator = document.getElementById("scrub-indicator");
+const siteHeader = document.getElementById("site-header");
+const heroBottomBar = document.getElementById("hero-bottom-bar");
 
 // Check reduced motion preference
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Header scroll listener
+function onScroll() {
+  if (siteHeader) {
+    if (window.scrollY > 60) {
+      siteHeader.classList.add("scrolled");
+    } else {
+      siteHeader.classList.remove("scrolled");
+    }
+  }
+}
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
 
 // Initialize Renderers
 const glRenderer = createGlRenderer(glCanvas);
@@ -51,19 +67,28 @@ const unlockMedia = () => {
 window.addEventListener("pointerdown", unlockMedia, { once: true });
 window.addEventListener("touchstart", unlockMedia, { once: true });
 
-// Interactive Scene Pills: click to jump to scene progress
+// Jump helper for scene buttons
+function jumpToScene(targetP: number) {
+  if (!heroWrapper) return;
+  const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
+  const holdDistance = totalScrollDistance * 0.05;
+  const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
+  const targetY = heroWrapper.offsetTop + targetP * activeScrubDistance;
+  window.scrollTo({
+    top: targetY,
+    behavior: "smooth",
+  });
+}
+
+// Interactive Scene Pills & Numbers: click to jump to scene progress
 scenePills.forEach((pill) => {
   pill.addEventListener("click", () => {
-    const targetP = parseFloat(pill.dataset.progress || "0");
-    if (!heroWrapper) return;
-    const totalScrollDistance = heroWrapper.offsetHeight - window.innerHeight;
-    const holdDistance = totalScrollDistance * 0.05;
-    const activeScrubDistance = Math.max(1, totalScrollDistance - holdDistance);
-    const targetY = heroWrapper.offsetTop + targetP * activeScrubDistance;
-    window.scrollTo({
-      top: targetY,
-      behavior: "smooth",
-    });
+    jumpToScene(parseFloat(pill.dataset.progress || "0"));
+  });
+});
+sceneNumBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    jumpToScene(parseFloat(btn.dataset.progress || "0"));
   });
 });
 
@@ -131,7 +156,7 @@ function tick(timestamp: number) {
 
     targetProgress = totalScrollDistance > 0 ? Math.min(1, Math.max(0, heroScrolled / activeScrubDistance)) : 0;
 
-    // When the hero wrapper has passed and sticky has naturally released, hide HUD
+    // When the hero wrapper has passed and sticky has naturally released, hide HUD / bottom bar
     const heroSceneHud = document.getElementById("hero-scene-hud");
     if (heroSceneHud) {
       if (heroScrolled > totalScrollDistance) {
@@ -140,6 +165,15 @@ function tick(timestamp: number) {
       } else {
         heroSceneHud.style.opacity = "1";
         heroSceneHud.style.pointerEvents = "auto";
+      }
+    }
+    if (heroBottomBar) {
+      if (heroScrolled > totalScrollDistance) {
+        heroBottomBar.style.opacity = "0";
+        heroBottomBar.style.pointerEvents = "none";
+      } else {
+        heroBottomBar.style.opacity = "1";
+        heroBottomBar.style.pointerEvents = "auto";
       }
     }
   }
@@ -170,6 +204,13 @@ function tick(timestamp: number) {
         pill.classList.add("active");
       } else {
         pill.classList.remove("active");
+      }
+    });
+    sceneNumBtns.forEach((btn, idx) => {
+      if (idx === currentSceneIndex) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
       }
     });
   }

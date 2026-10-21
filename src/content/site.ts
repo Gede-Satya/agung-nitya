@@ -191,30 +191,29 @@ export const SITE_CONTENT: SiteContent = {
 
   navigation: {
     links: [
-      { label: "Beranda", href: "/", id: "hero" },
-      { label: "Tentang Kami", href: "/#ekosistem", id: "ekosistem" },
-      { label: "Produk", href: "/katalog", id: "katalog" },
-      { label: "Pemeliharaan", href: "/#pemeliharaan", id: "pemeliharaan" },
-      { label: "Kontak", href: "/#kontak", id: "kontak" },
+      { label: "Produk", href: "#produk", id: "produk" },
+      { label: "Layanan", href: "#pilar", id: "pilar" },
+      { label: "Tentang", href: "#pengadaan", id: "pengadaan" },
+      { label: "Kontak", href: "#kontak", id: "kontak" },
     ],
     primaryAction: {
-      label: "Request Quotation",
-      href: "/#kontak",
+      label: "Minta Penawaran",
+      href: "#kontak",
     },
   },
 
   hero: {
-    badge: "Penyedia Aktif INAPROC Katalog Elektronik",
-    title: "Vendor pengadaan barang & jasa untuk instansi di Bali",
+    badge: "PENGADAAN UNTUK INSTITUSI & BISNIS",
+    title: "Pengadaan Perangkat IT dan Perlengkapan Institusi",
     subtitle:
-      "Melayani kebutuhan perangkat keras IT, peralatan kantor, medis, dan rumah tangga untuk instansi pemerintah & swasta.",
+      "Dukungan untuk kebutuhan teknologi dan operasional bisnis maupun institusi.",
     ctaPrimary: {
-      label: "Lihat Katalog Produk",
-      href: "/katalog",
+      label: "Minta Penawaran",
+      href: "#kontak",
     },
     ctaSecondary: {
-      label: "Ajukan Penawaran",
-      href: "/#kontak",
+      label: "Jelajahi Produk",
+      href: "#produk",
     },
   },
 

@@ -1,7 +1,7 @@
 export interface LinesOverlay {
   canvas: HTMLCanvasElement;
   resize: () => void;
-  render: (progress: number) => void;
+  render: (progress: number, time?: number) => void;
 }
 
 export function createLinesOverlay(canvas: HTMLCanvasElement): LinesOverlay {
@@ -42,10 +42,10 @@ export function createLinesOverlay(canvas: HTMLCanvasElement): LinesOverlay {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Fine architectural styling
+      // Fine architectural styling for dark cinematic hero
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(29, 29, 31, 0.12)"; // #1D1D1F at 12% opacity
-      ctx.fillStyle = "rgba(29, 29, 31, 0.45)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.14)"; // subtle white architectural line
+      ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
       ctx.font = `${Math.round(10 * dpr)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
 
       const padX = Math.round(w * 0.05);
