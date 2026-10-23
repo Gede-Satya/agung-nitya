@@ -548,78 +548,539 @@
       color: var(--text-muted);
     }
 
-    /* PRODUK & LAYANAN (FEATURE CARDS) */
-    .produk-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.75rem;
+    /* ─────────────────────────────────────────────────────────────
+       3D PERSPECTIVE CATALOG SLIDER
+       ───────────────────────────────────────────────────────────── */
+    .catalog-3d-section {
+      position: relative;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F5F8FC 45%, #FFFFFF 100%);
+      overflow: hidden;
+      padding-top: clamp(4.5rem, 7vw, 6.5rem);
+      padding-bottom: clamp(5rem, 8vw, 7.5rem);
+      border-bottom: 1px solid var(--border-light);
     }
 
-    .produk-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-light);
-      border-radius: 18px;
-      padding: 2.25rem;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
+    .catalog-3d-header-wrap {
       display: flex;
       flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
-    .produk-card:hover {
-      border-color: var(--accent-blue);
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-3px);
+    @media (min-width: 840px) {
+      .catalog-3d-header-wrap {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
     }
 
-    .produk-tag {
+    .catalog-3d-header-text {
+      max-width: 680px;
+    }
+
+    .catalog-3d-header-text .section-subhead {
+      margin-bottom: 0;
+    }
+
+    .catalog-3d-nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .btn-catalog-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.35rem;
+      border-radius: 9999px;
+      background: #0B192C;
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      font-size: 0.825rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(11, 29, 54, 0.2);
+      transition: all 0.25s ease;
+    }
+    .btn-catalog-all:hover {
+      background: var(--accent-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(11, 107, 174, 0.32);
+    }
+
+    .c3d-arrow-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s ease;
+    }
+    .c3d-arrow-btn:hover {
+      background: #FFFFFF;
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: scale(1.06);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* 3D Stage & Canvas Container */
+    .c3d-stage {
+      position: relative;
+      width: 100%;
+      height: 620px;
+      perspective: 1250px;
+      perspective-origin: 50% 36%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: pan-y;
+      padding: 1.5rem 0;
+      overflow: visible;
+    }
+    @media (max-width: 640px) {
+      .c3d-stage {
+        height: 540px;
+        perspective: 850px;
+        perspective-origin: 50% 36%;
+      }
+    }
+
+    /* 3D Circular Platform / Orbit Disk */
+    .c3d-circular-disc {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) rotateX(82deg);
+      width: min(1040px, 96%);
+      height: min(1040px, 96%);
+      pointer-events: none;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      z-index: 1;
+    }
+    .c3d-disc-orbit {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      border-radius: 50%;
+    }
+    .c3d-disc-orbit.outer {
+      width: 100%;
+      height: 100%;
+      border: 1.5px dashed rgba(11, 107, 174, 0.26);
+    }
+    .c3d-disc-orbit.middle {
+      width: 80%;
+      height: 80%;
+      border: 1px solid rgba(201, 162, 39, 0.35);
+      box-shadow: 0 0 40px rgba(11, 107, 174, 0.15);
+    }
+    .c3d-disc-orbit.inner {
+      width: 55%;
+      height: 55%;
+      border: 1px dashed rgba(11, 107, 174, 0.2);
+    }
+    .c3d-disc-glow {
+      position: absolute;
+      inset: 20%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(11, 107, 174, 0.16) 0%, rgba(201, 162, 39, 0.08) 45%, transparent 70%);
+      filter: blur(18px);
+    }
+
+    /* Cards track */
+    .c3d-cards-track {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      cursor: grab;
+      will-change: transform;
+    }
+    .c3d-stage.is-dragging,
+    .c3d-cards-track.is-dragging {
+      cursor: grabbing;
+    }
+
+    /* 3D Card */
+    .c3d-card {
+      position: absolute;
+      width: 340px;
+      height: 495px;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      outline: none;
+      transition: opacity 0.3s ease, filter 0.3s ease;
+      will-change: transform, opacity;
+    }
+    @media (max-width: 640px) {
+      .c3d-card {
+        width: 270px;
+        height: 450px;
+      }
+    }
+
+    .c3d-card.active {
+      cursor: default;
+    }
+    .c3d-card.flank {
+      cursor: pointer;
+    }
+
+    .c3d-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      border-radius: 24px;
+      border: 1px solid rgba(11, 107, 174, 0.14);
+      box-shadow: 0 16px 36px -10px rgba(11, 29, 54, 0.10), 0 0 0 1px rgba(11, 107, 174, 0.06);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 1.35rem;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .c3d-card.active .c3d-card-inner {
+      border-color: rgba(11, 107, 174, 0.35);
+      box-shadow: 0 24px 60px -12px rgba(11, 107, 174, 0.28),
+                  0 0 0 2px rgba(201, 162, 39, 0.55),
+                  0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .c3d-glow-orb {
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(11, 107, 174, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .c3d-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .c3d-tag {
       font-family: var(--font-mono);
-      font-size: 0.6875rem;
+      font-size: 0.65rem;
       font-weight: 600;
       letter-spacing: 0.08em;
       color: var(--accent-blue);
-      margin-bottom: 1rem;
       text-transform: uppercase;
     }
 
-    .produk-card-title {
-      font-family: var(--font-sans);
-      font-size: 1.35rem;
+    .c3d-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #059669;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
       font-weight: 700;
-      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+
+    /* Pedestal and Product Image */
+    .c3d-media-pedestal {
+      position: relative;
+      width: 100%;
+      height: 155px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 50% 40%, rgba(11, 107, 174, 0.06) 0%, #F8F9FA 75%);
+      border: 1px solid rgba(11, 107, 174, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 0.85rem;
-      line-height: 1.3;
+      overflow: hidden;
+    }
+    @media (max-width: 640px) {
+      .c3d-media-pedestal {
+        height: 140px;
+      }
     }
 
-    .produk-card-desc {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
+    .c3d-pedestal-light {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .produk-list {
-      list-style: none;
+    .c3d-product-img {
+      max-width: 82%;
+      max-height: 82%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(11, 29, 54, 0.12));
+      transition: transform 0.4s ease;
+      z-index: 2;
+    }
+    .c3d-card.active:hover .c3d-product-img {
+      transform: scale(1.06) translateY(-2px);
+    }
+
+    .c3d-pedestal-plate {
+      position: absolute;
+      bottom: 8px;
+      width: 68%;
+      height: 10px;
+      background: radial-gradient(ellipse at center, rgba(11, 29, 54, 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* Card Details */
+    .c3d-card-body {
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
-      margin-top: auto;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--border-light);
+      flex: 1;
     }
 
-    .produk-list-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      font-size: 0.825rem;
-      color: var(--text);
-      line-height: 1.45;
+    .c3d-category-sub {
+      font-size: 0.725rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
     }
-    .produk-list-item::before {
-      content: "—";
-      color: var(--accent-blue);
+
+    .c3d-card-title {
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.5rem;
+    }
+    @media (max-width: 640px) {
+      .c3d-card-title {
+        font-size: 0.95rem;
+        min-height: 2.3rem;
+      }
+    }
+
+    .c3d-specs-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .c3d-spec-pill {
       font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Actions */
+    .c3d-card-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-light);
+      margin-top: 0.5rem;
+    }
+
+    .c3d-btn-inaproc {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 10px;
+      background: #0B192C;
+      color: #FFFFFF;
+      font-size: 0.75rem;
       font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .c3d-btn-inaproc:hover {
+      background: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    .c3d-btn-quote {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 0.85rem;
+      border-radius: 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-light);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .c3d-btn-quote:hover {
+      background: #FFFFFF;
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    /* Stage Floating Side Buttons */
+    .c3d-side-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(11, 107, 174, 0.18);
+      color: #0B192C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 40;
+      box-shadow: 0 8px 24px rgba(11, 29, 54, 0.12);
+      transition: all 0.25s ease;
+    }
+    .c3d-side-nav:hover {
+      background: #FFFFFF;
+      color: var(--accent-blue);
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 12px 30px rgba(11, 107, 174, 0.25);
+    }
+    .c3d-side-nav.prev {
+      left: 10px;
+    }
+    .c3d-side-nav.next {
+      right: 10px;
+    }
+    @media (min-width: 1200px) {
+      .c3d-side-nav.prev { left: -18px; }
+      .c3d-side-nav.next { right: -18px; }
+    }
+
+    /* Telemetry and Dots Below Stage */
+    .c3d-telemetry-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .c3d-telemetry-bar {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .c3d-telemetry-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .c3d-radar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      animation: c3d-pulse 2s infinite;
+    }
+    @keyframes c3d-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .c3d-counter-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      letter-spacing: 0.05em;
+    }
+
+    .c3d-active-label {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: inline-block;
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .c3d-dots-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .c3d-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
+      background: rgba(29, 29, 31, 0.16);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .c3d-dot:hover {
+      background: rgba(11, 107, 174, 0.5);
+    }
+    .c3d-dot.active {
+      width: 28px;
+      background: var(--accent-blue);
+    }
+
+    .c3d-hint-text {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: rgba(29, 29, 31, 0.45);
+      letter-spacing: 0.04em;
     }
 
     /* ALUR PENGADAAN (STEPS) */
@@ -867,7 +1328,7 @@
     </a>
 
     <nav class="header-nav" aria-label="Menu Utama">
-      <a href="#produk" class="nav-link">Produk</a>
+      <a href="#katalog" class="nav-link">Katalog</a>
       <a href="#pilar" class="nav-link">Layanan</a>
       <a href="#pengadaan" class="nav-link">Tentang</a>
       <a href="#kontak" class="nav-link">Kontak</a>
@@ -918,30 +1379,16 @@
             <span>Minta Penawaran</span>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a href="#produk" class="hero-btn-secondary" id="hero-cta-products">
-            <span>Jelajahi Produk</span>
+          <a href="#katalog" class="hero-btn-secondary" id="hero-cta-products">
+            <span>Jelajahi Katalog</span>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M8 13L3.5 8.5M8 13L12.5 8.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- 7. ARCHITECTURAL HERO BOTTOM BAR & SCENE INDICATOR -->
-      <div class="hero-bottom-bar" id="hero-bottom-bar" aria-label="Indikator Adegan Hero">
-        <span id="scene-title" class="sr-only">01 / 05 // EKSTERIOR GEDUNG</span>
-        <span id="scrub-indicator" class="sr-only">SCRUB // 00%</span>
-        <div class="bottom-rule"></div>
-        <div class="bottom-row">
-          <span class="bottom-tagline">Unlocking Innovation, Empowering Possibilities</span>
-          <div class="bottom-scenes">
-            <button class="scene-num-btn active" data-progress="0.0" title="Scene 01: Eksterior Gedung">01</button>
-            <button class="scene-num-btn" data-progress="0.2" title="Scene 02: Ruang Kantor">02</button>
-            <button class="scene-num-btn" data-progress="0.4" title="Scene 03: Server Room">03</button>
-            <button class="scene-num-btn" data-progress="0.6" title="Scene 04: Ruang Pemeliharaan">04</button>
-            <button class="scene-num-btn" data-progress="0.8" title="Scene 05: Konsultasi & Penutup">05</button>
-          </div>
-        </div>
-        <div class="bottom-disclaimer">Visual ilustratif, bukan dokumentasi fasilitas perusahaan.</div>
-      </div>
+      <!-- Screen reader scene indicator -->
+      <span id="scene-title" class="sr-only">01 / 05 // EKSTERIOR GEDUNG</span>
+      <span id="scrub-indicator" class="sr-only">SCRUB // 00%</span>
 
     </section>
   </div>
@@ -984,53 +1431,107 @@
       </div>
     </section>
 
-    <!-- SECTION: PRODUK & LAYANAN -->
-    <section class="content-section" id="produk">
+    <!-- SECTION: KATALOG ELEKTRONIK (3D SLIDER SHOWCASE) -->
+    <section class="content-section catalog-3d-section" id="katalog" aria-label="Katalog 3D Produk Unggulan">
+      <div id="produk" style="position: absolute; top: -75px;"></div>
       <div class="content-container">
-        <div class="section-eyebrow">
-          <span class="badge-dot"></span>
-          <span>KATALOG & LAYANAN</span>
+        
+        <!-- Header row with title, description, and navigation actions -->
+        <div class="catalog-3d-header-wrap">
+          <div class="catalog-3d-header-text">
+            <div class="section-eyebrow">
+              <span class="badge-dot"></span>
+              <span>KATALOG RESMI LKPP · 3D SHOWCASE</span>
+            </div>
+            <h2 class="section-title">Kurasi Produk &amp; Solusi Unggulan.</h2>
+            <p class="section-subhead">Perangkat keras TI, workstation, sistem cadangan daya, dan perlengkapan institusi terdaftar resmi pada etalase INAPROC LKPP.</p>
+          </div>
+
+          <!-- Header Action Tools: Prev / Next Buttons & External Link -->
+          <div class="catalog-3d-nav-tools">
+            <div class="c3d-arrows-group" style="display: flex; gap: 0.5rem;">
+              <button
+                type="button"
+                id="catalog-3d-prev"
+                class="c3d-arrow-btn"
+                aria-label="Produk Sebelumnya (3D)"
+                title="Produk Sebelumnya"
+              >
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button
+                type="button"
+                id="catalog-3d-next"
+                class="c3d-arrow-btn"
+                aria-label="Produk Berikutnya (3D)"
+                title="Produk Berikutnya"
+              >
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <a
+              href="https://katalog.inaproc.id/agung-wijaya-nitya"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-catalog-all"
+            >
+              <span>Buka 742 Produk di INAPROC</span>
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
-        <h2 class="section-title">Produk perangkat keras dan perlengkapan institusi.</h2>
-        <p class="section-subhead">Daftar kategori utama yang disediakan untuk kebutuhan pengadaan bisnis dan instansi pemerintah.</p>
 
-        <div class="produk-grid">
-          <div class="produk-card">
-            <span class="produk-tag">01 // IT HARDWARE</span>
-            <h3 class="produk-card-title">Perangkat Keras Komputer & Daya</h3>
-            <p class="produk-card-desc">Kebutuhan komputasi dan proteksi kelistrikan perangkat kerja instansi.</p>
-            <ul class="produk-list">
-              <li class="produk-list-item">UPS (Uninterruptible Power Supply) berbagai kapasitas</li>
-              <li class="produk-list-item">Monitor kantor dan display kerja</li>
-              <li class="produk-list-item">Server rack, kabinet server, dan aksesoris rak</li>
-              <li class="produk-list-item">Komputer desktop dan periferal penunjang</li>
-            </ul>
+        <!-- 3D Perspective Circular Carousel Stage -->
+        <div class="c3d-stage" id="catalog-3d-stage" aria-roledescription="3D circular carousel">
+          <!-- 3D Circular Orbital Floor Platform -->
+          <div class="c3d-circular-disc" aria-hidden="true">
+            <div class="c3d-disc-orbit outer"></div>
+            <div class="c3d-disc-orbit middle"></div>
+            <div class="c3d-disc-orbit inner"></div>
+            <div class="c3d-disc-glow"></div>
           </div>
 
-          <div class="produk-card">
-            <span class="produk-tag">02 // INSTITUTIONAL SUPPLIES</span>
-            <h3 class="produk-card-title">Perlengkapan & Penyimpanan</h3>
-            <p class="produk-card-desc">Fasilitas fisik penunjang kerapian, arsip, dan operasional ruangan institusi.</p>
-            <ul class="produk-list">
-              <li class="produk-list-item">Rak penyimpanan dokumen dan arsip institusi</li>
-              <li class="produk-list-item">Lemari penyimpanan barang dan dokumen kantor</li>
-              <li class="produk-list-item">Meja kerja dan perlengkapan ruangan operasional</li>
-              <li class="produk-list-item">Peralatan fisik penunjang sarana kerja institusi</li>
-            </ul>
+          <!-- Dynamic 3D Cards Track (revolves in 360° circular orbit) -->
+          <div class="c3d-cards-track" id="catalog-3d-cards">
+            <!-- Rendered by JS -->
           </div>
 
-          <div class="produk-card">
-            <span class="produk-tag">03 // HARDWARE MAINTENANCE</span>
-            <h3 class="produk-card-title">Pemeliharaan Perangkat Keras</h3>
-            <p class="produk-card-desc">Layanan perawatan teknis hardware agar operasional perangkat tetap andal.</p>
-            <ul class="produk-list">
-              <li class="produk-list-item">Perawatan teknis berkala perangkat keras institusi</li>
-              <li class="produk-list-item">Pembersihan fisik dan pengecekan suhu operasional</li>
-              <li class="produk-list-item">Diagnosa performa dan penanganan kendala fisik</li>
-              <li class="produk-list-item">Pendampingan teknis pemeliharaan perangkat</li>
-            </ul>
-          </div>
+          <!-- Floating Large Edge Side Chevrons -->
+          <button
+            type="button"
+            class="c3d-side-nav prev"
+            onclick="document.getElementById('catalog-3d-prev')?.click()"
+            aria-label="Putar ke kiri"
+            title="Putar ke kiri"
+          >
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button
+            type="button"
+            class="c3d-side-nav next"
+            onclick="document.getElementById('catalog-3d-next')?.click()"
+            aria-label="Putar ke kanan"
+            title="Putar ke kanan"
+          >
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
+
+        <!-- Telemetry & Pagination Bar -->
+        <div class="c3d-telemetry-bar">
+          <div class="c3d-telemetry-left">
+            <span class="c3d-radar-dot" aria-hidden="true"></span>
+            <span class="c3d-counter-badge">[ <span id="catalog-3d-counter-current">01</span> / <span id="catalog-3d-counter-total">08</span> ]</span>
+            <span class="c3d-active-label" id="catalog-3d-active-title">DELL PowerEdge R760xs Rack Server</span>
+          </div>
+
+          <div class="c3d-dots-wrap" id="catalog-3d-dots">
+            <!-- Dots generated by JS -->
+          </div>
+
+          <span class="c3d-hint-text">Putar / geser untuk rotasi melingkar 360°</span>
+        </div>
+
       </div>
     </section>
 

@@ -2,6 +2,7 @@ import { createGlRenderer } from "./gl";
 import { createLinesOverlay } from "./lines";
 import { makeSequence, Sequence } from "./sequence";
 import { HERO_SCENES, smoothstep, lerp } from "./stage";
+import { initCatalog3DSlider } from "./slider3d";
 
 // DOM Elements
 const heroWrapper = (document.getElementById("hero-wrapper") || document.getElementById("hero-stage")) as HTMLElement;
@@ -125,6 +126,9 @@ document.querySelectorAll<HTMLElement>(".faq-item").forEach((item) => {
     });
   }
 });
+
+// Initialize 3D Perspective Slider for Catalog
+initCatalog3DSlider();
 
 // Resize Listener
 function onResize() {

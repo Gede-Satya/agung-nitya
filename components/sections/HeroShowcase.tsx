@@ -14,7 +14,7 @@ export default function HeroShowcase() {
   return (
     <section
       id="hero"
-      className="relative w-full overflow-hidden bg-[#0d1c36] text-white min-h-screen flex flex-col justify-between pt-24 pb-8"
+      className="relative w-full overflow-hidden bg-[#0d1c36] text-white min-h-screen flex flex-col justify-center py-20"
     >
       {/* Background Media: Architectural Glass Lobby Entrance */}
       <div className="absolute inset-0 z-0">
@@ -78,30 +78,6 @@ export default function HeroShowcase() {
             </Link>
           </div>
         </motion.div>
-      </div>
-
-      {/* Architectural Bottom Bar HUD */}
-      <div className="relative z-10 w-full px-6 sm:px-12 md:px-16 lg:px-20 max-w-7xl mx-auto pt-6">
-        <div className="w-full h-px bg-white/25 mb-3" />
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <span className="font-mono text-xs text-[#d7e6ff]/80 tracking-wide">
-            Unlocking Innovation, Empowering Possibilities
-          </span>
-          <div className="flex items-center gap-4 font-mono text-xs">
-            <span className="text-white font-bold relative after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-1 after:h-[2px] after:bg-white">
-              01
-            </span>
-            <span className="text-white/40">02</span>
-            <span className="text-white/40">03</span>
-            <span className="text-white/40">04</span>
-            <span className="text-white/40">05</span>
-          </div>
-        </div>
-        <div className="text-right mt-1">
-          <span className="font-mono text-[10px] text-white/40">
-            Visual ilustratif, bukan dokumentasi fasilitas perusahaan.
-          </span>
-        </div>
       </div>
     </section>
   );
