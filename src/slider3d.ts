@@ -154,9 +154,6 @@ export function initCatalog3DSlider(): void {
         aria-label="${escapeHtml(item.title)}"
       >
         <div class="c3d-card-inner">
-          <!-- Glass Accent Glow -->
-          <div class="c3d-glow-orb" aria-hidden="true"></div>
-
           <!-- Top Meta Row -->
           <div class="c3d-card-top">
             <span class="c3d-tag">${escapeHtml(item.tag)}</span>

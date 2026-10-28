@@ -22,62 +22,93 @@ onScroll();
 // DYNAMIC DUAL-CHANNEL HERO VIDEO PLAYLIST CONTROLLER
 // Seamless crossfade alternating between 5 high-end scenes
 // ─────────────────────────────────────────────────────────────
-interface HeroScene {
-  index: string;
-  tag: string;
-  label: string;
+interface HeroHardwareItem {
+  id: string;
+  category: string;
+  title: string;
+  spec: string;
+  image: string;
   video: string;
   poster: string;
+  badge: string;
+  nextName: string;
 }
 
-const HERO_SCENES: HeroScene[] = [
+const HERO_HARDWARE: HeroHardwareItem[] = [
   {
-    index: "01",
-    tag: "01 // EKSTERIOR GEDUNG & FASILITAS",
-    label: "Gedung & Lobi",
-    video: "/films/perusahaan-loop.mp4",
-    poster: "/films/perusahaan-loop-poster.jpg",
-  },
-  {
-    index: "02",
-    tag: "02 // PERENCANAAN & KOLABORASI TIM",
-    label: "Ruang Kantor",
-    video: "/films/kantor-loop.mp4",
-    poster: "/films/kantor-loop-poster.jpg",
-  },
-  {
-    index: "03",
-    tag: "03 // PUSAT DATA & RAK SERVER",
-    label: "Server Room",
+    id: "01",
+    category: "Pusat Data & Server",
+    title: "DELL PowerEdge R760xs",
+    spec: "2U Rack Server · Dual Intel Xeon Silver · 64GB DDR5 · Redundant PSU",
+    image: "/products/server-dell-r760xs.png",
     video: "/films/server-loop.mp4",
     poster: "/films/server-loop-poster.jpg",
+    badge: "01 · PUSAT DATA & RAK SERVER",
+    nextName: "ThinkStation P7",
   },
   {
-    index: "04",
-    tag: "04 // PEMELIHARAAN & DIAGNOSTIK HARDWARE",
-    label: "Pemeliharaan",
+    id: "02",
+    category: "Komputasi & Workstation",
+    title: "Lenovo ThinkStation P7",
+    spec: "Intel Xeon W-Series · NVIDIA RTX Ada · ISV Certified · Desain & AI",
+    image: "/products/workstation-lenovo-p7.jpeg",
+    video: "/films/kantor-loop.mp4",
+    poster: "/films/kantor-loop-poster.jpg",
+    badge: "02 · PERENCANAAN & WORKSTATION",
+    nextName: "APC Smart-UPS",
+  },
+  {
+    id: "03",
+    category: "Power Backup & Lab",
+    title: "APC Smart-UPS SMC3000I-2U",
+    spec: "3000VA / 2100W · LCD Interface · Pure Sine Wave · Perlindungan Server",
+    image: "/products/ups-apc-smc3000i.jpeg",
     video: "/films/pemeliharaan-loop.mp4",
     poster: "/films/pemeliharaan-loop-poster.jpg",
+    badge: "03 · PEMELIHARAAN & DAYA CADANGAN",
+    nextName: "LG Medical Display",
   },
   {
-    index: "05",
-    tag: "05 // SOLUSI KONSULTASI & WORKSTATION",
-    label: "Konsultasi",
-    video: "/films/penutup-loop.mp4",
-    poster: "/films/penutup-loop-poster.jpg",
+    id: "04",
+    category: "Display & Fasilitas Institusi",
+    title: "LG Commercial Medical Display 31.5\"",
+    spec: "8MP IPS · DICOM Part 14 · Kalibrasi Klinis & Manajemen Fasilitas",
+    image: "/products/monitor-lg-32hl512d.jpeg",
+    video: "/films/perusahaan-loop.mp4",
+    poster: "/films/perusahaan-loop-poster.jpg",
+    badge: "04 · EKSTERIOR & FASILITAS INSTITUSI",
+    nextName: "PowerEdge R760xs",
   },
 ];
 
+// Dual-channel background video elements
 const videoA = document.getElementById("hero-video-a") as HTMLVideoElement | null;
 const videoB = document.getElementById("hero-video-b") as HTMLVideoElement | null;
 const heroBadgeText = document.getElementById("hero-badge-text");
-const sceneTabs = document.querySelectorAll<HTMLButtonElement>(".hero-scene-tab");
 
-let currentSceneIndex = 0;
+// Concept 2 Card elements
+const heroCarouselCard = document.getElementById("hero-carousel-card");
+const hccCategory = document.getElementById("hcc-category");
+const hccCurrNum = document.getElementById("hcc-curr-num");
+const hccTotalNum = document.getElementById("hcc-total-num");
+const hccProductImg = document.getElementById("hcc-product-img") as HTMLImageElement | null;
+const hccProductTitle = document.getElementById("hcc-product-title");
+const hccProductSpec = document.getElementById("hcc-product-spec");
+const hccNextThumb = document.getElementById("hcc-next-thumb") as HTMLImageElement | null;
+const hccNextName = document.getElementById("hcc-next-name");
+const hccNextSneakBtn = document.getElementById("hcc-next-sneak-btn");
+const hccPrevBtn = document.getElementById("hcc-prev-btn");
+const hccNextBtn = document.getElementById("hcc-next-btn");
+const hccDots = document.querySelectorAll<HTMLButtonElement>(".hcc-dot");
+const hccProgressBar = document.getElementById("hcc-progress-bar");
+
+let currentHardwareIndex = 0;
 let activeChannel: "A" | "B" = "A";
 let isTransitioning = false;
+let isPaused = false;
 let sceneStartTime = performance.now();
-const SCENE_DURATION_MS = 6500; // 6.5s per scene before transitioning to the next
+let pausedAtElapsed = 0;
+const ITEM_DURATION_MS = 6200; // 6.2s per hardware showcase
 
 function playSafe(video: HTMLVideoElement) {
   video.muted = true;
@@ -97,102 +128,197 @@ function unlockAllMedia() {
 window.addEventListener("pointerdown", unlockAllMedia, { once: true });
 window.addEventListener("touchstart", unlockAllMedia, { once: true });
 
-function switchScene(targetIndex: number) {
-  if (!videoA || !videoB) return;
-  if (targetIndex === currentSceneIndex && !isTransitioning) {
+function switchHardware(targetIndex: number) {
+  if (targetIndex === currentHardwareIndex && !isTransitioning) {
     sceneStartTime = performance.now();
+    pausedAtElapsed = 0;
     return;
   }
   if (isTransitioning) return;
 
   isTransitioning = true;
-  currentSceneIndex = targetIndex;
-  const targetScene = HERO_SCENES[targetIndex];
+  currentHardwareIndex = targetIndex;
+  const targetItem = HERO_HARDWARE[targetIndex];
+  const nextItem = HERO_HARDWARE[(targetIndex + 1) % HERO_HARDWARE.length];
 
-  // Determine incoming vs outgoing video channel
-  const incoming = activeChannel === "A" ? videoB : videoA;
-  const outgoing = activeChannel === "A" ? videoA : videoB;
+  // 1. Dual-channel background video crossfade
+  if (videoA && videoB) {
+    const incoming = activeChannel === "A" ? videoB : videoA;
+    const outgoing = activeChannel === "A" ? videoA : videoA === outgoing ? videoA : videoB;
 
-  // Prepare incoming video
-  incoming.poster = targetScene.poster;
-  incoming.src = targetScene.video;
-  incoming.currentTime = 0;
-  playSafe(incoming);
+    incoming.poster = targetItem.poster;
+    incoming.src = targetItem.video;
+    incoming.currentTime = 0;
+    playSafe(incoming);
 
-  // Crossfade via CSS opacity classes
-  incoming.classList.add("active");
-  outgoing.classList.remove("active");
-  activeChannel = activeChannel === "A" ? "B" : "A";
+    incoming.classList.add("active");
+    outgoing.classList.remove("active");
+    activeChannel = activeChannel === "A" ? "B" : "A";
 
-  // Update tabs UI
-  sceneTabs.forEach((tab, idx) => {
+    setTimeout(() => {
+      outgoing.pause();
+      isTransitioning = false;
+
+      // Pre-cache next poster
+      const preloader = new Image();
+      preloader.src = nextItem.poster;
+    }, 1200);
+  } else {
+    isTransitioning = false;
+  }
+
+  // 2. Card Content Updates with smooth fade
+  if (hccCategory) hccCategory.textContent = targetItem.category;
+  if (hccCurrNum) hccCurrNum.textContent = targetItem.id;
+  if (hccTotalNum) hccTotalNum.textContent = `0${HERO_HARDWARE.length}`;
+
+  if (hccProductImg) {
+    hccProductImg.style.opacity = "0.2";
+    hccProductImg.style.transform = "scale(0.92)";
+    setTimeout(() => {
+      if (hccProductImg) {
+        hccProductImg.src = targetItem.image;
+        hccProductImg.alt = targetItem.title;
+        hccProductImg.style.opacity = "1";
+        hccProductImg.style.transform = "scale(1)";
+      }
+    }, 180);
+  }
+
+  if (hccProductTitle) {
+    hccProductTitle.style.opacity = "0.2";
+    setTimeout(() => {
+      if (hccProductTitle) {
+        hccProductTitle.textContent = targetItem.title;
+        hccProductTitle.style.opacity = "1";
+      }
+    }, 180);
+  }
+
+  if (hccProductSpec) {
+    hccProductSpec.style.opacity = "0.2";
+    setTimeout(() => {
+      if (hccProductSpec) {
+        hccProductSpec.textContent = targetItem.spec;
+        hccProductSpec.style.opacity = "1";
+      }
+    }, 180);
+  }
+
+  // 3. Next Sneak-peek Update
+  if (hccNextThumb) {
+    hccNextThumb.src = nextItem.image;
+    hccNextThumb.alt = nextItem.title;
+  }
+  if (hccNextName) {
+    hccNextName.textContent = nextItem.nextName;
+  }
+
+  // 4. Dot Navigation Update
+  hccDots.forEach((dot, idx) => {
     const isAct = idx === targetIndex;
-    tab.classList.toggle("active", isAct);
-    tab.setAttribute("aria-selected", isAct ? "true" : "false");
-    const bar = tab.querySelector<HTMLElement>(".tab-progress-bar");
-    if (bar && !isAct) {
-      bar.style.width = "0%";
-    }
+    dot.classList.toggle("active", isAct);
+    dot.setAttribute("aria-selected", isAct ? "true" : "false");
   });
 
-  // Update badge text with subtle fade
+  // 5. Hero Badge Update
   if (heroBadgeText) {
     heroBadgeText.style.transition = "opacity 0.25s ease";
     heroBadgeText.style.opacity = "0";
     setTimeout(() => {
-      heroBadgeText.textContent = targetScene.tag;
+      heroBadgeText.textContent = targetItem.badge;
       heroBadgeText.style.opacity = "1";
     }, 250);
   }
 
+  // 6. Reset timer
   sceneStartTime = performance.now();
-
-  // After 1.2s crossfade, pause outgoing video to preserve CPU/GPU
-  setTimeout(() => {
-    outgoing.pause();
-    isTransitioning = false;
-
-    // Background pre-cache next poster
-    const nextIdx = (targetIndex + 1) % HERO_SCENES.length;
-    const preloader = new Image();
-    preloader.src = HERO_SCENES[nextIdx].poster;
-  }, 1200);
+  pausedAtElapsed = 0;
+  if (hccProgressBar) {
+    hccProgressBar.style.width = "0%";
+  }
 }
 
-// Click on scene tab to immediately jump
-sceneTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const idx = parseInt(tab.dataset.index || "0", 10);
-    switchScene(idx);
+// Controls: Next & Prev
+function goNext() {
+  const nextIdx = (currentHardwareIndex + 1) % HERO_HARDWARE.length;
+  switchHardware(nextIdx);
+}
+
+function goPrev() {
+  const prevIdx = (currentHardwareIndex - 1 + HERO_HARDWARE.length) % HERO_HARDWARE.length;
+  switchHardware(prevIdx);
+}
+
+if (hccNextBtn) hccNextBtn.addEventListener("click", goNext);
+if (hccPrevBtn) hccPrevBtn.addEventListener("click", goPrev);
+if (hccNextSneakBtn) hccNextSneakBtn.addEventListener("click", goNext);
+
+// Dots Navigation
+hccDots.forEach((dot) => {
+  dot.addEventListener("click", () => {
+    const idx = parseInt(dot.dataset.index || "0", 10);
+    switchHardware(idx);
   });
 });
 
-// Animation loop to drive progress bar and trigger automatic scene rotation
-function tickVideoRotation(now: number) {
-  const elapsed = now - sceneStartTime;
-  const progressPct = Math.min(100, Math.max(0, (elapsed / SCENE_DURATION_MS) * 100));
+// Pause timer on card hover or focus
+if (heroCarouselCard) {
+  heroCarouselCard.addEventListener("mouseenter", () => {
+    isPaused = true;
+    pausedAtElapsed = performance.now() - sceneStartTime;
+  });
 
-  const activeTab = sceneTabs[currentSceneIndex];
-  if (activeTab) {
-    const bar = activeTab.querySelector<HTMLElement>(".tab-progress-bar");
-    if (bar) {
-      bar.style.width = `${progressPct.toFixed(1)}%`;
+  heroCarouselCard.addEventListener("mouseleave", () => {
+    isPaused = false;
+    sceneStartTime = performance.now() - pausedAtElapsed;
+  });
+
+  heroCarouselCard.addEventListener("focusin", () => {
+    isPaused = true;
+    pausedAtElapsed = performance.now() - sceneStartTime;
+  });
+
+  heroCarouselCard.addEventListener("focusout", () => {
+    isPaused = false;
+    sceneStartTime = performance.now() - pausedAtElapsed;
+  });
+
+  // Keyboard navigation within the card
+  heroCarouselCard.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goPrev();
+    }
+  });
+}
+
+// Animation loop to drive progress bar and auto-rotate
+function tickHardwareRotation(now: number) {
+  if (!isPaused) {
+    const elapsed = now - sceneStartTime;
+    const progressPct = Math.min(100, Math.max(0, (elapsed / ITEM_DURATION_MS) * 100));
+
+    if (hccProgressBar) {
+      hccProgressBar.style.width = `${progressPct.toFixed(1)}%`;
+    }
+
+    if (elapsed >= ITEM_DURATION_MS && !isTransitioning) {
+      goNext();
     }
   }
 
-  if (elapsed >= SCENE_DURATION_MS && !isTransitioning) {
-    const nextIndex = (currentSceneIndex + 1) % HERO_SCENES.length;
-    switchScene(nextIndex);
-  }
-
-  requestAnimationFrame(tickVideoRotation);
+  requestAnimationFrame(tickHardwareRotation);
 }
 
-// Start initial video playback
+// Start initial video playback (if video elements exist) & hardware rotation loop
 if (videoA) {
   playSafe(videoA);
-  requestAnimationFrame(tickVideoRotation);
 }
+requestAnimationFrame(tickHardwareRotation);
 
 // ─────────────────────────────────────────────────────────────
 // SMOOTH SCROLL ANCHORS

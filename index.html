@@ -68,6 +68,28 @@
       border: 0;
     }
 
+    /* ACCESSIBILITY & KEYBOARD FOCUS (antislop-human A-2 / R-30) */
+    :focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 3px;
+    }
+    a:focus-visible,
+    button:focus-visible,
+    .hero-btn-primary:focus-visible,
+    .hero-btn-secondary:focus-visible,
+    .btn-header-quote:focus-visible,
+    .hcc-btn:focus-visible,
+    .hcc-next-sneak:focus-visible,
+    .hcc-dot:focus-visible,
+    .c3d-arrow-btn:focus-visible,
+    .btn-catalog-all:focus-visible,
+    .c3d-btn-inaproc:focus-visible,
+    .c3d-btn-quote:focus-visible,
+    .faq-q:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 3px;
+    }
+
     /* GLOBAL FIXED HEADER (SEAMLESS OVER HERO, ADAPTS ON SCROLL) */
     header.site-header {
       position: fixed;
@@ -245,6 +267,22 @@
       pointer-events: none;
     }
 
+    .hero-bg-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      object-position: center 35%;
+      display: block;
+      pointer-events: none;
+      z-index: 1;
+    }
+
     video.hero-video {
       position: absolute;
       top: 50%;
@@ -404,132 +442,300 @@
       transform: translateY(-2px);
     }
 
-    /* SLEEK FLOATING SCENE SWITCHER (BOTTOM RIGHT DOCK) */
-    .hero-bottom-bar {
+    /* ==========================================================================
+       CONCEPT 2: FLOATING FROSTED-GLASS HARDWARE CAROUSEL CARD (BOTTOM RIGHT)
+       ========================================================================== */
+    .hero-carousel-card {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: clamp(1.25rem, 3.5vh, 2.5rem);
-      padding: 0 clamp(1.5rem, 5.5vw, 5.5rem);
+      right: clamp(1.5rem, 5.5vw, 5.5rem);
+      bottom: clamp(1.5rem, 4vh, 2.75rem);
       z-index: 25;
-      pointer-events: none;
-    }
-
-    .bottom-row {
+      width: min(440px, calc(100vw - 3rem));
+      background: rgba(10, 24, 46, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      padding: 1.15rem 1.25rem 1.25rem;
+      color: #FFFFFF;
+      overflow: hidden;
       display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      width: 100%;
-    }
-
-    .hero-scene-nav {
+      flex-direction: column;
+      gap: 0.9rem;
       pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.45rem;
-      background: rgba(10, 24, 46, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 9999px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
-    .hero-scene-tab {
-      position: relative;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 9999px;
-      padding: 0.35rem 0.65rem;
-      color: rgba(255, 255, 255, 0.65);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-      overflow: hidden;
-    }
-    .hero-scene-tab:hover {
-      color: #FFFFFF;
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .hero-scene-tab.active {
-      background: rgba(255, 255, 255, 0.14);
+    .hero-carousel-card:hover {
       border-color: rgba(255, 255, 255, 0.25);
-      color: #FFFFFF;
-      font-weight: 600;
-      padding: 0.35rem 0.85rem;
     }
 
-    .hero-scene-tab .tab-num {
-      color: rgba(210, 228, 252, 0.95);
+    /* Top: Category Tag & Counter */
+    .hcc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hcc-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--font-mono);
       font-size: 0.6875rem;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(210, 228, 252, 0.9);
+      text-transform: uppercase;
     }
 
-    .hero-scene-tab .tab-label {
-      font-family: var(--font-sans);
-      font-size: 0.725rem;
-      white-space: nowrap;
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
-    }
-    .hero-scene-tab.active .tab-label,
-    .hero-scene-tab:hover .tab-label {
-      max-width: 130px;
-      opacity: 1;
-    }
-
-    .tab-progress {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 2px;
-      background: transparent;
-      overflow: hidden;
-    }
-    .hero-scene-tab.active .tab-progress {
-      background: rgba(255, 255, 255, 0.18);
-    }
-    .tab-progress-bar {
-      display: block;
-      height: 100%;
-      width: 0%;
-      background: #FFFFFF;
-      transition: width 0.08s linear;
-    }
-
-    .pulse-indicator {
-      display: inline-block;
+    .hcc-live-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: #10B981;
       box-shadow: 0 0 8px #10B981;
       animation: tabPulse 2s infinite;
-      margin-right: 0.35rem;
-      vertical-align: middle;
+      flex-shrink: 0;
     }
+
     @keyframes tabPulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
-    .bottom-disclaimer {
+    .hcc-counter {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .hcc-counter strong {
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    /* Middle row: Hardware Thumbnail & Specs */
+    .hcc-body {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .hcc-thumb-wrap {
+      width: 88px;
+      height: 88px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .hcc-thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .hcc-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 0;
+    }
+
+    .hcc-product-title {
+      font-family: var(--font-sans);
+      font-size: 0.975rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      line-height: 1.3;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.25s ease;
+    }
+
+    .hcc-product-spec {
+      font-family: var(--font-sans);
+      font-size: 0.775rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.45;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: opacity 0.25s ease;
+    }
+
+    .hcc-spec-badge {
       display: inline-flex;
       align-items: center;
+      gap: 0.35rem;
       font-family: var(--font-mono);
       font-size: 0.65rem;
-      letter-spacing: 0.05em;
-      color: rgba(215, 230, 255, 0.85);
+      font-weight: 500;
+      color: #93C5FD;
+      margin-top: 0.15rem;
+    }
+
+    /* Bottom row: Next Preview + Navigation Controls */
+    .hcc-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hcc-next-sneak {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 0.35rem 0.65rem 0.35rem 0.4rem;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .hcc-next-sneak:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .hcc-next-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+    }
+
+    .hcc-next-text-wrap {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .hcc-next-label {
+      font-family: var(--font-mono);
+      font-size: 0.5875rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.5);
       text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .hcc-next-name {
+      font-family: var(--font-sans);
+      font-size: 0.71875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 135px;
+    }
+
+    .hcc-nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hcc-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 0;
+    }
+
+    .hcc-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
+
+    .hcc-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    .hcc-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-right: 0.25rem;
+    }
+
+    .hcc-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      transition: all 0.25s ease;
+    }
+
+    .hcc-dot:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .hcc-dot.active {
+      width: 16px;
+      background: #FFFFFF;
+    }
+
+    /* Auto-rotation Progress Track */
+    .hcc-progress-track {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2.5px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .hcc-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3B82F6, #60A5FA);
+      transition: width 0.08s linear;
     }
 
     /* HOMEPAGE CONTENT FLOW BELOW HERO */
@@ -846,17 +1052,6 @@
                   0 4px 14px rgba(0, 0, 0, 0.06);
     }
 
-    .c3d-glow-orb {
-      position: absolute;
-      top: -60px;
-      right: -60px;
-      width: 160px;
-      height: 160px;
-      background: radial-gradient(circle, rgba(11, 107, 174, 0.08) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
     .c3d-card-top {
       display: flex;
       align-items: center;
@@ -1087,8 +1282,9 @@
     .c3d-hint-text {
       font-family: var(--font-mono);
       font-size: 0.65rem;
-      color: rgba(29, 29, 31, 0.45);
+      color: rgba(29, 29, 31, 0.72);
       letter-spacing: 0.04em;
+      font-weight: 500;
     }
 
     /* ALUR PENGADAAN (STEPS) */
@@ -1278,6 +1474,25 @@
       }
     }
 
+    @media (max-width: 960px) {
+      .hero-section {
+        height: auto;
+        min-height: 100svh;
+        padding-top: 5.5rem;
+        padding-bottom: 2.25rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+      }
+      .hero-carousel-card {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: auto;
+        margin: 2rem clamp(1.5rem, 5.5vw, 5.5rem) 0;
+      }
+    }
+
     /* MOBILE POLISH */
     @media (max-width: 640px) {
       .hero-content-block {
@@ -1298,38 +1513,31 @@
       .hero-btn-primary, .hero-btn-secondary {
         flex: 1;
         justify-content: center;
-        padding: 0.7rem 1rem;
-        font-size: 0.7rem;
+        padding: 0.72rem 0.85rem;
+        font-size: 0.735rem;
+        white-space: nowrap;
+        text-align: center;
       }
-      .hero-bottom-bar {
-        padding: 0 1.25rem;
-        bottom: 1rem;
+      .hero-carousel-card {
+        margin: 1.5rem 1.25rem 0;
+        padding: 1rem;
       }
-      .bottom-row {
-        justify-content: center;
+      .hcc-body {
+        grid-template-columns: 76px 1fr;
+        gap: 0.75rem;
       }
-      .hero-scene-nav {
-        gap: 0.25rem;
-        width: auto;
-        max-width: 100%;
-        padding: 0.3rem 0.4rem;
-        justify-content: center;
-        scrollbar-width: none;
-        flex-wrap: nowrap;
+      .hcc-thumb-wrap {
+        width: 76px;
+        height: 76px;
       }
-      .hero-scene-nav::-webkit-scrollbar {
-        display: none;
+      .hcc-product-title {
+        font-size: 0.875rem;
       }
-      .hero-scene-tab {
-        padding: 0.3rem 0.55rem;
-        font-size: 0.65rem;
-        flex-shrink: 0;
+      .hcc-product-spec {
+        font-size: 0.71875rem;
       }
-      .hero-scene-tab.active {
-        padding: 0.3rem 0.75rem;
-      }
-      .bottom-disclaimer {
-        display: none;
+      .hcc-next-name {
+        max-width: 90px;
       }
       header.site-header {
         padding: 0 1.25rem;
@@ -1362,32 +1570,21 @@
     <div class="header-actions">
       <a href="#kontak" class="btn-header-quote" id="nav-cta">
         <span>Minta Penawaran</span>
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </header>
 
   <!-- HERO SECTION WITH DYNAMIC TRANSITIONING VIDEOS (NO SCROLL-DRIVEN EFFECTS) -->
   <section class="hero-section" id="hero" aria-label="Sinematik Hero PT Agung Wijaya Nitya">
-    <!-- Dual-Channel Video Background with Seamless Crossfade -->
+    <!-- Concept 2 Full-Bleed High-End Datacenter & Skyline Background -->
     <div class="hero-media-wrap" id="hero-media-wrap" aria-hidden="true">
-      <video
-        class="hero-video active"
-        id="hero-video-a"
-        autoplay
-        muted
-        playsinline
-        preload="auto"
-        poster="/films/perusahaan-loop-poster.jpg"
-        src="/films/perusahaan-loop.mp4"
-      ></video>
-      <video
-        class="hero-video"
-        id="hero-video-b"
-        muted
-        playsinline
-        preload="auto"
-      ></video>
+      <img
+        src="/images/concept2-hero-bg.jpg"
+        alt="Infrastruktur Pusat Data dan Ruang Kerja Enterprise"
+        class="hero-bg-image"
+        id="hero-bg-image"
+        loading="eager"
+      />
       <!-- Atmospheric Dark Navy Tint Overlay (Smooth Left-to-Right & Vertical Fade) -->
       <div class="hero-gradient-overlay"></div>
     </div>
@@ -1396,7 +1593,7 @@
     <div class="hero-content-block">
       <div class="hero-badge">
         <span class="badge-square"></span>
-        <span class="badge-text" id="hero-badge-text">01 // EKSTERIOR GEDUNG &amp; FASILITAS</span>
+        <span class="badge-text" id="hero-badge-text">01 · PUSAT DATA &amp; RAK SERVER</span>
       </div>
       <h1 class="hero-title">
         <span>Pengadaan</span>
@@ -1407,46 +1604,105 @@
       <div class="hero-cta-group">
         <a href="#kontak" class="hero-btn-primary" id="hero-cta-quote">
           <span>Minta Penawaran</span>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="#pilar" class="hero-btn-secondary" id="hero-cta-services">
-          <span>Jelajahi Layanan</span>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M8 13L3.5 8.5M8 13L12.5 8.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <a href="#katalog" class="hero-btn-secondary" id="hero-cta-services">
+          <span>Buka Katalog INAPROC ↗</span>
         </a>
       </div>
     </div>
 
-    <!-- Architectural Hero Bottom Bar with Interactive Dynamic Scene Switcher -->
-    <div class="hero-bottom-bar" id="hero-bottom-bar">
-      <div class="bottom-row">
-        <!-- Interactive Scene Navigation Pills with Progress Indication -->
-        <div class="hero-scene-nav" id="hero-scene-nav" role="tablist" aria-label="Pilih Klip Video Hero">
-          <button class="hero-scene-tab active" data-index="0" role="tab" aria-selected="true" title="Scene 1: Eksterior Gedung & Lobi">
-            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
-            <span class="tab-num">01</span>
-            <span class="tab-label">Gedung &amp; Lobi</span>
+    <!-- CONCEPT 2: FLOATING FROSTED-GLASS HARDWARE SPOTLIGHT CAROUSEL -->
+    <div
+      class="hero-carousel-card"
+      id="hero-carousel-card"
+      role="region"
+      aria-label="Sorotan Perangkat Keras Unggulan"
+    >
+      <!-- Top Bar: Category & Counter -->
+      <div class="hcc-top">
+        <div class="hcc-tag">
+          <span class="hcc-live-dot" aria-hidden="true"></span>
+          <span id="hcc-category">Pusat Data &amp; Server</span>
+        </div>
+        <div class="hcc-counter">
+          <strong id="hcc-curr-num">01</strong> / <span id="hcc-total-num">04</span>
+        </div>
+      </div>
+
+      <!-- Middle: Active Hardware Thumbnail & Specs -->
+      <div class="hcc-body">
+        <div class="hcc-thumb-wrap">
+          <img
+            id="hcc-product-img"
+            class="hcc-thumb-img"
+            src="/products/server-dell-r760xs.png"
+            alt="DELL PowerEdge R760xs"
+            loading="eager"
+          />
+        </div>
+        <div class="hcc-info">
+          <h3 class="hcc-product-title" id="hcc-product-title">DELL PowerEdge R760xs</h3>
+          <p class="hcc-product-spec" id="hcc-product-spec">2U Rack Server · Dual Intel Xeon Silver · 64GB DDR5 · Redundant PSU</p>
+          <span class="hcc-spec-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Tersedia INAPROC &amp; E-Katalog
+          </span>
+        </div>
+      </div>
+
+      <!-- Footer: Next Sneak-peek + Dot & Arrow Controls -->
+      <div class="hcc-footer">
+        <button
+          type="button"
+          class="hcc-next-sneak"
+          id="hcc-next-sneak-btn"
+          aria-label="Lompat ke produk berikutnya"
+          title="Klik untuk melihat produk berikutnya"
+        >
+          <img
+            id="hcc-next-thumb"
+            class="hcc-next-thumb"
+            src="/products/workstation-lenovo-p7.jpeg"
+            alt="Thumbnail berikutnya"
+            aria-hidden="true"
+          />
+          <div class="hcc-next-text-wrap">
+            <span class="hcc-next-label">Berikutnya</span>
+            <span class="hcc-next-name" id="hcc-next-name">ThinkStation P7</span>
+          </div>
+        </button>
+
+        <div class="hcc-nav-controls">
+          <div class="hcc-dots" id="hcc-dots" role="tablist" aria-label="Pilih item perangkat">
+            <button type="button" class="hcc-dot active" data-index="0" role="tab" aria-selected="true" aria-label="Item 1: Server Dell PowerEdge"></button>
+            <button type="button" class="hcc-dot" data-index="1" role="tab" aria-selected="false" aria-label="Item 2: Workstation ThinkStation P7"></button>
+            <button type="button" class="hcc-dot" data-index="2" role="tab" aria-selected="false" aria-label="Item 3: APC Smart-UPS 3000VA"></button>
+            <button type="button" class="hcc-dot" data-index="3" role="tab" aria-selected="false" aria-label="Item 4: LG Medical Display"></button>
+          </div>
+          <button
+            type="button"
+            class="hcc-btn"
+            id="hcc-prev-btn"
+            aria-label="Perangkat sebelumnya"
+            title="Sebelumnya"
+          >
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <button class="hero-scene-tab" data-index="1" role="tab" aria-selected="false" title="Scene 2: Ruang Kantor & Kolaborasi">
-            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
-            <span class="tab-num">02</span>
-            <span class="tab-label">Ruang Kantor</span>
-          </button>
-          <button class="hero-scene-tab" data-index="2" role="tab" aria-selected="false" title="Scene 3: Server Room & Pusat Data">
-            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
-            <span class="tab-num">03</span>
-            <span class="tab-label">Server Room</span>
-          </button>
-          <button class="hero-scene-tab" data-index="3" role="tab" aria-selected="false" title="Scene 4: Laboratorium Pemeliharaan Hardware">
-            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
-            <span class="tab-num">04</span>
-            <span class="tab-label">Pemeliharaan</span>
-          </button>
-          <button class="hero-scene-tab" data-index="4" role="tab" aria-selected="false" title="Scene 5: Solusi Konsultasi & Workstation">
-            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
-            <span class="tab-num">05</span>
-            <span class="tab-label">Konsultasi</span>
+          <button
+            type="button"
+            class="hcc-btn"
+            id="hcc-next-btn"
+            aria-label="Perangkat selanjutnya"
+            title="Selanjutnya"
+          >
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
+      </div>
+
+      <!-- Auto-rotation Progress Track -->
+      <div class="hcc-progress-track">
+        <div class="hcc-progress-fill" id="hcc-progress-bar"></div>
       </div>
     </div>
   </section>
@@ -1459,30 +1715,29 @@
       <div id="layanan" style="position: absolute; top: -75px;"></div>
       <div class="content-container">
         <div class="section-eyebrow">
-          <span class="badge-dot"></span>
           <span>BIDANG UTAMA</span>
         </div>
         <h2 class="section-title">Fokus layanan dan pengadaan institusi.</h2>
-        <p class="section-subhead">Solusi terpercaya untuk kebutuhan infrastruktur fisik teknologi dan perlengkapan institusi.</p>
+        <p class="section-subhead">Penyediaan infrastruktur fisik komputasi, proteksi daya, dan sarana operasional kantor instansi.</p>
         
         <div class="pilar-grid">
           <div class="pilar-card">
-            <span class="pilar-card-num">01 // KOMPUTER & IT</span>
+            <span class="pilar-card-num">01 · KOMPUTER & IT</span>
             <h3 class="pilar-card-title">Komputer & Perangkat IT</h3>
             <p class="pilar-card-desc">Pengadaan komputer desktop institusi, monitor kantor, dan perangkat keras teknologi penunjang kerja.</p>
           </div>
           <div class="pilar-card">
-            <span class="pilar-card-num">02 // DAYA & SERVER</span>
+            <span class="pilar-card-num">02 · DAYA & SERVER</span>
             <h3 class="pilar-card-title">Daya & Rak Server</h3>
             <p class="pilar-card-desc">Penyediaan UPS (Uninterruptible Power Supply), server rack, dan infrastruktur fisik ruang server.</p>
           </div>
           <div class="pilar-card">
-            <span class="pilar-card-num">03 // PERLENGKAPAN</span>
+            <span class="pilar-card-num">03 · PERLENGKAPAN</span>
             <h3 class="pilar-card-title">Perlengkapan Institusi</h3>
             <p class="pilar-card-desc">Peralatan penyimpanan, rak arsip berkas, dan perlengkapan penunjang fasilitas kantor institusi.</p>
           </div>
           <div class="pilar-card">
-            <span class="pilar-card-num">04 // PEMELIHARAAN</span>
+            <span class="pilar-card-num">04 · PEMELIHARAAN</span>
             <h3 class="pilar-card-title">Pemeliharaan Hardware</h3>
             <p class="pilar-card-desc">Layanan pemeliharaan teknis perangkat keras untuk memastikan keandalan operasional perangkat kerja.</p>
           </div>
@@ -1499,10 +1754,9 @@
         <div class="catalog-3d-header-wrap">
           <div class="catalog-3d-header-text">
             <div class="section-eyebrow">
-              <span class="badge-dot"></span>
               <span>KATALOG RESMI LKPP · 3D SHOWCASE</span>
             </div>
-            <h2 class="section-title">Kurasi Produk &amp; Solusi Unggulan.</h2>
+            <h2 class="section-title">Katalog Perangkat Keras &amp; Fasilitas.</h2>
             <p class="section-subhead">Perangkat keras TI, workstation, sistem cadangan daya, dan perlengkapan institusi terdaftar resmi pada etalase INAPROC LKPP.</p>
           </div>
 
@@ -1573,11 +1827,10 @@
     <section class="content-section" id="pengadaan">
       <div class="content-container">
         <div class="section-eyebrow">
-          <span class="badge-dot"></span>
           <span>ALUR KERJA</span>
         </div>
         <h2 class="section-title">Pengadaan yang terstruktur dan transparan.</h2>
-        <p class="section-subhead">Tahapan konsultasi hingga pengiriman barang yang jelas, akuntabel, dan sesuai prosedur.</p>
+        <p class="section-subhead">Alur pengadaan dari konsultasi spesifikasi teknis, penerbitan surat penawaran harga, hingga verifikasi fisik barang.</p>
 
         <div class="steps-grid">
           <div class="step-card">
@@ -1608,16 +1861,15 @@
     <section class="content-section" id="faq">
       <div class="content-container">
         <div class="section-eyebrow">
-          <span class="badge-dot"></span>
           <span>PERTANYAAN UMUM</span>
         </div>
         <h2 class="section-title">Pertanyaan yang sering diajukan.</h2>
-        <p class="section-subhead">Keterangan resmi mengenai pengadaan dan layanan PT. Agung Wijaya Nitya.</p>
+        <p class="section-subhead">Keterangan resmi mengenai pengadaan dan layanan Agung Wijaya Nitya.</p>
 
         <div class="faq-wrapper">
           <div class="faq-item open">
             <div class="faq-q">
-              <span>Di mana katalog resmi PT. Agung Wijaya Nitya dapat diakses?</span>
+              <span>Di mana katalog resmi Agung Wijaya Nitya dapat diakses?</span>
               <span class="faq-icon">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
@@ -1629,7 +1881,7 @@
 
           <div class="faq-item">
             <div class="faq-q">
-              <span>Produk apa saja yang menjadi fokus PT. Agung Wijaya Nitya?</span>
+              <span>Produk apa saja yang menjadi fokus Agung Wijaya Nitya?</span>
               <span class="faq-icon">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
@@ -1641,13 +1893,13 @@
 
           <div class="faq-item">
             <div class="faq-q">
-              <span>Apakah PT. Agung Wijaya Nitya menyediakan software atau aplikasi SIMRS rumah sakit?</span>
+              <span>Apakah Agung Wijaya Nitya menyediakan software atau aplikasi SIMRS rumah sakit?</span>
               <span class="faq-icon">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
             </div>
             <div class="faq-a">
-              Tidak. PT. Agung Wijaya Nitya bukan vendor SIMRS dan tidak menjual perangkat lunak sistem informasi rumah sakit. Fokus operasional kami secara murni pada pengadaan perangkat keras (hardware), perlengkapan fisik institusi, dan jasa pemeliharaan hardware.
+              Tidak. Agung Wijaya Nitya bukan vendor SIMRS dan tidak menjual perangkat lunak sistem informasi rumah sakit. Fokus operasional kami secara murni pada pengadaan perangkat keras (hardware), perlengkapan fisik institusi, dan jasa pemeliharaan hardware.
             </div>
           </div>
 
@@ -1665,7 +1917,7 @@
 
           <div class="faq-item">
             <div class="faq-q">
-              <span>Di mana domisili kantor PT. Agung Wijaya Nitya?</span>
+              <span>Di mana domisili kantor Agung Wijaya Nitya?</span>
               <span class="faq-icon">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
@@ -1684,10 +1936,9 @@
   <footer class="site-footer" id="kontak">
     <div class="footer-cta-card">
       <div class="section-eyebrow" style="justify-content: center;">
-        <span class="badge-dot"></span>
-        <span>KONSULTASI & KEMITRAAN</span>
+        <span>KONSULTASI PENGADAAN</span>
       </div>
-      <h2 class="footer-cta-title">Butuh pengadaan perangkat IT atau perlengkapan institusi?</h2>
+      <h2 class="footer-cta-title">Konsultasikan spesifikasi teknis dan volume pengadaan instansi Anda.</h2>
       <p class="footer-cta-sub">Hubungi kami untuk permintaan penawaran harga resmi dan konsultasi spesifikasi teknis pengadaan Anda.</p>
       
       <div class="footer-contacts-list">
@@ -1698,14 +1949,13 @@
         <a href="https://katalog.inaproc.id/agung-wijaya-nitya" target="_blank" rel="noopener noreferrer">e-Katalog LKPP ↗</a>
       </div>
 
-      <a href="mailto:info@agungwijayanitya.com?subject=Permintaan%20Penawaran%20Pengadaan%20-%20PT%20Agung%20Wijaya%20Nitya" class="hero-btn-primary" style="display: inline-flex; margin: 0 auto;">
+      <a href="mailto:info@agungwijayanitya.com?subject=Permintaan%20Penawaran%20Pengadaan%20-%20Agung%20Wijaya%20Nitya" class="hero-btn-primary" style="display: inline-flex; margin: 0 auto;">
         Minta Penawaran Sekarang
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
 
     <div class="footer-bottom-bar">
-      <span>© PT. Agung Wijaya Nitya. Unlocking Innovation, Empowering Possibilities.</span>
+      <span>© Agung Wijaya Nitya. Pengadaan Perangkat Keras TI &amp; Perlengkapan Institusi.</span>
       <span>Mitra Pengadaan Perangkat IT & Institusi — Kabupaten Badung, Bali</span>
     </div>
   </footer>
