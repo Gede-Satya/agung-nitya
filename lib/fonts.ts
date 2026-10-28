@@ -1,23 +1,10 @@
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-export const geist = Geist({
+export const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
-export const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-  display: "swap",
-});
-
-export const newsreader = Newsreader({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-editorial",
-  display: "swap",
-});
-
-export const fontVariables = `${geist.variable} ${geistMono.variable} ${newsreader.variable}`;
+export const fontVariables = `${poppins.variable}`;

@@ -46,7 +46,7 @@ export function createLinesOverlay(canvas: HTMLCanvasElement): LinesOverlay {
       ctx.lineWidth = 1;
       ctx.strokeStyle = "rgba(255, 255, 255, 0.14)"; // subtle white architectural line
       ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-      ctx.font = `${Math.round(10 * dpr)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+      ctx.font = `${Math.round(10 * dpr)}px 'Poppins', sans-serif`;
 
       const padX = Math.round(w * 0.05);
       const padY = Math.round(h * 0.06);

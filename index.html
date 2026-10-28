@@ -10,14 +10,13 @@
   <meta name="description" content="PT. Agung Wijaya Nitya: Mitra pengadaan perangkat keras IT, UPS, server rack, perlengkapan institusi, dan layanan pemeliharaan hardware di Kabupaten Badung, Bali." />
   <meta name="robots" content="index, follow" />
 
-  <!-- Fonts: Instrument Serif (Display Editorial), Plus Jakarta Sans (Grotesk Body), JetBrains Mono (Technical Eyebrows) -->
+  <!-- Fonts: Poppins (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
 
-  <!-- Preload hero poster and sequence manifest -->
-  <link rel="preload" as="image" href="/films/t12/f_001.webp" />
-  <link rel="preload" as="fetch" href="/films/t12/manifest.json" crossorigin />
+  <!-- Preload hero video poster -->
+  <link rel="preload" as="image" href="/films/perusahaan-loop-poster.jpg" />
 
   <style>
     /* CSS RESET & TOKENS */
@@ -34,9 +33,9 @@
       --text-muted: rgba(29, 29, 31, 0.68);
       --accent-blue: rgb(11, 107, 174);
       --accent-blue-hover: rgb(8, 86, 140);
-      --font-serif: 'Instrument Serif', Georgia, serif;
-      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --font-serif: 'Poppins', system-ui, -apple-system, sans-serif;
+      --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Poppins', system-ui, -apple-system, sans-serif;
       --border-light: rgba(29, 29, 31, 0.08);
       --border-glass: rgba(255, 255, 255, 0.6);
       --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
@@ -96,9 +95,37 @@
 
     .brand-group {
       display: flex;
-      flex-direction: column;
-      gap: 3px;
+      align-items: center;
+      gap: 0.75rem;
       text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .brand-group:hover {
+      opacity: 0.9;
+    }
+
+    .brand-logo-wrap {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .brand-title {
@@ -107,6 +134,7 @@
       font-weight: 700;
       letter-spacing: -0.01em;
       color: #FFFFFF;
+      line-height: 1.2;
     }
 
     .brand-sub {
@@ -116,6 +144,24 @@
       color: rgba(205, 225, 250, 0.7);
       text-transform: uppercase;
       font-weight: 500;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 640px) {
+      .brand-group {
+        gap: 0.6rem;
+      }
+      .brand-logo-wrap {
+        width: 32px;
+        height: 32px;
+      }
+      .brand-title {
+        font-size: 0.85rem;
+      }
+      .brand-sub {
+        font-size: 0.55rem;
+        letter-spacing: 0.08em;
+      }
     }
 
     nav.header-nav {
@@ -172,94 +218,86 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
     }
 
-    /* HERO PINNED STAGE (OUTER WRAPPER CREATES ~4–5 VIEWPORT HEIGHTS OF SCROLL DISTANCE) */
-    /* HERO PINNED STAGE (OUTER WRAPPER CREATES 500svh / 500vh SCROLL DISTANCE) */
-    .hero-wrapper {
+    /* HERO SECTION WITH VIDEO BACKGROUND (NO SCROLL-DRIVEN EFFECTS) */
+    .hero-section {
       position: relative;
-      width: 100%;
-      height: 500vh;
-      height: 500svh;
-      margin: 0;
-      padding: 0;
-    }
-
-    .hero-stage, .hero-pin {
-      position: sticky;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100vh;
       height: 100svh;
+      min-height: 600px;
       overflow: hidden;
-      background: #FFFFFF;
+      background: #0B1D36;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
       z-index: 10;
     }
 
-    /* FULL-BLEED CANVASES & MEDIA (EDGE TO EDGE) */
-    canvas.gl, canvas.lines {
+    /* FULL-BLEED VIDEO BACKGROUND */
+    .hero-media-wrap {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    video.hero-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      object-position: center;
       display: block;
       pointer-events: none;
-      object-fit: cover;
-    }
-    canvas.gl { z-index: 1; }
-    canvas.lines { z-index: 2; }
-
-    .boot-poster {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 10;
-      transition: opacity 0.8s ease;
-      pointer-events: none;
-    }
-    .boot-poster.hidden {
       opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    video.ambient-loop {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
+    video.hero-video.active {
+      opacity: 1;
+      z-index: 1;
     }
 
-    /* ATMOSPHERIC DARK BLUE GRADIENT OVERLAY (EDGE-TO-EDGE OVER MEDIA) */
+    /* ATMOSPHERIC DARK BLUE GRADIENT OVERLAY (HIGH CONTRAST ON LEFT, CINEMATIC ON RIGHT) */
     .hero-gradient-overlay {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 2;
       pointer-events: none;
-      background: linear-gradient(
-        90deg,
-        rgba(13, 28, 54, 0.96) 0%,
-        rgba(15, 33, 64, 0.92) 28%,
-        rgba(17, 38, 74, 0.80) 45%,
-        rgba(18, 40, 78, 0.46) 62%,
-        rgba(15, 32, 60, 0.15) 82%,
-        transparent 100%
-      );
+      background:
+        linear-gradient(
+          90deg,
+          rgba(10, 24, 46, 0.96) 0%,
+          rgba(11, 29, 54, 0.90) 30%,
+          rgba(13, 34, 62, 0.72) 52%,
+          rgba(15, 38, 70, 0.38) 75%,
+          rgba(10, 24, 46, 0.20) 100%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(10, 24, 46, 0.60) 0%,
+          transparent 25%,
+          transparent 75%,
+          rgba(10, 24, 46, 0.85) 100%
+        );
     }
 
     /* HERO EDITORIAL COPY & CTAs OVERLAY (LEFT ALIGNED) */
     .hero-content-block {
-      position: absolute;
-      left: clamp(1.5rem, 5.5vw, 5.5rem);
-      top: 48%;
-      transform: translateY(-50%);
+      position: relative;
+      margin-left: clamp(1.5rem, 5.5vw, 5.5rem);
+      margin-right: clamp(1.5rem, 5.5vw, 5.5rem);
       max-width: 660px;
-      z-index: 25;
+      z-index: 10;
       pointer-events: auto;
       background: transparent;
       padding: 0;
@@ -289,11 +327,11 @@
 
     .hero-title {
       font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(2.85rem, 5.6vw, 5.15rem);
-      font-weight: 400;
-      line-height: 1.05;
-      letter-spacing: -0.015em;
+      font-style: normal;
+      font-size: clamp(2.75rem, 5.2vw, 4.65rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
       color: #FFFFFF;
       margin-bottom: 1.35rem;
       text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
@@ -325,19 +363,19 @@
       padding: 0.75rem 1.6rem;
       border-radius: 9999px;
       background: #0B192C;
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       color: #FFFFFF;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.01em;
       text-decoration: none;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
       transition: all 0.25s ease;
     }
     .hero-btn-primary:hover {
       background: #112847;
-      border-color: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.45);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     }
@@ -348,25 +386,25 @@
       gap: 0.55rem;
       padding: 0.75rem 1.55rem;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       color: #FFFFFF;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
       text-decoration: none;
       transition: all 0.25s ease;
     }
     .hero-btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
     }
 
-    /* ARCHITECTURAL HERO BOTTOM BAR & HUD OVERLAY */
+    /* SLEEK FLOATING SCENE SWITCHER (BOTTOM RIGHT DOCK) */
     .hero-bottom-bar {
       position: absolute;
       left: 0;
@@ -374,79 +412,124 @@
       bottom: clamp(1.25rem, 3.5vh, 2.5rem);
       padding: 0 clamp(1.5rem, 5.5vw, 5.5rem);
       z-index: 25;
-      pointer-events: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      transition: opacity 0.3s ease;
-    }
-
-    .bottom-rule {
-      width: 100%;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.22);
-      margin-bottom: 0.75rem;
+      pointer-events: none;
     }
 
     .bottom-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      gap: 1.5rem;
+      width: 100%;
     }
 
-    .bottom-tagline {
-      font-family: var(--font-mono);
-      font-size: 0.725rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      color: rgba(215, 230, 255, 0.75);
-    }
-
-    .bottom-scenes {
-      display: flex;
+    .hero-scene-nav {
+      pointer-events: auto;
+      display: inline-flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 0.35rem;
+      padding: 0.35rem 0.45rem;
+      background: rgba(10, 24, 46, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
     }
 
-    .scene-num-btn {
-      background: transparent;
-      border: none;
-      padding: 0.2rem 0;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.38);
-      cursor: pointer;
+    .hero-scene-tab {
       position: relative;
-      transition: color 0.2s ease;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9999px;
+      padding: 0.35rem 0.65rem;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
     }
-    .scene-num-btn:hover {
-      color: rgba(255, 255, 255, 0.85);
-    }
-    .scene-num-btn.active {
+    .hero-scene-tab:hover {
       color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .hero-scene-tab.active {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+    }
+
+    .hero-scene-tab .tab-num {
+      color: rgba(210, 228, 252, 0.95);
+      font-size: 0.6875rem;
       font-weight: 700;
     }
-    .scene-num-btn.active::after {
-      content: "";
+
+    .hero-scene-tab .tab-label {
+      font-family: var(--font-sans);
+      font-size: 0.725rem;
+      white-space: nowrap;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+    }
+    .hero-scene-tab.active .tab-label,
+    .hero-scene-tab:hover .tab-label {
+      max-width: 130px;
+      opacity: 1;
+    }
+
+    .tab-progress {
       position: absolute;
       left: 0;
-      right: 0;
-      bottom: -3px;
+      bottom: 0;
+      width: 100%;
       height: 2px;
+      background: transparent;
+      overflow: hidden;
+    }
+    .hero-scene-tab.active .tab-progress {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .tab-progress-bar {
+      display: block;
+      height: 100%;
+      width: 0%;
       background: #FFFFFF;
-      border-radius: 1px;
+      transition: width 0.08s linear;
+    }
+
+    .pulse-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+      animation: tabPulse 2s infinite;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+    @keyframes tabPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     .bottom-disclaimer {
+      display: inline-flex;
+      align-items: center;
       font-family: var(--font-mono);
-      font-size: 0.625rem;
-      letter-spacing: 0.03em;
-      color: rgba(255, 255, 255, 0.42);
-      text-align: right;
-      margin-top: 0.15rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      color: rgba(215, 230, 255, 0.85);
+      text-transform: uppercase;
     }
 
     /* HOMEPAGE CONTENT FLOW BELOW HERO */
@@ -483,10 +566,10 @@
 
     .section-title {
       font-family: var(--font-serif);
-      font-size: clamp(2.25rem, 4vw, 3.5rem);
-      font-weight: 400;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
+      font-size: clamp(2.15rem, 3.8vw, 3.25rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
       color: var(--text);
       margin-bottom: 0.85rem;
       max-width: 820px;
@@ -961,44 +1044,7 @@
       color: var(--accent-blue);
     }
 
-    /* Stage Floating Side Buttons */
-    .c3d-side-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(11, 107, 174, 0.18);
-      color: #0B192C;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 40;
-      box-shadow: 0 8px 24px rgba(11, 29, 54, 0.12);
-      transition: all 0.25s ease;
-    }
-    .c3d-side-nav:hover {
-      background: #FFFFFF;
-      color: var(--accent-blue);
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: 0 12px 30px rgba(11, 107, 174, 0.25);
-    }
-    .c3d-side-nav.prev {
-      left: 10px;
-    }
-    .c3d-side-nav.next {
-      right: 10px;
-    }
-    @media (min-width: 1200px) {
-      .c3d-side-nav.prev { left: -18px; }
-      .c3d-side-nav.next { right: -18px; }
-    }
-
-    /* Telemetry and Dots Below Stage */
+    /* Telemetry Bar Below Stage */
     .c3d-telemetry-bar {
       display: flex;
       flex-direction: column;
@@ -1019,20 +1065,6 @@
       gap: 0.75rem;
     }
 
-    .c3d-radar-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-      animation: c3d-pulse 2s infinite;
-    }
-    @keyframes c3d-pulse {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-
     .c3d-counter-badge {
       font-family: var(--font-mono);
       font-size: 0.75rem;
@@ -1046,34 +1078,10 @@
       color: var(--text-muted);
       font-weight: 500;
       display: inline-block;
-      max-width: 320px;
+      max-width: 380px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    .c3d-dots-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .c3d-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 9999px;
-      background: rgba(29, 29, 31, 0.16);
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .c3d-dot:hover {
-      background: rgba(11, 107, 174, 0.5);
-    }
-    .c3d-dot.active {
-      width: 28px;
-      background: var(--accent-blue);
     }
 
     .c3d-hint-text {
@@ -1206,9 +1214,10 @@
 
     .footer-cta-title {
       font-family: var(--font-serif);
-      font-size: clamp(2.25rem, 4vw, 3.25rem);
-      font-weight: 400;
-      line-height: 1.2;
+      font-size: clamp(2.15rem, 3.8vw, 3.15rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
       color: var(--text);
       margin-bottom: 1rem;
     }
@@ -1259,32 +1268,23 @@
 
     /* REDUCED MOTION SUPPORT */
     @media (prefers-reduced-motion: reduce) {
-      .hero-wrapper {
-        height: 100vh !important;
-        height: 100svh !important;
-      }
-      .hero-stage, .hero-pin {
-        position: relative !important;
-        height: 100vh !important;
-        height: 100svh !important;
-      }
-      canvas.gl, canvas.lines, video.ambient-loop {
+      .hero-section video.hero-video {
         display: none !important;
       }
-      .boot-poster {
-        opacity: 1 !important;
+      .hero-section {
+        background-image: url('/films/perusahaan-loop-poster.jpg') !important;
+        background-size: cover !important;
+        background-position: center !important;
       }
     }
 
     /* MOBILE POLISH */
     @media (max-width: 640px) {
       .hero-content-block {
-        left: 1.25rem;
-        right: 1.25rem;
-        top: 48%;
-        transform: translateY(-50%);
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
         max-width: none;
-        padding: 0;
+        padding-top: 1rem;
       }
       .hero-title {
         font-size: 2.35rem;
@@ -1303,10 +1303,30 @@
       }
       .hero-bottom-bar {
         padding: 0 1.25rem;
-        bottom: 1.25rem;
+        bottom: 1rem;
       }
-      .bottom-tagline {
+      .bottom-row {
+        justify-content: center;
+      }
+      .hero-scene-nav {
+        gap: 0.25rem;
+        width: auto;
+        max-width: 100%;
+        padding: 0.3rem 0.4rem;
+        justify-content: center;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+      }
+      .hero-scene-nav::-webkit-scrollbar {
+        display: none;
+      }
+      .hero-scene-tab {
+        padding: 0.3rem 0.55rem;
         font-size: 0.65rem;
+        flex-shrink: 0;
+      }
+      .hero-scene-tab.active {
+        padding: 0.3rem 0.75rem;
       }
       .bottom-disclaimer {
         display: none;
@@ -1323,13 +1343,18 @@
   <!-- GLOBAL FIXED HEADER -->
   <header class="site-header" id="site-header" aria-label="Navigasi Utama">
     <a href="#" class="brand-group">
-      <span class="brand-title">PT Agung Wijaya Nitya</span>
-      <span class="brand-sub">PROCUREMENT PARTNER - BADUNG, BALI</span>
+      <div class="brand-logo-wrap">
+        <img src="/images/logo-awn-transparent.png" alt="Logo Agung Wijaya Nitya" class="brand-logo" width="38" height="38" />
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">Agung Wijaya Nitya</span>
+        <span class="brand-sub">PROCUREMENT PARTNER - BADUNG, BALI</span>
+      </div>
     </a>
 
     <nav class="header-nav" aria-label="Menu Utama">
-      <a href="#katalog" class="nav-link">Katalog</a>
       <a href="#pilar" class="nav-link">Layanan</a>
+      <a href="#katalog" class="nav-link">Katalog</a>
       <a href="#pengadaan" class="nav-link">Tentang</a>
       <a href="#kontak" class="nav-link">Kontak</a>
     </nav>
@@ -1342,62 +1367,96 @@
     </div>
   </header>
 
-  <!-- HERO WRAPPER (OUTER SCROLL CONTAINER CREATES ~4–5 VIEWPORT HEIGHTS OF SCROLL DISTANCE) -->
-  <div class="hero-wrapper" id="hero-wrapper" aria-label="Sinematik Hero PT Agung Wijaya Nitya">
-    <section class="hero-stage hero-pin" id="hero-stage">
-      
-      <!-- 1. WebGL1 Full-Bleed Canvas -->
-      <canvas class="gl" id="gl-canvas"></canvas>
+  <!-- HERO SECTION WITH DYNAMIC TRANSITIONING VIDEOS (NO SCROLL-DRIVEN EFFECTS) -->
+  <section class="hero-section" id="hero" aria-label="Sinematik Hero PT Agung Wijaya Nitya">
+    <!-- Dual-Channel Video Background with Seamless Crossfade -->
+    <div class="hero-media-wrap" id="hero-media-wrap" aria-hidden="true">
+      <video
+        class="hero-video active"
+        id="hero-video-a"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        poster="/films/perusahaan-loop-poster.jpg"
+        src="/films/perusahaan-loop.mp4"
+      ></video>
+      <video
+        class="hero-video"
+        id="hero-video-b"
+        muted
+        playsinline
+        preload="auto"
+      ></video>
+      <!-- Atmospheric Dark Navy Tint Overlay (Smooth Left-to-Right & Vertical Fade) -->
+      <div class="hero-gradient-overlay"></div>
+    </div>
 
-      <!-- 2. Lines & Architectural Crosshairs 2D Overlay -->
-      <canvas class="lines" id="lines-canvas"></canvas>
+    <!-- Editorial Copy & CTAs Overlay (Left Safe Area) -->
+    <div class="hero-content-block">
+      <div class="hero-badge">
+        <span class="badge-square"></span>
+        <span class="badge-text" id="hero-badge-text">01 // EKSTERIOR GEDUNG &amp; FASILITAS</span>
+      </div>
+      <h1 class="hero-title">
+        <span>Pengadaan</span>
+        <span>Perangkat IT dan</span>
+        <span>Perlengkapan Institusi</span>
+      </h1>
+      <p class="hero-subhead">Dukungan untuk kebutuhan teknologi dan operasional bisnis maupun institusi.</p>
+      <div class="hero-cta-group">
+        <a href="#kontak" class="hero-btn-primary" id="hero-cta-quote">
+          <span>Minta Penawaran</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#pilar" class="hero-btn-secondary" id="hero-cta-services">
+          <span>Jelajahi Layanan</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M8 13L3.5 8.5M8 13L12.5 8.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
 
-      <!-- 3. Ambient Videos (Scene 1 & Scene 5) -->
-      <video class="ambient-loop" id="hero-loop" muted loop playsinline preload="metadata" poster="/films/perusahaan-loop-poster.jpg" src="/films/perusahaan-loop.mp4"></video>
-      <video class="ambient-loop" id="footer-loop" muted loop playsinline preload="none" poster="/films/penutup-loop-poster.jpg" src="/films/penutup-loop.mp4"></video>
-
-      <!-- 4. Boot Poster (Instant Paint) -->
-      <img class="boot-poster" id="boot-poster" src="/films/t12/f_001.webp" alt="Fasilitas Gedung PT. Agung Wijaya Nitya" />
-
-      <!-- 5. Atmospheric Dark Navy Tint Overlay (Left to Right Fade) -->
-      <div class="hero-gradient-overlay" aria-hidden="true"></div>
-
-      <!-- 6. COMPACT HERO COPY & CTAs OVERLAY (LEFT SAFE AREA) -->
-      <div class="hero-content-block">
-        <div class="hero-badge">
-          <span class="badge-square"></span>
-          <span class="badge-text">PENGADAAN UNTUK INSTITUSI & BISNIS</span>
-        </div>
-        <h1 class="hero-title">
-          <span>Pengadaan</span>
-          <span>Perangkat IT dan</span>
-          <span>Perlengkapan Institusi</span>
-        </h1>
-        <p class="hero-subhead">Dukungan untuk kebutuhan teknologi dan operasional bisnis maupun institusi.</p>
-        <div class="hero-cta-group">
-          <a href="#kontak" class="hero-btn-primary" id="hero-cta-quote">
-            <span>Minta Penawaran</span>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#katalog" class="hero-btn-secondary" id="hero-cta-products">
-            <span>Jelajahi Katalog</span>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M8 13L3.5 8.5M8 13L12.5 8.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+    <!-- Architectural Hero Bottom Bar with Interactive Dynamic Scene Switcher -->
+    <div class="hero-bottom-bar" id="hero-bottom-bar">
+      <div class="bottom-row">
+        <!-- Interactive Scene Navigation Pills with Progress Indication -->
+        <div class="hero-scene-nav" id="hero-scene-nav" role="tablist" aria-label="Pilih Klip Video Hero">
+          <button class="hero-scene-tab active" data-index="0" role="tab" aria-selected="true" title="Scene 1: Eksterior Gedung & Lobi">
+            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
+            <span class="tab-num">01</span>
+            <span class="tab-label">Gedung &amp; Lobi</span>
+          </button>
+          <button class="hero-scene-tab" data-index="1" role="tab" aria-selected="false" title="Scene 2: Ruang Kantor & Kolaborasi">
+            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
+            <span class="tab-num">02</span>
+            <span class="tab-label">Ruang Kantor</span>
+          </button>
+          <button class="hero-scene-tab" data-index="2" role="tab" aria-selected="false" title="Scene 3: Server Room & Pusat Data">
+            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
+            <span class="tab-num">03</span>
+            <span class="tab-label">Server Room</span>
+          </button>
+          <button class="hero-scene-tab" data-index="3" role="tab" aria-selected="false" title="Scene 4: Laboratorium Pemeliharaan Hardware">
+            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
+            <span class="tab-num">04</span>
+            <span class="tab-label">Pemeliharaan</span>
+          </button>
+          <button class="hero-scene-tab" data-index="4" role="tab" aria-selected="false" title="Scene 5: Solusi Konsultasi & Workstation">
+            <span class="tab-progress"><span class="tab-progress-bar"></span></span>
+            <span class="tab-num">05</span>
+            <span class="tab-label">Konsultasi</span>
+          </button>
         </div>
       </div>
-
-      <!-- Screen reader scene indicator -->
-      <span id="scene-title" class="sr-only">01 / 05 // EKSTERIOR GEDUNG</span>
-      <span id="scrub-indicator" class="sr-only">SCRUB // 00%</span>
-
-    </section>
-  </div>
+    </div>
+  </section>
 
   <!-- NATURAL HOMEPAGE CONTENT FLOW (FOLLOWS HERO PIN) -->
   <main class="site-main" id="main-content">
 
-    <!-- SECTION: EMPAT PILAR -->
+    <!-- SECTION: EMPAT PILAR (LAYANAN) -->
     <section class="content-section" id="pilar">
+      <div id="layanan" style="position: absolute; top: -75px;"></div>
       <div class="content-container">
         <div class="section-eyebrow">
           <span class="badge-dot"></span>
@@ -1495,41 +1554,16 @@
           <div class="c3d-cards-track" id="catalog-3d-cards">
             <!-- Rendered by JS -->
           </div>
-
-          <!-- Floating Large Edge Side Chevrons -->
-          <button
-            type="button"
-            class="c3d-side-nav prev"
-            onclick="document.getElementById('catalog-3d-prev')?.click()"
-            aria-label="Putar ke kiri"
-            title="Putar ke kiri"
-          >
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button
-            type="button"
-            class="c3d-side-nav next"
-            onclick="document.getElementById('catalog-3d-next')?.click()"
-            aria-label="Putar ke kanan"
-            title="Putar ke kanan"
-          >
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
 
-        <!-- Telemetry & Pagination Bar -->
+        <!-- Telemetry & Status Bar -->
         <div class="c3d-telemetry-bar">
           <div class="c3d-telemetry-left">
-            <span class="c3d-radar-dot" aria-hidden="true"></span>
             <span class="c3d-counter-badge">[ <span id="catalog-3d-counter-current">01</span> / <span id="catalog-3d-counter-total">08</span> ]</span>
             <span class="c3d-active-label" id="catalog-3d-active-title">DELL PowerEdge R760xs Rack Server</span>
           </div>
 
-          <div class="c3d-dots-wrap" id="catalog-3d-dots">
-            <!-- Dots generated by JS -->
-          </div>
-
-          <span class="c3d-hint-text">Putar / geser untuk rotasi melingkar 360°</span>
+          <span class="c3d-hint-text">Geser kartu untuk eksplorasi 360°</span>
         </div>
 
       </div>

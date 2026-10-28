@@ -139,9 +139,19 @@ export default function Navbar() {
             href="/"
             className="flex min-h-11 items-center gap-3 hover:opacity-90 transition-opacity"
           >
+            <span className="relative block h-8 w-8 sm:h-9 sm:w-9 shrink-0">
+              <Image
+                src="/images/logo-awn-transparent.png"
+                alt="Logo Resmi Agung Wijaya Nitya"
+                fill
+                priority
+                className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"
+                sizes="(max-width: 640px) 32px, 36px"
+              />
+            </span>
             <span className="leading-tight">
               <span className="block font-heading text-sm sm:text-base font-bold text-white tracking-tight">
-                PT Agung Wijaya Nitya
+                Agung Wijaya Nitya
               </span>
               <span className="block font-mono text-[9px] sm:text-[10px] tracking-[0.12em] font-medium text-[#cde1fa]/80 uppercase">
                 PROCUREMENT PARTNER - BADUNG, BALI

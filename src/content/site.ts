@@ -191,8 +191,8 @@ export const SITE_CONTENT: SiteContent = {
 
   navigation: {
     links: [
-      { label: "Produk", href: "#produk", id: "produk" },
       { label: "Layanan", href: "#pilar", id: "pilar" },
+      { label: "Katalog", href: "#katalog", id: "katalog" },
       { label: "Tentang", href: "#pengadaan", id: "pengadaan" },
       { label: "Kontak", href: "#kontak", id: "kontak" },
     ],
@@ -212,8 +212,8 @@ export const SITE_CONTENT: SiteContent = {
       href: "#kontak",
     },
     ctaSecondary: {
-      label: "Jelajahi Produk",
-      href: "#produk",
+      label: "Jelajahi Layanan",
+      href: "#pilar",
     },
   },
 

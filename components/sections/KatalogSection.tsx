@@ -128,7 +128,7 @@ export default function KatalogSection() {
             lead="Putar carousel melingkar untuk menjelajahi kurasi perangkat keras TI dan perlengkapan institusi resmi."
             action={
               <div className="flex items-center gap-3">
-                <div className="hidden items-center gap-2 sm:flex">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={prev}
@@ -291,55 +291,23 @@ export default function KatalogSection() {
                 );
               })}
             </div>
-
-            {/* Edge floating buttons */}
-            <button
-              type="button"
-              onClick={prev}
-              className="absolute left-2 sm:left-4 z-40 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md border border-rule shadow-lg flex items-center justify-center text-ink hover:text-accent hover:scale-110 transition-all"
-              aria-label="Putar ke kiri"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="absolute right-2 sm:right-4 z-40 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md border border-rule shadow-lg flex items-center justify-center text-ink hover:text-accent hover:scale-110 transition-all"
-              aria-label="Putar ke kanan"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
           </div>
         </Reveal>
 
-        {/* Telemetry and Dots */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <div className="flex items-center gap-3 text-xs font-mono text-muted">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>
+        {/* Minimalist Telemetry Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs font-mono text-muted">
+          <div className="flex items-center gap-2.5 truncate max-w-full">
+            <span className="font-semibold text-accent">
               [{String(activeIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}]
             </span>
-            <span className="font-semibold text-ink truncate max-w-[280px]">
+            <span className="text-ink/30">·</span>
+            <span className="font-medium text-ink truncate max-w-[280px] sm:max-w-md">
               {currentProduct?.title}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            {formationProducts.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => rotateToIndex(i)}
-                aria-label={`Ke slide ${i + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === activeIndex ? "w-7 bg-accent" : "w-2 bg-rule hover:bg-ink/30"
-                }`}
-              />
-            ))}
-          </div>
-
-          <span className="text-[11px] font-mono text-muted/80">
-            Putar / seret untuk rotasi melingkar 360°
+          <span className="text-[11px] text-muted/70">
+            Geser kartu untuk eksplorasi 360°
           </span>
         </div>
       </div>

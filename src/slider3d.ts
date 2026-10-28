@@ -110,7 +110,6 @@ export function initCatalog3DSlider(): void {
   const cardsContainer = document.getElementById("catalog-3d-cards");
   const prevBtn = document.getElementById("catalog-3d-prev") as HTMLButtonElement | null;
   const nextBtn = document.getElementById("catalog-3d-next") as HTMLButtonElement | null;
-  const dotsContainer = document.getElementById("catalog-3d-dots");
   const counterCurrent = document.getElementById("catalog-3d-counter-current");
   const counterTotal = document.getElementById("catalog-3d-counter-total");
   const activeTitle = document.getElementById("catalog-3d-active-title");
@@ -218,27 +217,6 @@ export function initCatalog3DSlider(): void {
     `;
   }).join("");
 
-  // Render navigation dots
-  if (dotsContainer) {
-    dotsContainer.innerHTML = CATALOG_PRODUCTS_3D.map(
-      (_, index) => `
-        <button
-          type="button"
-          class="c3d-dot ${index === 0 ? "active" : ""}"
-          data-target="${index}"
-          aria-label="Pindah ke slide ${index + 1}"
-        ></button>
-      `
-    ).join("");
-
-    dotsContainer.querySelectorAll<HTMLButtonElement>(".c3d-dot").forEach((dot) => {
-      dot.addEventListener("click", () => {
-        const target = parseInt(dot.dataset.target || "0", 10);
-        rotateToIndex(target);
-      });
-    });
-  }
-
   if (counterTotal) {
     counterTotal.textContent = String(totalItems).padStart(2, "0");
   }
@@ -331,16 +309,6 @@ export function initCatalog3DSlider(): void {
     }
     if (activeCategory && currentItem) {
       activeCategory.textContent = currentItem.category;
-    }
-
-    if (dotsContainer) {
-      dotsContainer.querySelectorAll(".c3d-dot").forEach((dot, i) => {
-        if (i === idx) {
-          dot.classList.add("active");
-        } else {
-          dot.classList.remove("active");
-        }
-      });
     }
   }
 
