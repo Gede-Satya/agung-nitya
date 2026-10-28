@@ -344,15 +344,8 @@
     .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.5rem;
       margin-bottom: 1.35rem;
-    }
-    .badge-square {
-      width: 7px;
-      height: 7px;
-      background: rgba(210, 228, 252, 0.85);
-      display: inline-block;
-      flex-shrink: 0;
     }
     .badge-text {
       font-family: var(--font-mono);
@@ -398,36 +391,34 @@
       display: inline-flex;
       align-items: center;
       gap: 0.65rem;
-      padding: 0.75rem 1.6rem;
+      padding: 0.78rem 1.65rem;
       border-radius: 9999px;
-      background: #0B192C;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      color: #FFFFFF;
+      background: #C9A227;
+      border: 1px solid #E5C358;
+      color: #0B1D36;
       font-family: var(--font-sans);
       font-size: 0.8125rem;
       font-weight: 600;
       letter-spacing: 0.01em;
       text-decoration: none;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 18px rgba(201, 162, 39, 0.28);
       transition: all 0.25s ease;
     }
     .hero-btn-primary:hover {
-      background: #112847;
-      border-color: rgba(255, 255, 255, 0.45);
+      background: #D8B136;
+      border-color: #F3D26A;
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 8px 24px rgba(201, 162, 39, 0.4);
     }
 
     .hero-btn-secondary {
       display: inline-flex;
       align-items: center;
       gap: 0.55rem;
-      padding: 0.75rem 1.55rem;
+      padding: 0.78rem 1.65rem;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       color: #FFFFFF;
       font-family: var(--font-sans);
       font-size: 0.8125rem;
@@ -437,8 +428,8 @@
       transition: all 0.25s ease;
     }
     .hero-btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.45);
       transform: translateY(-2px);
     }
 
@@ -493,19 +484,12 @@
       text-transform: uppercase;
     }
 
-    .hcc-live-dot {
-      width: 6px;
-      height: 6px;
+    .hcc-tag-bullet {
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 8px #10B981;
-      animation: tabPulse 2s infinite;
+      background: #C9A227;
       flex-shrink: 0;
-    }
-
-    @keyframes tabPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     .hcc-counter {
@@ -734,7 +718,7 @@
     .hcc-progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #3B82F6, #60A5FA);
+      background: linear-gradient(90deg, #C9A227, #E5C358);
       transition: width 0.08s linear;
     }
 
@@ -1592,7 +1576,6 @@
     <!-- Editorial Copy & CTAs Overlay (Left Safe Area) -->
     <div class="hero-content-block">
       <div class="hero-badge">
-        <span class="badge-square"></span>
         <span class="badge-text" id="hero-badge-text">01 · PUSAT DATA &amp; RAK SERVER</span>
       </div>
       <h1 class="hero-title">
@@ -1621,7 +1604,7 @@
       <!-- Top Bar: Category & Counter -->
       <div class="hcc-top">
         <div class="hcc-tag">
-          <span class="hcc-live-dot" aria-hidden="true"></span>
+          <span class="hcc-tag-bullet" aria-hidden="true"></span>
           <span id="hcc-category">Pusat Data &amp; Server</span>
         </div>
         <div class="hcc-counter">
