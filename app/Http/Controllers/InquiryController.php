@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Inquiry;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class InquiryController extends Controller
+{
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:150'],
+            'agency_name' => ['nullable', 'string', 'max:200'],
+            'email' => ['required', 'email', 'max:150'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'service_needed' => ['nullable', 'string', 'max:150'],
+            'message' => ['required', 'string', 'max:3000'],
+        ]);
+
+        Inquiry::create($validated);
+
+        return back()->with('success', 'Pesan Anda telah berhasil dikirim. Tim kami akan segera menghubungi Anda.');
+    }
+}

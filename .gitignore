@@ -50,3 +50,14 @@ next-env.d.ts
 /qa/
 /.playwright-mcp/
 /.qa-*.log
+
+# Laravel
+/vendor
+/storage/*.key
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/cache/*
+/database/*.sqlite
+/database/*.sqlite-journal
+public/hot
+public/storage
