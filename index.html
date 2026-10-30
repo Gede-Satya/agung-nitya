@@ -884,26 +884,56 @@
       box-shadow: 0 8px 22px rgba(11, 107, 174, 0.32);
     }
 
+    .c3d-stage-wrap {
+      position: relative;
+      width: 100%;
+    }
+
     .c3d-arrow-btn {
-      width: 44px;
-      height: 44px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 60;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: #FFFFFF;
-      border: 1px solid var(--border-light);
+      border: 1px solid rgba(11, 107, 174, 0.22);
       color: var(--text);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.25s ease;
+      box-shadow: 0 8px 24px rgba(11, 29, 54, 0.14);
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .c3d-arrow-btn.c3d-arrow-prev {
+      left: clamp(0rem, 1vw, 0.75rem);
+    }
+    .c3d-arrow-btn.c3d-arrow-next {
+      right: clamp(0rem, 1vw, 0.75rem);
     }
     .c3d-arrow-btn:hover {
       background: #FFFFFF;
       border-color: var(--accent-blue);
       color: var(--accent-blue);
-      transform: scale(1.06);
-      box-shadow: var(--shadow-md);
+      transform: translateY(-50%) scale(1.06);
+      box-shadow: 0 12px 28px rgba(11, 107, 174, 0.22);
+    }
+    .c3d-arrow-btn:active {
+      transform: translateY(-50%) scale(0.97);
+    }
+    @media (max-width: 640px) {
+      .c3d-arrow-btn {
+        width: 44px;
+        height: 44px;
+      }
+      .c3d-arrow-btn.c3d-arrow-prev {
+        left: 0.25rem;
+      }
+      .c3d-arrow-btn.c3d-arrow-next {
+        right: 0.25rem;
+      }
     }
 
     /* 3D Stage & Canvas Container */
@@ -1713,28 +1743,8 @@
             <p class="section-subhead">Perangkat keras TI, workstation, sistem cadangan daya, dan perlengkapan institusi terdaftar resmi pada etalase INAPROC LKPP.</p>
           </div>
 
-          <!-- Header Action Tools: Prev / Next Buttons & External Link -->
+          <!-- Header Action Tools: External Link -->
           <div class="catalog-3d-nav-tools">
-            <div class="c3d-arrows-group" style="display: flex; gap: 0.75rem;">
-              <button
-                type="button"
-                id="catalog-3d-prev"
-                class="c3d-arrow-btn"
-                aria-label="Produk Sebelumnya (3D)"
-                title="Produk Sebelumnya"
-              >
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button
-                type="button"
-                id="catalog-3d-next"
-                class="c3d-arrow-btn"
-                aria-label="Produk Berikutnya (3D)"
-                title="Produk Berikutnya"
-              >
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-            </div>
             <a
               href="https://katalog.inaproc.id/agung-wijaya-nitya"
               target="_blank"
@@ -1747,12 +1757,34 @@
           </div>
         </div>
 
-        <!-- 3D Perspective Circular Carousel Stage -->
-        <div class="c3d-stage" id="catalog-3d-stage" aria-roledescription="3D circular carousel">
-          <!-- Dynamic 3D Cards Track (revolves in 360° circular orbit) -->
-          <div class="c3d-cards-track" id="catalog-3d-cards">
-            <!-- Rendered by JS -->
+        <!-- 3D Perspective Circular Carousel Stage with Side Navigation Buttons -->
+        <div class="c3d-stage-wrap">
+          <button
+            type="button"
+            id="catalog-3d-prev"
+            class="c3d-arrow-btn c3d-arrow-prev"
+            aria-label="Produk Sebelumnya (3D)"
+            title="Produk Sebelumnya"
+          >
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="c3d-stage" id="catalog-3d-stage" aria-roledescription="3D circular carousel">
+            <!-- Dynamic 3D Cards Track (revolves in 360° circular orbit) -->
+            <div class="c3d-cards-track" id="catalog-3d-cards">
+              <!-- Rendered by JS -->
+            </div>
           </div>
+
+          <button
+            type="button"
+            id="catalog-3d-next"
+            class="c3d-arrow-btn c3d-arrow-next"
+            aria-label="Produk Berikutnya (3D)"
+            title="Produk Berikutnya"
+          >
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
 
         <!-- Telemetry & Status Bar -->
