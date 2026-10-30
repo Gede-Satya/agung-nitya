@@ -1,4 +1,4 @@
-import { initCatalog3DSlider } from "./slider3d";
+import { initCatalog3DSlider, closeCoreItemPage } from "./slider3d";
 
 // ─────────────────────────────────────────────────────────────
 // HEADER SCROLL TRANSITION
@@ -326,7 +326,19 @@ requestAnimationFrame(tickHardwareRotation);
 document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", (e) => {
     const href = anchor.getAttribute("href");
-    if (!href || href === "#") return;
+    if (!href) return;
+
+    // If a dedicated core item page is open, close it first before scrolling to homepage sections
+    if (document.body.classList.contains("item-page-open") && href !== "#kontak") {
+      closeCoreItemPage(true);
+    }
+
+    if (href === "#") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     const targetEl = document.querySelector(href);
     if (targetEl) {
       e.preventDefault();

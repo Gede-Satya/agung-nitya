@@ -6,7 +6,8 @@
   <meta name="color-scheme" content="only light" />
   <meta name="theme-color" content="#FFFFFF" />
 
-  <title>PT. Agung Wijaya Nitya — Mitra Pengadaan Perangkat IT & Institusi</title>
+  <title>PT. Agung Wijaya Nitya · Mitra Pengadaan Perangkat IT &amp; Institusi</title>
+  <link rel="icon" type="image/png" href="/images/logo-awn-transparent.png" />
   <meta name="description" content="PT. Agung Wijaya Nitya: Mitra pengadaan perangkat keras IT, UPS, server rack, perlengkapan institusi, dan layanan pemeliharaan hardware di Kabupaten Badung, Bali." />
   <meta name="robots" content="index, follow" />
 
@@ -107,11 +108,12 @@
       transition: background 0.3s ease, border-color 0.3s ease, height 0.3s ease;
     }
 
-    header.site-header.scrolled {
-      background: rgba(10, 24, 46, 0.72);
+    header.site-header.scrolled,
+    body.item-page-open header.site-header {
+      background: rgba(10, 24, 46, 0.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       height: 68px;
     }
 
@@ -822,22 +824,23 @@
     }
 
     /* ─────────────────────────────────────────────────────────────
-       3D PERSPECTIVE CATALOG SLIDER
+       3D TILTED CIRCULAR RING CATALOG SLIDER (16 UNIQUE CORE ITEMS)
        ───────────────────────────────────────────────────────────── */
     .catalog-3d-section {
       position: relative;
-      background: linear-gradient(180deg, #FFFFFF 0%, #F5F8FC 45%, #FFFFFF 100%);
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 48%, #FFFFFF 0%, #F4F7FC 58%, #EBF1F8 100%);
       overflow: hidden;
-      padding-top: clamp(4.5rem, 7vw, 6.5rem);
-      padding-bottom: clamp(5rem, 8vw, 7.5rem);
+      padding-top: clamp(4.5rem, 7vw, 6.25rem);
+      padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
       border-bottom: 1px solid var(--border-light);
     }
 
     .catalog-3d-header-wrap {
       display: flex;
       flex-direction: column;
-      gap: 1.75rem;
-      margin-bottom: 3rem;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
     @media (min-width: 840px) {
       .catalog-3d-header-wrap {
@@ -848,7 +851,7 @@
     }
 
     .catalog-3d-header-text {
-      max-width: 680px;
+      max-width: 700px;
     }
 
     .catalog-3d-header-text .section-subhead {
@@ -858,7 +861,7 @@
     .catalog-3d-nav-tools {
       display: flex;
       align-items: center;
-      gap: 1.15rem;
+      gap: 0.85rem;
       flex-shrink: 0;
       flex-wrap: wrap;
     }
@@ -867,7 +870,8 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.75rem 1.35rem;
+      min-height: 44px;
+      padding: 0.72rem 1.35rem;
       border-radius: 9999px;
       background: #0B192C;
       color: #FFFFFF;
@@ -893,32 +897,34 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 60;
+      z-index: 70;
       width: 48px;
       height: 48px;
+      min-width: 44px;
+      min-height: 44px;
       border-radius: 50%;
       background: #FFFFFF;
-      border: 1px solid rgba(11, 107, 174, 0.22);
+      border: 1px solid rgba(11, 107, 174, 0.25);
       color: var(--text);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(11, 29, 54, 0.14);
+      box-shadow: 0 10px 28px rgba(11, 29, 54, 0.16);
       transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
     }
     .c3d-arrow-btn.c3d-arrow-prev {
-      left: clamp(0rem, 1vw, 0.75rem);
+      left: clamp(0rem, 0.5vw, 0.5rem);
     }
     .c3d-arrow-btn.c3d-arrow-next {
-      right: clamp(0rem, 1vw, 0.75rem);
+      right: clamp(0rem, 0.5vw, 0.5rem);
     }
     .c3d-arrow-btn:hover {
-      background: #FFFFFF;
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
+      background: #0B192C;
+      border-color: #0B192C;
+      color: #FFFFFF;
       transform: translateY(-50%) scale(1.06);
-      box-shadow: 0 12px 28px rgba(11, 107, 174, 0.22);
+      box-shadow: 0 14px 32px rgba(11, 29, 54, 0.28);
     }
     .c3d-arrow-btn:active {
       transform: translateY(-50%) scale(0.97);
@@ -929,44 +935,44 @@
         height: 44px;
       }
       .c3d-arrow-btn.c3d-arrow-prev {
-        left: 0.25rem;
+        left: 0.15rem;
       }
       .c3d-arrow-btn.c3d-arrow-next {
-        right: 0.25rem;
+        right: 0.15rem;
       }
     }
 
-    /* 3D Stage & Canvas Container */
+    /* 3D Concave Panorama Stage (Viewer Inside the Circle) */
     .c3d-stage {
       position: relative;
       width: 100%;
-      height: 650px;
-      perspective: 1450px;
-      perspective-origin: 50% 36%;
+      height: 510px;
+      perspective: 740px;
+      perspective-origin: 50% 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       user-select: none;
       touch-action: pan-y;
-      padding: 2rem 0;
+      padding: 1rem 0;
       overflow: visible;
     }
     @media (max-width: 1023px) {
       .c3d-stage {
-        height: 600px;
-        perspective: 1200px;
-        perspective-origin: 50% 36%;
+        height: 440px;
+        perspective: 620px;
+        perspective-origin: 50% 50%;
       }
     }
     @media (max-width: 640px) {
       .c3d-stage {
-        height: 550px;
-        perspective: 980px;
-        perspective-origin: 50% 36%;
+        height: 360px;
+        perspective: 490px;
+        perspective-origin: 50% 50%;
       }
     }
 
-    /* Cards track */
+    /* Cards track (360° concave inner cylinder) */
     .c3d-cards-track {
       position: absolute;
       width: 100%;
@@ -983,255 +989,279 @@
       cursor: grabbing;
     }
 
-    /* 3D Card */
+    /* Portrait 3D Card on the concave inner cylinder wall */
     .c3d-card {
       position: absolute;
-      width: 340px;
-      height: 495px;
+      width: 230px;
+      height: 342px;
       transform-style: preserve-3d;
       cursor: pointer;
       outline: none;
-      transition: opacity 0.3s ease, filter 0.3s ease;
+      transition: opacity 0.25s ease;
       will-change: transform, opacity;
     }
     @media (max-width: 1023px) {
       .c3d-card {
-        width: 305px;
-        height: 475px;
+        width: 190px;
+        height: 285px;
       }
     }
     @media (max-width: 640px) {
       .c3d-card {
-        width: 260px;
-        height: 450px;
+        width: 148px;
+        height: 226px;
       }
     }
 
-    .c3d-card.active {
-      cursor: default;
-    }
-    .c3d-card.flank {
-      cursor: pointer;
+    .c3d-card:focus-visible .c3d-card-face {
+      outline: 3px solid var(--accent-blue);
+      outline-offset: 3px;
     }
 
-    .c3d-card-inner {
-      position: relative;
+    .c3d-card-face {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      background: #FFFFFF;
-      border-radius: 24px;
-      border: 1px solid rgba(11, 107, 174, 0.14);
-      box-shadow: 0 16px 36px -10px rgba(11, 29, 54, 0.10), 0 0 0 1px rgba(11, 107, 174, 0.06);
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
-      padding: 1.25rem 1.35rem;
+      justify-content: space-between;
+      padding: 0.9rem 0.9rem 0.75rem;
       overflow: hidden;
-      transform-style: preserve-3d;
-      transition: box-shadow 0.35s ease, border-color 0.35s ease;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow:
+        0 20px 42px -12px rgba(10, 20, 38, 0.42),
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, filter 0.3s ease;
     }
-    .c3d-card.active .c3d-card-inner {
-      border-color: rgba(11, 107, 174, 0.35);
-      box-shadow: 0 24px 60px -12px rgba(11, 107, 174, 0.28),
-                  0 0 0 2px rgba(201, 162, 39, 0.55),
-                  0 4px 14px rgba(0, 0, 0, 0.06);
+    .c3d-card:hover .c3d-card-face {
+      border-color: #FDE047;
+      box-shadow:
+        0 26px 52px -10px rgba(11, 25, 44, 0.55),
+        0 0 0 2px #FDE047,
+        inset 0 1px 0 rgba(255, 255, 255, 0.48);
     }
 
-    .c3d-card-top {
+    /* Card Color Themes inspired by the reference photo (Warm Gold, Sunset Crimson, Deep Navy, Charcoal, Bronze, Slate) */
+    .c3d-theme-crimson .c3d-card-face {
+      background: linear-gradient(165deg, #D9381E 0%, #9E1B12 48%, #1C0D0B 100%);
+      color: #FFFFFF;
+    }
+    .c3d-theme-gold .c3d-card-face {
+      background: linear-gradient(165deg, #C89D54 0%, #78561E 48%, #17120A 100%);
+      color: #FFFFFF;
+    }
+    .c3d-theme-navy .c3d-card-face {
+      background: linear-gradient(165deg, #1E4E8C 0%, #0F294A 50%, #071324 100%);
+      color: #FFFFFF;
+    }
+    .c3d-theme-charcoal .c3d-card-face {
+      background: linear-gradient(165deg, #3A3F47 0%, #1F242B 50%, #0D1014 100%);
+      color: #FFFFFF;
+    }
+    .c3d-theme-bronze .c3d-card-face {
+      background: linear-gradient(165deg, #B46528 0%, #6E370F 50%, #180D06 100%);
+      color: #FFFFFF;
+    }
+    .c3d-theme-slate .c3d-card-face {
+      background: linear-gradient(165deg, #2B5876 0%, #183247 50%, #0A1620 100%);
+      color: #FFFFFF;
+    }
+
+    /* Top-left dark circular notch like the cards in the reference image */
+    .c3d-card-notch {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0B131E;
+      border: 2px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .c3d-card-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      padding-left: 0.55rem;
+    }
+
+    .c3d-card-meta-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
+      gap: 0.25rem;
     }
 
-    .c3d-tag {
+    .c3d-card-num {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      font-weight: 600;
+      font-size: 0.625rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
-      color: var(--accent-blue);
-      text-transform: uppercase;
+      color: #FDE047;
     }
 
-    .c3d-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #059669;
+    .c3d-card-count-pill {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      font-size: 0.5625rem;
+      font-weight: 600;
+      padding: 0.12rem 0.42rem;
+      border-radius: 9999px;
+      background: rgba(9, 14, 24, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+      white-space: nowrap;
     }
 
-    /* Pedestal and Product Image */
-    .c3d-media-pedestal {
-      position: relative;
-      width: 100%;
-      height: 155px;
-      border-radius: 16px;
-      background: radial-gradient(circle at 50% 40%, rgba(11, 107, 174, 0.06) 0%, #F8F9FA 75%);
-      border: 1px solid rgba(11, 107, 174, 0.07);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 0.85rem;
-      overflow: hidden;
-    }
-    @media (max-width: 640px) {
-      .c3d-media-pedestal {
-        height: 140px;
-      }
-    }
-
-    .c3d-pedestal-light {
-      position: absolute;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .c3d-product-img {
-      max-width: 82%;
-      max-height: 82%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 18px rgba(11, 29, 54, 0.12));
-      transition: transform 0.4s ease;
-      z-index: 2;
-    }
-    .c3d-card.active:hover .c3d-product-img {
-      transform: scale(1.06) translateY(-2px);
-    }
-
-    .c3d-pedestal-plate {
-      position: absolute;
-      bottom: 8px;
-      width: 68%;
-      height: 10px;
-      background: radial-gradient(ellipse at center, rgba(11, 29, 54, 0.12) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    /* Card Details */
-    .c3d-card-body {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .c3d-category-sub {
-      font-size: 0.725rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 0.2rem;
-    }
-
-    .c3d-card-title {
+    .c3d-card-heading {
       font-family: var(--font-sans);
-      font-size: 1.05rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      line-height: 1.3;
-      color: var(--text);
-      margin-bottom: 0.5rem;
+      line-height: 1.22;
+      color: #FFFFFF;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      min-height: 2.5rem;
     }
-    @media (max-width: 640px) {
-      .c3d-card-title {
-        font-size: 0.95rem;
-        min-height: 2.3rem;
+
+    .c3d-card-sub {
+      font-size: 0.58rem;
+      line-height: 1.25;
+      color: rgba(255, 255, 255, 0.88);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .c3d-card-visual {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      margin: 0.35rem 0;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(11, 25, 44, 0.08);
+    }
+
+    .c3d-card-glow {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .c3d-card-img {
+      max-width: 90%;
+      max-height: 90%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(11, 25, 44, 0.18));
+      transition: transform 0.3s ease;
+      z-index: 2;
+    }
+    .c3d-card:hover .c3d-card-img {
+      transform: scale(1.07);
+    }
+
+    .c3d-card-footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+      padding: 0.32rem 0.5rem;
+      border-radius: 8px;
+      background: rgba(7, 13, 24, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+    }
+
+    .c3d-card-cta-text {
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .c3d-card-cta-arrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #FDE047;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1023px) {
+      .c3d-card-face {
+        padding: 0.6rem 0.6rem 0.55rem;
+      }
+      .c3d-card-heading {
+        font-size: 0.7rem;
+      }
+      .c3d-card-sub {
+        display: none;
+      }
+      .c3d-card-cta-text {
+        font-size: 0.55rem;
       }
     }
 
-    .c3d-specs-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      margin-bottom: auto;
-      padding-bottom: 0.5rem;
+    @media (max-width: 640px) {
+      .c3d-card-face {
+        padding: 0.5rem 0.5rem 0.45rem;
+        border-radius: 13px;
+      }
+      .c3d-card-count-pill {
+        display: none;
+      }
+      .c3d-card-heading {
+        font-size: 0.64rem;
+      }
+      .c3d-card-footer {
+        padding: 0.25rem 0.4rem;
+      }
+      .c3d-card-cta-text {
+        font-size: 0.52rem;
+      }
     }
 
-    .c3d-spec-pill {
-      font-family: var(--font-mono);
-      font-size: 0.625rem;
-      padding: 0.25rem 0.5rem;
-      background: var(--bg-alt);
-      border: 1px solid var(--border-light);
-      border-radius: 6px;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    /* Actions */
-    .c3d-card-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      padding-top: 0.85rem;
-      border-top: 1px solid var(--border-light);
-      margin-top: 0.65rem;
-    }
-
-    .c3d-btn-inaproc {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.6rem 0.85rem;
-      border-radius: 10px;
-      background: #0B192C;
-      color: #FFFFFF;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .c3d-btn-inaproc:hover {
-      background: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-
-    .c3d-btn-quote {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.6rem 0.85rem;
-      border-radius: 10px;
-      background: var(--bg-alt);
-      border: 1px solid var(--border-light);
-      color: var(--text);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .c3d-btn-quote:hover {
-      background: #FFFFFF;
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-    }
-
-    /* Telemetry Bar Below Stage */
+    /* Telemetry & Active Action Bar Below 3D Ring */
     .c3d-telemetry-bar {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.25rem;
-      margin-top: 2.25rem;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding: 1rem 1.35rem;
+      background: #FFFFFF;
+      border: 1px solid rgba(11, 107, 174, 0.16);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(11, 29, 54, 0.06);
     }
-    @media (min-width: 640px) {
+    @media (min-width: 860px) {
       .c3d-telemetry-bar {
         flex-direction: row;
         justify-content: space-between;
@@ -1242,33 +1272,786 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .c3d-counter-badge {
       font-family: var(--font-mono);
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent-blue);
       letter-spacing: 0.05em;
     }
 
     .c3d-active-label {
-      font-size: 0.825rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      display: inline-block;
-      max-width: 380px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 0.875rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .c3d-telemetry-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .c3d-hint-text {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      color: rgba(29, 29, 31, 0.72);
-      letter-spacing: 0.04em;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
       font-weight: 500;
+    }
+
+    .c3d-open-active-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      padding: 0.65rem 1.2rem;
+      border-radius: 9999px;
+      background: var(--accent-blue);
+      color: #FFFFFF;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(11, 107, 174, 0.28);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .c3d-open-active-btn:hover {
+      background: var(--accent-blue-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Quick-Access 16 Core Item Pills Grid */
+    .c3d-quick-pills-wrap {
+      margin-top: 1.5rem;
+    }
+
+    .c3d-quick-pills-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .c3d-quick-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .c3d-quick-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      min-height: 44px;
+      padding: 0.48rem 0.85rem;
+      border-radius: 9999px;
+      background: #FFFFFF;
+      border: 1px solid rgba(29, 29, 31, 0.14);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .c3d-quick-pill:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #F0F7FF;
+      transform: translateY(-1px);
+    }
+    .c3d-quick-pill.active {
+      background: #0B192C;
+      border-color: #0B192C;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(11, 25, 44, 0.22);
+    }
+
+    .c3d-qp-num {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+    .c3d-quick-pill.active .c3d-qp-num {
+      color: #FDE047;
+    }
+
+    .c3d-qp-count {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.1rem 0.42rem;
+      border-radius: 9999px;
+      background: var(--bg-alt);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .c3d-quick-pill.active .c3d-qp-count {
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       DEDICATED CORE ITEM PAGE ("HALAMAN BARANG & JENIS-JENISNYA")
+       ───────────────────────────────────────────────────────────── */
+    body.item-page-open #hero,
+    body.item-page-open #main-content {
+      display: none !important;
+    }
+
+    .item-category-page {
+      min-height: 100vh;
+      padding-top: 68px;
+      background: #F8FAFC;
+      border-bottom: 1px solid var(--border-light);
+      overflow-x: hidden;
+      width: 100%;
+    }
+    .item-category-page[hidden] {
+      display: none !important;
+    }
+
+    /* Sticky Top Navigation Bar inside Item Page */
+    .icp-sticky-bar {
+      position: sticky;
+      top: 68px;
+      z-index: 80;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 0.75rem clamp(1.25rem, 5vw, 4.5rem);
+    }
+
+    .icp-sticky-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    @media (min-width: 900px) {
+      .icp-sticky-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .icp-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      padding: 0.55rem 1.15rem;
+      border-radius: 9999px;
+      background: #0B192C;
+      color: #FFFFFF;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      align-self: flex-start;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .icp-back-btn:hover {
+      background: var(--accent-blue);
+      transform: translateX(-2px);
+    }
+
+    .icp-switcher-rail {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+      scrollbar-width: thin;
+      max-width: 100%;
+    }
+
+    .icp-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-height: 44px;
+      padding: 0.45rem 0.85rem;
+      border-radius: 9999px;
+      background: var(--bg-alt);
+      border: 1px solid rgba(29, 29, 31, 0.12);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .icp-nav-pill:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #FFFFFF;
+    }
+    .icp-nav-pill.active {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #FFFFFF;
+    }
+
+    .icp-nav-pill-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.08rem 0.38rem;
+      border-radius: 9999px;
+      background: rgba(29, 29, 31, 0.08);
+      color: var(--text);
+    }
+    .icp-nav-pill.active .icp-nav-pill-badge {
+      background: rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+    }
+
+    /* Item Page Hero Banner */
+    .icp-hero {
+      background: linear-gradient(135deg, #0A182E 0%, #102A4C 60%, #163B68 100%);
+      color: #FFFFFF;
+      padding: clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 5vw, 4.5rem);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .icp-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .icp-hero-copy,
+    .icp-hero-visual-box,
+    .icp-sticky-inner {
+      min-width: 0;
+    }
+    @media (min-width: 880px) {
+      .icp-hero-inner {
+        grid-template-columns: 1.35fr 0.65fr;
+      }
+    }
+
+    .icp-hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: #FDE047;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+
+    .icp-hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.85rem, 3.5vw, 2.85rem);
+      font-weight: 700;
+      line-height: 1.18;
+      color: #FFFFFF;
+      margin-bottom: 0.85rem;
+    }
+
+    .icp-hero-desc {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 680px;
+      margin-bottom: 1.5rem;
+    }
+
+    .icp-hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-bottom: 1.65rem;
+    }
+
+    .icp-stat-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .icp-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(210, 228, 252, 0.82);
+    }
+
+    .icp-stat-val {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .icp-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+    }
+
+    .icp-hero-visual-box {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32);
+    }
+
+    .icp-hero-img {
+      max-width: 100%;
+      max-height: 190px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(11, 25, 44, 0.18));
+    }
+
+    /* Controls & Sub-Type ("Jenis-Jenisnya") Filter Section */
+    .icp-body-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 5vw, 4.5rem);
+    }
+
+    .icp-filter-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      padding: 1.35rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .icp-filter-heading {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .icp-subtype-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .icp-subtype-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      min-height: 44px;
+      padding: 0.5rem 0.95rem;
+      border-radius: 9999px;
+      background: var(--bg-alt);
+      border: 1px solid rgba(29, 29, 31, 0.12);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icp-subtype-tab:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #F0F7FF;
+    }
+    .icp-subtype-tab.active {
+      background: #0B192C;
+      border-color: #0B192C;
+      color: #FFFFFF;
+    }
+
+    .icp-st-count {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.1rem 0.42rem;
+      border-radius: 9999px;
+      background: rgba(29, 29, 31, 0.08);
+      color: var(--text);
+    }
+    .icp-subtype-tab.active .icp-st-count {
+      background: rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+    }
+
+    .icp-search-sort-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+    }
+    @media (min-width: 720px) {
+      .icp-search-sort-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .icp-search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .icp-search-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(29, 29, 31, 0.18);
+      background: var(--bg-alt);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+    }
+    .icp-search-input:focus {
+      background: #FFFFFF;
+      border-color: var(--accent-blue);
+      outline: 2px solid rgba(11, 107, 174, 0.2);
+    }
+
+    .icp-sort-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .icp-sort-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .icp-sort-select {
+      min-height: 44px;
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid rgba(29, 29, 31, 0.18);
+      background: var(--bg-alt);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.825rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .icp-results-count {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Grouped Sub-Type ("Jenis") Sections */
+    .icp-subtype-group {
+      margin-bottom: 2.75rem;
+    }
+
+    .icp-subtype-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-bottom: 0.85rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid rgba(11, 107, 174, 0.16);
+    }
+
+    .icp-subtype-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .icp-subtype-marker {
+      width: 10px;
+      height: 22px;
+      border-radius: 4px;
+      background: var(--accent-blue);
+      flex-shrink: 0;
+    }
+
+    .icp-subtype-group-title {
+      font-family: var(--font-sans);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .icp-subtype-group-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.28rem 0.75rem;
+      border-radius: 9999px;
+      background: #E0F2FE;
+      color: #0369A1;
+    }
+
+    .icp-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+      gap: 1.35rem;
+    }
+
+    .icp-item-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(29, 29, 31, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px rgba(11, 29, 54, 0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .icp-item-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(11, 107, 174, 0.35);
+      box-shadow: 0 14px 32px rgba(11, 29, 54, 0.1);
+    }
+
+    .icp-item-media {
+      position: relative;
+      height: 185px;
+      background: radial-gradient(circle at 50% 55%, #FFFFFF 0%, #F1F5F9 100%);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.35rem 1.25rem 0.9rem;
+    }
+
+    .icp-item-subtype-pill {
+      position: absolute;
+      top: 0.65rem;
+      left: 0.65rem;
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      background: rgba(11, 25, 44, 0.86);
+      color: #FFFFFF;
+      max-width: 72%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icp-item-origin-pill {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border-radius: 6px;
+    }
+    .icp-item-origin-pill.is-pdn {
+      background: #DCFCE7;
+      color: #166534;
+    }
+    .icp-item-origin-pill.is-impor {
+      background: #E0E7FF;
+      color: #1E40AF;
+    }
+
+    .icp-item-img {
+      max-width: 82%;
+      max-height: 118px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 6px 14px rgba(11, 25, 44, 0.12));
+    }
+
+    .icp-item-body {
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .icp-item-brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .icp-item-brand {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .icp-item-cat {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    .icp-item-title {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+    }
+
+    .icp-item-price-box {
+      margin-top: auto;
+      padding: 0.65rem 0.8rem;
+      border-radius: 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .icp-item-price {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0B192C;
+    }
+
+    .icp-item-price-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .icp-item-actions {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .icp-btn-inaproc {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 44px;
+      padding: 0.55rem 0.75rem;
+      border-radius: 10px;
+      background: #0B192C;
+      color: #FFFFFF;
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+    .icp-btn-inaproc:hover {
+      background: var(--accent-blue);
+    }
+
+    .icp-btn-quote {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.55rem 0.85rem;
+      border-radius: 10px;
+      background: #FFFFFF;
+      border: 1px solid rgba(29, 29, 31, 0.2);
+      color: var(--text);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .icp-btn-quote:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #F0F7FF;
+    }
+
+    /* Empty State (R-27) */
+    .icp-empty-state {
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      background: #FFFFFF;
+      border: 1px dashed rgba(11, 107, 174, 0.3);
+      border-radius: 16px;
+    }
+
+    .icp-empty-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.45rem;
+    }
+
+    .icp-empty-sub {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .icp-reset-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.6rem 1.25rem;
+      border-radius: 9999px;
+      background: var(--accent-blue);
+      color: #FFFFFF;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     /* ALUR PENGADAAN (STEPS) */
@@ -1728,8 +2511,8 @@
       </div>
     </section>
 
-    <!-- SECTION: KATALOG ELEKTRONIK (3D SLIDER SHOWCASE) -->
-    <section class="content-section catalog-3d-section" id="katalog" aria-label="Katalog 3D Produk Unggulan">
+    <!-- SECTION: KATALOG ELEKTRONIK (3D TILTED CIRCULAR RING SHOWCASE) -->
+    <section class="content-section catalog-3d-section" id="katalog" aria-label="Katalog 3D 16 Barang Inti">
       <div id="produk" style="position: absolute; top: -75px;"></div>
       <div class="content-container">
         
@@ -1737,10 +2520,10 @@
         <div class="catalog-3d-header-wrap">
           <div class="catalog-3d-header-text">
             <div class="section-eyebrow">
-              <span>KATALOG RESMI LKPP · 3D SHOWCASE</span>
+              <span>KATALOG RESMI LKPP · 16 KATEGORI BARANG INTI (3D RING)</span>
             </div>
-            <h2 class="section-title">Katalog Perangkat Keras &amp; Fasilitas.</h2>
-            <p class="section-subhead">Perangkat keras TI, workstation, sistem cadangan daya, dan perlengkapan institusi terdaftar resmi pada etalase INAPROC LKPP.</p>
+            <h2 class="section-title">Lingkaran 3D Barang Inti &amp; Jenis-Jenisnya.</h2>
+            <p class="section-subhead">16 kelompok barang inti tanpa duplikasi dalam satu lingkaran 3D. Klik kartu mana saja (misalnya Kamera, Server, atau UPS) untuk langsung membuka halaman khusus barang tersebut beserta seluruh jenis dan tipenya.</p>
           </div>
 
           <!-- Header Action Tools: External Link -->
@@ -1751,50 +2534,20 @@
               rel="noopener noreferrer"
               class="btn-catalog-all"
             >
-              <span>Buka 742 Produk di INAPROC</span>
+              <span>Buka Etalase INAPROC Resmi</span>
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
         </div>
 
-        <!-- 3D Perspective Circular Carousel Stage with Side Navigation Buttons -->
+        <!-- 3D Perspective Circular Carousel Stage -->
         <div class="c3d-stage-wrap">
-          <button
-            type="button"
-            id="catalog-3d-prev"
-            class="c3d-arrow-btn c3d-arrow-prev"
-            aria-label="Produk Sebelumnya (3D)"
-            title="Produk Sebelumnya"
-          >
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-
-          <div class="c3d-stage" id="catalog-3d-stage" aria-roledescription="3D circular carousel">
-            <!-- Dynamic 3D Cards Track (revolves in 360° circular orbit) -->
+          <div class="c3d-stage" id="catalog-3d-stage" tabindex="0" aria-roledescription="3D circular carousel" aria-label="Lingkaran 3D 16 Barang Inti Katalog">
+            <!-- Dynamic 3D Cards Track -->
             <div class="c3d-cards-track" id="catalog-3d-cards">
               <!-- Rendered by JS -->
             </div>
           </div>
-
-          <button
-            type="button"
-            id="catalog-3d-next"
-            class="c3d-arrow-btn c3d-arrow-next"
-            aria-label="Produk Berikutnya (3D)"
-            title="Produk Berikutnya"
-          >
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-
-        <!-- Telemetry & Status Bar -->
-        <div class="c3d-telemetry-bar">
-          <div class="c3d-telemetry-left">
-            <span class="c3d-counter-badge">[ <span id="catalog-3d-counter-current">01</span> / <span id="catalog-3d-counter-total">08</span> ]</span>
-            <span class="c3d-active-label" id="catalog-3d-active-title">DELL PowerEdge R760xs Rack Server</span>
-          </div>
-
-          <span class="c3d-hint-text">Geser kartu untuk eksplorasi 360°</span>
         </div>
 
       </div>
@@ -1909,6 +2662,129 @@
 
   </main>
 
+  <!-- DEDICATED CORE ITEM PAGE ("HALAMAN BARANG & JENIS-JENISNYA") -->
+  <section
+    id="item-category-page"
+    class="item-category-page"
+    hidden
+    aria-label="Halaman Detail Kategori Barang dan Jenis-Jenisnya"
+  >
+    <!-- Sticky Top Bar: Back to 3D Ring + 16-Item Switcher Rail -->
+    <div class="icp-sticky-bar">
+      <div class="icp-sticky-inner">
+        <button type="button" class="icp-back-btn" id="icp-back-btn">
+          <span aria-hidden="true">←</span>
+          <span>Kembali ke Lingkaran 3D</span>
+        </button>
+
+        <div class="icp-switcher-rail" id="icp-switcher-rail" role="navigation" aria-label="Pindah Kategori Barang Inti">
+          <!-- 16 Core Item Pills rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Hero Banner -->
+    <div class="icp-hero">
+      <div class="icp-hero-inner">
+        <div class="icp-hero-copy">
+          <div class="icp-hero-eyebrow" id="icp-hero-eyebrow">BARANG INTI 01 // KATALOG RESMI INAPROC LKPP</div>
+          <h1 class="icp-hero-title" id="icp-hero-title">Kamera &amp; Dokumentasi Visual</h1>
+          <p class="icp-hero-desc" id="icp-hero-desc">
+            Rangkaian lengkap perangkat kamera dokumentasi, camcorder profesional, kamera mirrorless/DSLR, kamera konferensi ruang rapat, CCTV keamanan, drone pemetaan, gimbal stabilizer, hingga pencahayaan studio.
+          </p>
+
+          <div class="icp-hero-stats">
+            <div class="icp-stat-card">
+              <span class="icp-stat-label">Total Variasi Unit</span>
+              <span class="icp-stat-val" id="icp-stat-units">24 Unit &amp; Tipe</span>
+            </div>
+            <div class="icp-stat-card">
+              <span class="icp-stat-label">Kelompok Jenis</span>
+              <span class="icp-stat-val" id="icp-stat-subtypes">9 Jenis Kategori</span>
+            </div>
+            <div class="icp-stat-card">
+              <span class="icp-stat-label">Rentang Harga Tayang</span>
+              <span class="icp-stat-val" id="icp-stat-price">Sesuai Etalase INAPROC</span>
+            </div>
+          </div>
+
+          <div class="icp-hero-actions">
+            <a
+              href="mailto:info@agungwijayanitya.com?subject=Permintaan%20Penawaran%20Pengadaan"
+              class="hero-btn-primary"
+              id="icp-hero-quote-btn"
+            >
+              <span>Minta Penawaran Kategori Ini</span>
+            </a>
+            <a
+              href="https://katalog.inaproc.id/agung-wijaya-nitya"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hero-btn-secondary"
+            >
+              <span>Buka Etalase INAPROC ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="icp-hero-visual-box">
+          <img
+            src="/products/sony-pxw-z200.png"
+            alt="Kamera &amp; Dokumentasi Visual"
+            class="icp-hero-img"
+            id="icp-hero-img"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-Type Filter Tabs ("Jenis-Jenisnya") & Product Catalog Grid -->
+    <div class="icp-body-container">
+      <div class="icp-filter-panel">
+        <div class="icp-filter-heading">Pilih Jenis-Jenis Barang pada Kategori Ini</div>
+        <div class="icp-subtype-tabs" id="icp-subtype-tabs" role="tablist" aria-label="Filter berdasarkan jenis barang">
+          <!-- Sub-type tabs rendered by JS -->
+        </div>
+
+        <div class="icp-search-sort-row">
+          <div class="icp-search-wrap">
+            <label for="icp-search-input" class="sr-only">Cari nama barang, merek, atau jenis</label>
+            <input
+              type="search"
+              id="icp-search-input"
+              class="icp-search-input"
+              placeholder="Cari tipe, merek, atau jenis barang dalam halaman ini..."
+            />
+          </div>
+
+          <div class="icp-sort-wrap">
+            <label for="icp-sort-select" class="icp-sort-label">Urutkan:</label>
+            <select id="icp-sort-select" class="icp-sort-select">
+              <option value="default">Dikelompokkan per Jenis Barang</option>
+              <option value="price-desc">Harga Tertinggi ke Terendah</option>
+              <option value="price-asc">Harga Terendah ke Tertinggi</option>
+              <option value="name-asc">Nama Barang (A - Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="icp-results-count" id="icp-results-count">Menampilkan seluruh barang dan jenis-jenisnya</div>
+
+      <!-- Grouped Product Cards by Sub-Type ("Jenis") -->
+      <div id="icp-products-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Empty State (R-27) -->
+      <div class="icp-empty-state" id="icp-empty-state" hidden>
+        <h3 class="icp-empty-title">Tidak ditemukan tipe barang yang sesuai filter pencarian.</h3>
+        <p class="icp-empty-sub">Silakan ubah kata kunci pencarian atau tampilkan kembali seluruh jenis barang pada kategori ini.</p>
+        <button type="button" class="icp-reset-btn" id="icp-reset-filter-btn">Tampilkan Semua Jenis Barang</button>
+      </div>
+    </div>
+  </section>
+
   <!-- SITE FOOTER & KONTAK -->
   <footer class="site-footer" id="kontak">
     <div class="footer-cta-card">
@@ -1933,7 +2809,7 @@
 
     <div class="footer-bottom-bar">
       <span>© Agung Wijaya Nitya. Pengadaan Perangkat Keras TI &amp; Perlengkapan Institusi.</span>
-      <span>Mitra Pengadaan Perangkat IT & Institusi — Kabupaten Badung, Bali</span>
+      <span>Mitra Pengadaan Perangkat IT &amp; Institusi · Kabupaten Badung, Bali</span>
     </div>
   </footer>
 
