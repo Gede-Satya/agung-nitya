@@ -131,12 +131,12 @@ export function initCatalog3DSlider(): void {
 
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Compute radius based on viewport width
+  // Compute radius based on viewport width (expanded ring circumference for wider card gap)
   function getRadius(): number {
     const width = window.innerWidth;
-    if (width < 640) return 290;
-    if (width < 1024) return 400;
-    return 480;
+    if (width < 640) return 390;
+    if (width < 1024) return 520;
+    return 630;
   }
 
   // Render cards HTML
