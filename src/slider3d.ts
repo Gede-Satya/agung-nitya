@@ -883,21 +883,21 @@ export function initCatalog3DSlider(): void {
         if (absFacing < 14) {
           card.classList.add("active", "front");
           card.style.opacity = "1";
-          card.style.zIndex = "20";
+          card.style.zIndex = "50";
         } else if (absFacing < 48) {
           card.classList.add("flank");
           card.style.opacity = "1";
-          card.style.zIndex = "30";
+          card.style.zIndex = "35";
         } else if (absFacing <= 72) {
           card.classList.add("side");
           card.style.opacity = "1";
-          card.style.zIndex = "40";
+          card.style.zIndex = "20";
         } else {
           // Smooth edge fade at the outer rim of the concave arc (72° to 82°)
           const edgeRatio = Math.max(0, (82 - absFacing) / 10);
           card.classList.add("side");
           card.style.opacity = edgeRatio.toFixed(2);
-          card.style.zIndex = "40";
+          card.style.zIndex = "10";
         }
       } else {
         card.classList.add("rear");
@@ -998,37 +998,63 @@ export function initCatalog3DSlider(): void {
     });
   });
 
-  // Clicking ANY card in the 3D circle goes directly to that item's page + all its varieties ("beserta jenis-jenisnya")
+  // Reliable card click handler: supports mouse clicks, laptop trackpad taps, and mobile touch
+  let lastOpenTime = 0;
+  function handleCardSelect(index: number, coreId: string): void {
+    const now = performance.now();
+    if (now - lastOpenTime < 400) return;
+    lastOpenTime = now;
+    rotateToIndex(index);
+    openCoreItemPage(coreId, true);
+  }
+
+  let cardPressX = 0;
+  let cardPressY = 0;
+  let cardPressTime = 0;
+  let cardPressTarget: HTMLElement | null = null;
+
   cardElements.forEach((card, index) => {
+    const coreId = card.dataset.coreId || CORE_ITEMS_3D[index]?.id;
+    if (!coreId) return;
+
+    card.addEventListener("pointerdown", (e: PointerEvent) => {
+      cardPressX = e.clientX;
+      cardPressY = e.clientY;
+      cardPressTime = performance.now();
+      cardPressTarget = card;
+    });
+
+    card.addEventListener("pointerup", (e: PointerEvent) => {
+      if (cardPressTarget !== card) return;
+      const moved = Math.hypot(e.clientX - cardPressX, e.clientY - cardPressY);
+      const duration = performance.now() - cardPressTime;
+      // If movement is under 18px and pressed for under 700ms, this is a clean, deliberate tap/click
+      if (moved < 18 && duration < 700) {
+        handleCardSelect(index, coreId);
+      }
+      cardPressTarget = null;
+    });
+
     card.addEventListener("click", (e) => {
-      if (dragMovedPx > 8) {
+      if (dragMovedPx > 18) {
         e.preventDefault();
         return;
       }
-      const coreId = card.dataset.coreId || CORE_ITEMS_3D[index]?.id;
-      if (coreId) {
-        rotateToIndex(index);
-        openCoreItemPage(coreId, true);
-      }
+      handleCardSelect(index, coreId);
     });
 
-    card.addEventListener("keydown", (e) => {
+    card.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        const coreId = card.dataset.coreId || CORE_ITEMS_3D[index]?.id;
-        if (coreId) {
-          rotateToIndex(index);
-          openCoreItemPage(coreId, true);
-        }
+        handleCardSelect(index, coreId);
       }
     });
   });
 
+  const DRAG_THRESHOLD_PX = 18;
+
   // Pointer drag on carousel ring
   stage.addEventListener("pointerdown", (e: PointerEvent) => {
-    const target = e.target as HTMLElement | null;
-    if (target?.closest("button.c3d-arrow-btn")) return;
-
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
@@ -1044,8 +1070,11 @@ export function initCatalog3DSlider(): void {
       if (!isDragging) return;
       const deltaX = e.clientX - startX;
       const deltaY = e.clientY - startY;
-      dragMovedPx = Math.hypot(deltaX, deltaY);
-      currentAngle = dragStartAngle - deltaX * 0.22;
+      const moved = Math.hypot(deltaX, deltaY);
+      dragMovedPx = moved;
+      if (moved > 4) {
+        currentAngle = dragStartAngle - deltaX * 0.22;
+      }
     },
     { passive: true }
   );
@@ -1055,14 +1084,25 @@ export function initCatalog3DSlider(): void {
     isDragging = false;
     stage.classList.remove("is-dragging");
 
-    if (dragMovedPx > 8) {
+    if (dragMovedPx >= DRAG_THRESHOLD_PX) {
       targetAngle = Math.round(currentAngle / stepAngle) * stepAngle;
     }
+    dragMovedPx = 0;
     resetAutoplay();
   };
 
   window.addEventListener("pointerup", onPointerUp);
   window.addEventListener("pointercancel", onPointerUp);
+
+  // Pause autoplay while hovering or touching stage so card doesn't move away during click
+  stage.addEventListener("mouseenter", () => pauseAutoplay());
+  stage.addEventListener("mouseleave", () => {
+    if (!isDragging) resetAutoplay();
+  });
+  stage.addEventListener("touchstart", () => pauseAutoplay(), { passive: true });
+  stage.addEventListener("touchend", () => {
+    if (!isDragging) resetAutoplay();
+  }, { passive: true });
 
   stage.addEventListener("keydown", (e: KeyboardEvent) => {
     if (e.key === "ArrowLeft") {

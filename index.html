@@ -983,6 +983,7 @@
       transform-style: preserve-3d;
       cursor: grab;
       will-change: transform;
+      pointer-events: none;
     }
     .c3d-stage.is-dragging,
     .c3d-cards-track.is-dragging {
@@ -999,6 +1000,7 @@
       outline: none;
       transition: opacity 0.25s ease;
       will-change: transform, opacity;
+      pointer-events: auto;
     }
     @media (max-width: 1023px) {
       .c3d-card {
